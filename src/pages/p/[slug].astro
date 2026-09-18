@@ -87,14 +87,14 @@ const welcomeIt =
   lang="it"
 >
   <section class="bg-surface-elev border-b border-border">
-    <div class="max-w-wrap mx-auto px-md py-2xl text-center">
-      <Eyebrow class="justify-center mb-md">In collaborazione con {partner.data.display_name}</Eyebrow>
-      <h1 class="font-display text-4xl text-ink leading-tight mb-md max-w-prose mx-auto">
+    <div class="max-w-wrap mx-auto px-md py-md sm:py-2xl text-center">
+      <Eyebrow class="justify-center mb-sm sm:mb-md">In collaborazione con {partner.data.display_name}</Eyebrow>
+      <h1 class="font-display text-3xl sm:text-4xl text-ink leading-tight mb-sm sm:mb-md max-w-prose mx-auto">
         Ascolta la Puglia come una storia. <em class="text-accent">Per capire dove sei.</em>
       </h1>
-      <p class="text-lg text-ink-muted max-w-prose mx-auto">{welcomeIt}</p>
+      <p class="text-base sm:text-lg text-ink-muted max-w-prose mx-auto">{welcomeIt}</p>
 
-      <div class="mt-lg flex flex-col items-center">
+      <div class="mt-md sm:mt-lg flex flex-col items-center">
         <HeroAudioSample lang="it" src={trailer.src} guideSlug={trailer.slug} context="partner" />
         <p class="font-body text-xs text-ink-subtle mt-sm">Anteprima gratuita · nessuna app · offline dopo l&rsquo;acquisto</p>
       </div>

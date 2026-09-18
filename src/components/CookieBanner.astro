@@ -37,10 +37,10 @@ const policyHref = localizedHref('/cookie-policy', lang);
   role="dialog"
   aria-label={lang === 'it' ? 'Preferenze cookie' : lang === 'de' ? 'Cookie-Einstellungen' : 'Cookie preferences'}
   aria-live="polite"
-  class="fixed bottom-0 left-0 right-0 z-50 bg-surface border-t border-border shadow-lg px-md py-md hidden"
+  class="fixed bottom-0 left-0 right-0 z-50 bg-surface border-t border-border shadow-lg px-md py-sm sm:py-md hidden"
 >
-  <div class="max-w-wrap mx-auto flex flex-col sm:flex-row items-start sm:items-center gap-md justify-between">
-    <p class="text-sm text-ink-muted flex-1">
+  <div class="max-w-wrap mx-auto flex flex-col sm:flex-row items-start sm:items-center gap-sm sm:gap-md justify-between">
+    <p class="text-xs sm:text-sm text-ink-muted flex-1">
       {c.text}
       <a href={policyHref} class="underline hover:text-ink ml-xs">{c.policy}</a>.
     </p>

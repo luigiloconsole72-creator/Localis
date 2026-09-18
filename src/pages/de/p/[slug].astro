@@ -87,14 +87,14 @@ const welcomeDe =
   langUrlsOverride={{ it: `/p/${slug}/`, en: `/en/p/${slug}/`, de: `/de/p/${slug}/` }}
 >
   <section class="bg-surface-elev border-b border-border">
-    <div class="max-w-wrap mx-auto px-md py-2xl text-center">
-      <Eyebrow class="justify-center mb-md">In Zusammenarbeit mit {partner.data.display_name}</Eyebrow>
-      <h1 class="font-display text-4xl text-ink leading-tight mb-md max-w-prose mx-auto">
+    <div class="max-w-wrap mx-auto px-md py-md sm:py-2xl text-center">
+      <Eyebrow class="justify-center mb-sm sm:mb-md">In Zusammenarbeit mit {partner.data.display_name}</Eyebrow>
+      <h1 class="font-display text-3xl sm:text-4xl text-ink leading-tight mb-sm sm:mb-md max-w-prose mx-auto">
         Erlebe Apulien als Geschichte. <em class="text-accent">Um zu verstehen, wo du bist.</em>
       </h1>
-      <p class="text-lg text-ink-muted max-w-prose mx-auto">{welcomeDe}</p>
+      <p class="text-base sm:text-lg text-ink-muted max-w-prose mx-auto">{welcomeDe}</p>
 
-      <div class="mt-lg flex flex-col items-center">
+      <div class="mt-md sm:mt-lg flex flex-col items-center">
         <HeroAudioSample lang="de" src={trailer.src} guideSlug={trailer.slug} context="partner" />
         <p class="font-body text-xs text-ink-subtle mt-sm">Kostenlose H&ouml;rprobe · keine App · offline nach dem Kauf</p>
       </div>
