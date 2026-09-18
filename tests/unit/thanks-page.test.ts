@@ -78,10 +78,10 @@ describe('buildThanksPageModel', () => {
     expect(model).toEqual({
       state: 'ready',
       pageTitle: 'Deine Guides sind bereit.',
-      primaryMessage: 'Du kannst direkt von hier aus mit dem Hoeren beginnen.',
+      primaryMessage: 'Du kannst direkt von hier aus mit dem Hören beginnen.',
       emailMessage:
-        'Wir haben dir den Zugangslink auch an kunde@example.com geschickt, damit du spaeter alles wiederfindest.',
-      cardCta: 'Jetzt anhoeren',
+        'Wir haben dir den Zugangslink auch an kunde@example.com geschickt, damit du später alles wiederfindest.',
+      cardCta: 'Jetzt anhören',
       cards: [
         {
           slug: 'porto-bari',
@@ -117,7 +117,7 @@ describe('buildThanksPageModel', () => {
       pageTitle: 'Danke.',
       primaryMessage: 'Wir haben deine Zahlung erhalten, aber konnten gerade keine Guides laden.',
       emailMessage: 'Wir senden dir den Zugangslink gleich per E-Mail. Bitte pruefe auch den Spam-Ordner.',
-      cardCta: 'Jetzt anhoeren',
+      cardCta: 'Jetzt anhören',
       cards: [],
     });
   });

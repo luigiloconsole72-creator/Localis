@@ -108,7 +108,7 @@ function deriveInitials(a: Author): string {
 function bioFor(a: Author): string {
   const draftIt = `Voce confermata per "${a.guideTitle}". Foto e bio breve a giorni.`;
   const draftEn = `Voice confirmed for "${a.guideTitle}". Photo and short bio coming soon.`;
-  const draftDe = `Stimme fuer "${a.guideTitle}" bestaetigt. Foto und Kurzbiografie folgen bald.`;
+  const draftDe = `Stimme für "${a.guideTitle}" bestätigt. Foto und Kurzbiografie folgen bald.`;
   if (lang === 'it') {
     return a.bioIt ?? draftIt;
   }

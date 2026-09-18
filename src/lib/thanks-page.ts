@@ -69,10 +69,10 @@ const COPY = {
   de: {
     ready: {
       pageTitle: 'Deine Guides sind bereit.',
-      primaryMessage: 'Du kannst direkt von hier aus mit dem Hoeren beginnen.',
+      primaryMessage: 'Du kannst direkt von hier aus mit dem Hören beginnen.',
       emailMessage: (buyerEmail: string | null) =>
         buyerEmail
-          ? `Wir haben dir den Zugangslink auch an ${buyerEmail} geschickt, damit du spaeter alles wiederfindest.`
+          ? `Wir haben dir den Zugangslink auch an ${buyerEmail} geschickt, damit du später alles wiederfindest.`
           : 'Wir senden dir den Zugangslink gleich per E-Mail. Bitte pruefe auch den Spam-Ordner.',
     },
     empty: {
@@ -80,7 +80,7 @@ const COPY = {
       primaryMessage: 'Wir haben deine Zahlung erhalten, aber konnten gerade keine Guides laden.',
       emailMessage: 'Wir senden dir den Zugangslink gleich per E-Mail. Bitte pruefe auch den Spam-Ordner.',
     },
-    cardCta: 'Jetzt anhoeren',
+    cardCta: 'Jetzt anhören',
   },
 } satisfies Record<
   Lang,

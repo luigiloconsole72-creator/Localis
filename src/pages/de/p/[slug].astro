@@ -102,15 +102,6 @@ const welcomeDe =
   </section>
 
   <section class="max-w-wrap mx-auto px-md py-2xl">
-    <SectionDivider label="Verfügbare Geschichten" />
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-md">
-      {guides.map((g, i) => (
-        <GuideCard guide={g} lang="de" index={i} />
-      ))}
-    </div>
-  </section>
-
-  <section class="max-w-wrap mx-auto px-md py-2xl">
     <SectionDivider label="Wähle deinen Plan" />
     <div class="grid grid-cols-1 md:grid-cols-2 gap-md max-w-[44rem] mx-auto">
       <PriceCard
@@ -121,7 +112,7 @@ const welcomeDe =
           '1 Geschichte nach Wahl',
           'Unbegrenzter Zugang',
           'Keine App — öffnet mit einem Link',
-          'Italienisch und Englisch',
+          'Italienisch, Englisch und Deutsch',
         ]}
       />
       <PriceCard
@@ -130,6 +121,15 @@ const welcomeDe =
         primary
         features={bundleFeatures}
       />
+    </div>
+  </section>
+
+  <section class="max-w-wrap mx-auto px-md py-2xl">
+    <SectionDivider label="Verfügbare Geschichten" />
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-md">
+      {guides.map((g, i) => (
+        <GuideCard guide={g} lang="de" index={i} />
+      ))}
     </div>
   </section>
 
