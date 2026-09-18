@@ -27,6 +27,10 @@ export async function countScan(request: Request, pathname: string, res: Respons
     if (!/^text\/html/i.test(res.headers.get('content-type') || '')) return;
     const url = new URL(request.url);
     if (url.searchParams.get('localis_internal') === '1') return; // canary/test interni
+    // Il controllo su user-agent vuoto non e' solo anti-bot, regge anche il
+    // build: Astro esegue il middleware mentre prerenderizza le pagine statiche
+    // (misurato: 183 esecuzioni per build) e lo fa con user-agent assente. Senza
+    // questa riga ogni deploy scriverebbe conteggi inventati.
     const ua = request.headers.get('user-agent') || '';
     if (!ua || BOT.test(ua)) return;
 
