@@ -1,5 +1,13 @@
 // Raccoglie i dati per il digest giornaliero e li stampa in JSON su stdout.
-// Usato da gallery-outreach/daily_digest.py.  Output: { date, ga4, commits, recontact }
+// Output: { date, ga4, commits, recontact }
+//
+// L'UNICO consumatore e' C:\Dev\gallery-outreach\daily_digest.py, lanciato dal
+// Task Scheduler ("Localis Daily Digest", 08:00) via run-daily-digest.bat, che
+// aggiunge i conteggi del DB outreach e manda la mail con Resend. Nel 2026-08
+// era nato un secondo digest su GitHub Actions: non ha mai funzionato (secret
+// mai impostati) ed e' stato rimosso il 2026-09-18. Se serve togliere la
+// dipendenza dal PC acceso, va portato via anche il DB outreach, non solo lo
+// script.
 
 import { readdirSync, readFileSync } from 'node:fs';
 import { execSync } from 'node:child_process';

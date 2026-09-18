@@ -1,26 +1,28 @@
 ---
-export const prerender = true;
+// SSR e non prerenderizzata: su Vercel le pagine statiche le serve la CDN senza
+// passare dal middleware, e le scansioni delle card stampate non verrebbero
+// contate (vedi countScan in src/middleware.ts).
+export const prerender = false;
 import Layout from '../../components/Layout.astro';
 import Eyebrow from '../../components/Eyebrow.astro';
-import { getAllCodes, resolveCode } from '../../lib/qr-codes';
+import { isValidCode, resolveCode } from '../../lib/qr-codes';
 import { getActivePartner } from '../../lib/partners';
 
-export async function getStaticPaths() {
-  const codes = getAllCodes();
-  const paths = [];
-  for (const entry of codes) {
-    const resolved = resolveCode(entry.code);
-    let redirectTo: string | null = null;
-    if (resolved.status === 'assigned' && resolved.partner_slug) {
-      const partner = await getActivePartner(resolved.partner_slug);
-      if (partner) redirectTo = `/p/${resolved.partner_slug}`;
-    }
-    paths.push({ params: { code: entry.code }, props: { redirectTo } });
-  }
-  return paths;
-}
+// I codici del registro sono maiuscoli ed e' cosi' che li codificano i QR
+// stampati. Chi invece digita l'indirizzo a mano lo scrive minuscolo, e prima
+// si prendeva un 404.
+const code = (Astro.params.code || '').toUpperCase();
+if (!isValidCode(code)) return new Response(null, { status: 404 });
 
-const { redirectTo } = Astro.props as { redirectTo: string | null };
+// Un codice ben formato ma non ancora nel registro mostra il benvenuto invece
+// di un 404: le card si stampano a lotti e si assegnano dopo, e una card in
+// mano a un ospite deve sempre portare da qualche parte.
+const resolved = resolveCode(code);
+let redirectTo: string | null = null;
+if (resolved.status === 'assigned' && resolved.partner_slug) {
+  const partner = await getActivePartner(resolved.partner_slug);
+  if (partner) redirectTo = `/p/${resolved.partner_slug}`;
+}
 ---
 {redirectTo ? (
   <html lang="it">

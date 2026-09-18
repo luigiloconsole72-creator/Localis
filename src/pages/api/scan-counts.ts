@@ -1,5 +1,6 @@
-// Lettura dei conteggi scansioni server-side (scritti dall'edge function
-// scan-counter). Protetto da ADMIN_TOKEN. Uso:
+// Lettura dei conteggi consenso-indipendenti: le scansioni QR le scrive
+// countScan in src/middleware.ts, le pagine viste ("v:") le scrive /api/hit.
+// Protetto da ADMIN_TOKEN. Uso:
 //   /api/scan-counts?token=...&days=14
 import type { APIRoute } from 'astro';
 import { kvHGetAll } from '../../lib/kv';

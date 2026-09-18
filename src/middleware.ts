@@ -1,4 +1,5 @@
 import { defineMiddleware } from 'astro:middleware';
+import { BOT } from './lib/bots';
 import { kvHIncrBy } from './lib/kv';
 import {
   LANG_COOKIE_NAME,
@@ -11,21 +12,32 @@ import {
 
 const PARTNER_COOKIE_NAME = 'lg_partner';
 
-// Conteggio scansioni indipendente dal consenso cookie: GA4 e PostHog
+// Conteggio scansioni QR indipendente dal consenso cookie: GA4 e PostHog
 // partono solo dopo l'accettazione e vedono una frazione del traffico
 // (misurato: 5 scansioni su 34). Aggregato per giorno, nessun IP, nessun
-// identificatore: solo un contatore per partner.
-const BOT = /bot|crawl|spider|slurp|bingpreview|facebookexternalhit|whatsapp|telegram|preview|headless|lighthouse|monitor|curl|wget|python-requests|axios|node-fetch|okhttp|go-http/i;
-
-async function countScan(request: Request, partnerSlug: string): Promise<void> {
+// identificatore: un contatore per partner e per codice stampato.
+//
+// Qui stanno solo le scansioni. Le pagine viste di tutto il sito le conta
+// /api/hit, perche' le pagine prerenderizzate non arrivano mai al middleware:
+// un solo scrittore per metrica, cosi' niente doppi conteggi.
+export async function countScan(request: Request, pathname: string, res: Response): Promise<void> {
   try {
-    if (request.method !== 'GET') return;
+    if (request.method !== 'GET' || res.status !== 200) return;
+    // Solo pagine: esclude asset, JSON e feed.
+    if (!/^text\/html/i.test(res.headers.get('content-type') || '')) return;
     const url = new URL(request.url);
     if (url.searchParams.get('localis_internal') === '1') return; // canary/test interni
     const ua = request.headers.get('user-agent') || '';
     if (!ua || BOT.test(ua)) return;
-    const day = new Date().toISOString().slice(0, 10);
-    await kvHIncrBy('scan-counts', day, partnerSlug);
+
+    const partnerMatch = pathname.match(/^\/(?:en\/|de\/)?p\/([a-z0-9][a-z0-9-]{2,40})\/?$/i);
+    const codeMatch = pathname.match(/^\/q\/([a-z0-9]{4,12})\/?$/i);
+    const scanKey = partnerMatch
+      ? partnerMatch[1].toLowerCase()
+      : codeMatch ? `q:${codeMatch[1].toLowerCase()}` : null;
+    if (!scanKey) return;
+
+    await kvHIncrBy('scan-counts', new Date().toISOString().slice(0, 10), scanKey);
   } catch {
     /* un contatore che fallisce non deve mai impedire la pagina */
   }
@@ -39,6 +51,14 @@ export const onRequest = defineMiddleware(async (context, next) => {
   if (!['GET', 'HEAD'].includes(context.request.method) || !isPublicHtmlPath(pathname)) {
     return next();
   }
+
+  // Conta solo le pagine servite davvero: i redirect qui sotto non sono una
+  // visita, lo sara' la richiesta che li segue.
+  const proceed = async () => {
+    const res = await next();
+    await countScan(context.request, pathname, res);
+    return res;
+  };
 
   const cookieOptions = {
     path: '/',
@@ -80,13 +100,13 @@ export const onRequest = defineMiddleware(async (context, next) => {
     if (targetPath !== pathname || url.searchParams.has('lang')) {
       return redirectTo(targetPath);
     }
-    return next();
+    return proceed();
   }
 
   const pathLang = getPathLang(pathname);
   if (pathLang) {
     context.cookies.set(LANG_COOKIE_NAME, pathLang, cookieOptions);
-    return next();
+    return proceed();
   }
 
   const cookieLang = context.cookies.get(LANG_COOKIE_NAME)?.value;
@@ -99,5 +119,5 @@ export const onRequest = defineMiddleware(async (context, next) => {
     return redirectTo(allLangUrls(pathname)[preferredLang]);
   }
 
-  return next();
+  return proceed();
 });

@@ -11,6 +11,18 @@ export default defineConfig({
   site: 'https://localis.guide',
   output: 'server',
   adapter: vercel({
+    // Il middleware come edge function separata. Serve soprattutto a NON farlo
+    // girare durante il build: in modalita' 'classic' Astro lo esegue anche al
+    // momento di prerenderizzare le pagine statiche, e qui dentro c'e' un
+    // contatore che scrive su Redis.
+    //
+    // ATTENZIONE a cosa NON fa: su Vercel le pagine prerenderizzate (74 su 80)
+    // le serve la CDN prima di ogni funzione (`handle: filesystem` nel build
+    // output), quindi il middleware le vede comunque solo se sono SSR. Il
+    // conteggio consenso-indipendente vale per /p/{slug}; su Netlify copriva
+    // tutto il sito perche' l'edge function girava prima dei file statici.
+    middlewareMode: 'edge',
+
     // L'audio completo delle guide vive su R2, non nel bundle: escluderlo
     // tiene la funzione leggera (e impedisce che finisca servito per sbaglio).
     excludeFiles: [
