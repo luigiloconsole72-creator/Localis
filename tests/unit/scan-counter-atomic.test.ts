@@ -86,6 +86,15 @@ describe('il middleware conta le visite', () => {
     expect(await kvHGetAll('scan-counts', today)).toEqual({});
   });
 
+  // /de/q/{codice} e /en/q/{codice} non esistono: un redirect per lingua qui
+  // significa un 404 in faccia a chi ha appena scansionato la card.
+  it('non manda la card QR su una lingua che non esiste', async () => {
+    const res = await onRequest(context('/q/AR9PL4/', { acceptLanguage: 'de-DE,de;q=0.9' }), servePage);
+
+    expect((res as Response).status).toBe(200);
+    expect((await kvHGetAll('scan-counts', today))['q:ar9pl4']).toBe(1);
+  });
+
   it('non conta un redirect: la visita e la richiesta che lo segue', async () => {
     const res = await onRequest(context('/', { acceptLanguage: 'de-DE,de;q=0.9' }), servePage);
 

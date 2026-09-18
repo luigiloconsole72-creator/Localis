@@ -60,6 +60,13 @@ export const onRequest = defineMiddleware(async (context, next) => {
     return res;
   };
 
+  // Le card QR neutre non hanno una versione per lingua: /de/q/{codice} e
+  // /en/q/{codice} non esistono, e mandarci un turista significa dargli un 404
+  // con la card in mano. La lingua la decide la pagina di arrivo, dopo il salto
+  // su /p/{slug}. (Regressione del 18/09: passando /q/ a SSR si era acceso
+  // anche il redirect lingua, prima spento perche' la pagina era statica.)
+  if (/^\/q\/[^/]+\/?$/i.test(pathname)) return proceed();
+
   const cookieOptions = {
     path: '/',
     maxAge: MAX_AGE_SECONDS,
