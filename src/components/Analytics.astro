@@ -1,4 +1,6 @@
 ---
+import VercelAnalytics from '@vercel/analytics/astro';
+
 const domain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN || 'localis.guide';
 const ga4Id = import.meta.env.PUBLIC_GA4_ID || '';
 const posthogKey = import.meta.env.PUBLIC_POSTHOG_KEY || '';
@@ -284,3 +286,8 @@ const isProd = import.meta.env.PROD;
     )}
   </>
 )}
+
+{/* Vercel Web Analytics — Tracks page views and performance metrics.
+    Enabled via both adapter config (webAnalytics: { enabled: true }) and
+    the @vercel/analytics package for enhanced features. */}
+<VercelAnalytics />

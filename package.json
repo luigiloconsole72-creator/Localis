@@ -42,6 +42,7 @@
     "@aws-sdk/client-s3": "^3.1054.0",
     "@aws-sdk/s3-request-presigner": "^3.1054.0",
     "@upstash/redis": "^1.38.4",
+    "@vercel/analytics": "^2.0.1",
     "astro": "^6.3.8",
     "jsonwebtoken": "^9.0.3",
     "resend": "^6.12.4",
