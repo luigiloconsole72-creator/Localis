@@ -102,15 +102,6 @@ const welcomeIt =
   </section>
 
   <section class="max-w-wrap mx-auto px-md py-2xl">
-    <SectionDivider label="Le guide disponibili" />
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-md">
-      {guides.map((g, i) => (
-        <GuideCard guide={g} lang="it" index={i} />
-      ))}
-    </div>
-  </section>
-
-  <section class="max-w-wrap mx-auto px-md py-2xl">
     <SectionDivider label="Scegli il tuo piano" />
     <div class="grid grid-cols-1 md:grid-cols-2 gap-md max-w-[44rem] mx-auto">
       <PriceCard
@@ -121,7 +112,7 @@ const welcomeIt =
           '1 guida a scelta',
           'Accesso illimitato',
           'Senza app, si apre con un link',
-          'Italiano e inglese',
+          'Italiano, inglese e tedesco',
         ]}
       />
       <PriceCard
@@ -130,6 +121,15 @@ const welcomeIt =
         primary
         features={bundleFeatures}
       />
+    </div>
+  </section>
+
+  <section class="max-w-wrap mx-auto px-md py-2xl">
+    <SectionDivider label="Le guide disponibili" />
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-md">
+      {guides.map((g, i) => (
+        <GuideCard guide={g} lang="it" index={i} />
+      ))}
     </div>
   </section>
 
