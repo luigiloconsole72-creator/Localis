@@ -11,6 +11,12 @@ export default defineConfig({
   site: 'https://localis.guide',
   output: 'server',
   adapter: vercel({
+    // Inietta lo script di Vercel Web Analytics, servito da /_vercel/insights/
+    // sullo stesso dominio: la CSP lo copre gia' con 'self'. Va acceso anche
+    // dal pannello Vercel (scheda Analytics), altrimenti lo script parte ma
+    // non ha dove scrivere.
+    webAnalytics: { enabled: true },
+
     // Il middleware come edge function separata. Serve soprattutto a NON farlo
     // girare durante il build: in modalita' 'classic' Astro lo esegue anche al
     // momento di prerenderizzare le pagine statiche, e qui dentro c'e' un
