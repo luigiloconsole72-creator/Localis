@@ -1,6 +1,11 @@
 const AUDIO_CACHE = 'localis-audio-v2';  // keep v2: preserves user-saved audio on SW update
 const STATIC_CACHE = 'localis-static-v3';
-const OFFLINE_INDEX_KEY = 'localis::offline-index';
+const OFFLINE_INDEX_KEY = new URL('/sw-cache/offline-index', self.location.origin).href;
+
+// Cache Storage accepts only HTTP(S) requests, including synthetic keys.
+function audioCacheKey(pathname) {
+  return new Request(new URL(`/sw-cache/audio${pathname}`, self.location.origin).href);
+}
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();
@@ -147,7 +152,7 @@ async function handleSwAudio(pathname, request) {
   }
 
   const cache = await caches.open(AUDIO_CACHE);
-  const cacheKey = new Request(`localis::audio-path::${entry.pathname}`);
+  const cacheKey = audioCacheKey(entry.pathname);
   const cached = await cache.match(cacheKey);
   if (!cached) {
     return new Response('Audio non trovato in cache', { status: 404 });
@@ -161,7 +166,7 @@ async function handleSwAudio(pathname, request) {
 // Guide audio on R2 — serves from cache (Range-aware) if saved, else streams from network
 async function handleGuideAudio(request) {
   const url = new URL(request.url);
-  const cacheKey = new Request(`localis::audio-path::${url.pathname}`);
+  const cacheKey = audioCacheKey(url.pathname);
 
   const cache = await caches.open(AUDIO_CACHE);
   const cached = await cache.match(cacheKey);
@@ -257,9 +262,9 @@ async function saveOfflineIndex(index) {
 
 self.addEventListener('message', (event) => {
   const { data, source } = event;
-  if (data?.type === 'SAVE_OFFLINE')     { handleSaveOffline(data, source); return; }
-  if (data?.type === 'GET_OFFLINE_STATUS') { handleGetStatus(data, source); return; }
-  if (data?.type === 'DELETE_OFFLINE')  { handleDeleteOffline(data, source); return; }
+  if (data?.type === 'SAVE_OFFLINE')     { event.waitUntil(handleSaveOffline(data, source)); return; }
+  if (data?.type === 'GET_OFFLINE_STATUS') { event.waitUntil(handleGetStatus(data, source)); return; }
+  if (data?.type === 'DELETE_OFFLINE')  { event.waitUntil(handleDeleteOffline(data, source)); return; }
 });
 
 async function handleGetStatus(data, source) {
@@ -275,7 +280,7 @@ async function handleDeleteOffline(data, source) {
   const entry = index[`${slug}::${lang}`];
   if (entry?.pathname) {
     const cache = await caches.open(AUDIO_CACHE);
-    await cache.delete(new Request(`localis::audio-path::${entry.pathname}`));
+    await cache.delete(audioCacheKey(entry.pathname));
   }
   delete index[`${slug}::${lang}`];
   await saveOfflineIndex(index);
@@ -285,6 +290,18 @@ async function handleDeleteOffline(data, source) {
 async function handleSaveOffline(data, source) {
   const { url, slug, lang } = data;
   try {
+    // The first navigation and its assets precede clients.claim(). Save them
+    // explicitly so a successful download also survives an offline reopen.
+    const pageUrl = new URL(source.url);
+    if (pageUrl.origin === self.location.origin && pageUrl.pathname.startsWith('/access/')) {
+      const staticCache = await caches.open(STATIC_CACHE);
+      const assets = (data.assets || []).filter((asset) => {
+        const parsed = new URL(asset, self.location.origin);
+        return parsed.origin === self.location.origin && parsed.pathname.startsWith('/_astro/');
+      });
+      await staticCache.addAll([pageUrl.href, ...new Set(assets)]);
+    }
+
     const response = await fetch(url, { cache: 'no-store' });
     if (!response.ok || !response.body) {
       source.postMessage({ type: 'OFFLINE_ERROR', slug, lang, message: `HTTP ${response.status}` });
@@ -319,7 +336,7 @@ async function handleSaveOffline(data, source) {
     const pathname = new URL(url).pathname;
     const cache = await caches.open(AUDIO_CACHE);
     await cache.put(
-      new Request(`localis::audio-path::${pathname}`),
+      audioCacheKey(pathname),
       new Response(full.buffer, {
         headers: { 'Content-Type': 'audio/mpeg', 'Content-Length': String(received), 'Accept-Ranges': 'bytes' },
       }),

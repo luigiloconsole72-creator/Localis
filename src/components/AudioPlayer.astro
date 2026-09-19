@@ -453,6 +453,10 @@ const labels = {
       url: p.audioUrl,
       slug: p.slug,
       lang: p.lang,
+      // These assets may have loaded before the service worker took control.
+      assets: Array.from(document.querySelectorAll<HTMLScriptElement | HTMLLinkElement>(
+        'script[src], link[rel="stylesheet"][href]',
+      )).map((el) => el instanceof HTMLScriptElement ? el.src : el.href),
     });
   }
 
