@@ -62,6 +62,16 @@ describe('i18n helpers', () => {
       expect(isPublicHtmlPath('/guide/bari-vecchia')).toBe(true);
     });
 
+    // Regressione 21/09: /thanks e' l'unica pagina d'acquisto in SSR, quindi il
+    // redirect lingua la spediva su /de/thanks — rotta che non esiste. Ogni
+    // compratore tedesco o inglese vedeva un 404 appena pagato.
+    it('keeps SSR pages without a localized twin out of language routing', () => {
+      expect(isPublicHtmlPath('/thanks')).toBe(false);
+      expect(isPublicHtmlPath('/thanks/')).toBe(false);
+      expect(isPublicHtmlPath('/admin/referral')).toBe(false);
+      expect(isPublicHtmlPath('/partner/masseria-dirupo/statement')).toBe(false);
+    });
+
     it('picks supported language from Accept-Language header', () => {
       expect(getPreferredLangFromHeader('de-DE,de;q=0.9,en;q=0.8,it;q=0.7')).toBe('de');
       expect(getPreferredLangFromHeader('en-GB,en;q=0.9,it;q=0.8')).toBe('en');

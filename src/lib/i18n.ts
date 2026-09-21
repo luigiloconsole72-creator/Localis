@@ -134,11 +134,21 @@ export function getPreferredLangFromHeader(header: string | null): Lang {
   return ranked[0]?.lang ?? 'it';
 }
 
+// Rotte servite dalla function che NON hanno una versione per lingua: il
+// redirect linguistico le manderebbe su un path inesistente (/de/thanks = 404,
+// misurato il 21/09 su ogni compratore con cookie lg_lang != it). Decidono la
+// lingua da sole: /thanks dai metadata Stripe, /access/ dal querystring del
+// magic link. Le pagine prerenderizzate non passano di qui (su Vercel le serve
+// la CDN), quindi l'elenco copre solo le pagine SSR.
 export function isPublicHtmlPath(pathname: string): boolean {
   if (
     pathname.startsWith('/api/')
     || pathname.startsWith('/access/')
     || pathname.startsWith('/_astro/')
+    || pathname === '/thanks'
+    || pathname.startsWith('/thanks/')
+    || pathname.startsWith('/admin/')
+    || pathname.startsWith('/partner/')
   ) {
     return false;
   }
