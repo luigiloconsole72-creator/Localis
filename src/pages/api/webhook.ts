@@ -94,16 +94,6 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session): Promis
     return guideTitle(g.data, lang);
   });
 
-  // Render email
-  const { subject, html, text } = lang === 'it'
-    ? renderAccessEmailIt({ accessUrl, guideTitles })
-    : lang === 'de'
-      ? renderAccessEmailDe({ accessUrl, guideTitles })
-      : renderAccessEmailEn({ accessUrl, guideTitles });
-
-  // Send via Resend
-  await sendEmail({ to: email, subject, html, text });
-
   await captureServerEvent('purchase_completed', hashDistinctId(email), {
     product,
     guide_count: guide_slugs.length,
@@ -129,6 +119,17 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session): Promis
     lang,
     trafficType: meta.internal === '1' ? 'internal' : undefined,
   });
+
+  // L'email per ultima: e' l'unico passo che dipende da un servizio esterno e
+  // puo' far fallire l'handler (500 -> Stripe ritenta). Quando stava prima, un
+  // guasto di Resend si portava via anche la misura di un acquisto gia' pagato.
+  const { subject, html, text } = lang === 'it'
+    ? renderAccessEmailIt({ accessUrl, guideTitles })
+    : lang === 'de'
+      ? renderAccessEmailDe({ accessUrl, guideTitles })
+      : renderAccessEmailEn({ accessUrl, guideTitles });
+
+  await sendEmail({ to: email, subject, html, text });
 
   console.log(`[webhook] Sent access email to ${maskEmail(email)} for guides ${guide_slugs.join(', ')}`);
 
