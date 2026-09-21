@@ -1,69 +1,80 @@
 import { test, expect } from '@playwright/test';
 
+// Aspettative riallineate il 2026-09-21. La suite non partiva (webServer usava
+// `astro preview`, che l'adapter Vercel non supporta), quindi era rimasta ferma
+// al copy di prima del riposizionamento di giugno: cercava ancora "Ascolta
+// Bari" e una sezione prezzi con le PriceCard sulla home.
+
 test.describe('Italian homepage', () => {
   test('header renders logo and language switcher', async ({ page }) => {
     await page.goto('/');
     await expect(page.getByRole('banner')).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Localis', exact: true })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Localis', exact: true }).first()).toBeVisible();
     await expect(page.locator('html')).toHaveAttribute('lang', 'it');
-    const langSwitch = page.getByRole('link', { name: /switch language/i });
+
+    // Il selettore di lingua e' una bandiera con aria-label, non piu' un link
+    // testuale "EN": il nome accessibile e' l'unica presa stabile.
+    const langSwitch = page.getByRole('link', { name: 'English' }).first();
     await expect(langSwitch).toBeVisible();
-    await expect(langSwitch).toHaveText('EN');
+    await expect(langSwitch).toHaveAttribute('href', /\/en\//);
   });
 
   test('renders hero with correct copy', async ({ page }) => {
     await page.goto('/');
-    await expect(page.getByRole('heading', { level: 1 })).toContainText('Ascolta Bari');
-    await expect(page.getByRole('heading', { level: 1 })).toContainText('come una storia');
-    await expect(page.getByText('Mentre sei lì.')).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1 })).toContainText(
+      /La Puglia, raccontata da chi ci vive/,
+    );
+    await expect(
+      page.getByText(/Racconti audio documentati per capire Bari e la Puglia mentre le visiti/),
+    ).toBeVisible();
   });
 
-  test('renders 5 guide cards', async ({ page }) => {
+  test('renders the four destination zones', async ({ page }) => {
     await page.goto('/');
-    const cards = page.locator('a').filter({ hasText: /Bari|Porto|San Nicola|Meglio|Teatri/ });
-    expect(await cards.count()).toBeGreaterThanOrEqual(5);
+    for (const zone of ['/bari', '/valle-d-itria', '/gargano', '/matera']) {
+      await expect(page.locator(`main a[href="${zone}"]`).first()).toBeVisible();
+    }
   });
 
-  test('renders pricing section with two cards', async ({ page }) => {
+  test('pricing section lists the three tiers', async ({ page }) => {
     await page.goto('/#prezzi');
-    await expect(page.getByRole('heading', { name: 'Guida singola' })).toBeAttached();
-    await expect(page.getByRole('heading', { name: 'Bari completa' })).toBeAttached();
+    const pricing = page.locator('#prezzi');
+    await expect(pricing).toContainText('Guida singola');
+    await expect(pricing).toContainText('€4,99');
+    await expect(pricing).toContainText('Pack 3');
+    await expect(pricing).toContainText('€11,99');
+    await expect(pricing).toContainText('Pack 6');
+    await expect(pricing).toContainText('€19,99');
   });
 
-  test('checkout button calls /api/checkout', async ({ page }) => {
-    await page.goto('/#prezzi');
+  test('buy button posts the selection to /api/checkout', async ({ page }) => {
+    // I bottoni d'acquisto vivono sulla pagina guida, non piu' sulla home.
+    await page.goto('/guide/bari-vecchia');
 
-    // Intercept the API call (we don't want to actually hit Stripe in tests)
-    let apiCalled = false;
-    await page.route('**/api/checkout', async (route) => {
-      apiCalled = true;
-      await route.fulfill({
-        status: 400,
-        contentType: 'application/json',
-        body: JSON.stringify({ error: 'Stripe price ID not configured for product "bari-vecchia"' }),
-      });
+    // Il checkout non e' una fetch: e' un form POST che naviga verso Stripe.
+    // Qui lo si intercetta e si risponde con un redirect innocuo.
+    let payload: string | null = null;
+    await page.route('**/api/checkout*', async (route) => {
+      payload = route.request().postData();
+      await route.fulfill({ status: 303, headers: { location: '/' }, body: '' });
     });
 
-    // Capture the alert (shown when API errors out)
-    let alertMsg = '';
-    page.on('dialog', async (dialog) => {
-      alertMsg = dialog.message();
-      await dialog.dismiss();
-    });
+    await page.getByRole('button', { name: /Acquista guida singola/i }).first().click();
 
-    await page.getByRole('button', { name: /Ascolta tutto/i }).first().click({ force: true });
-
-    // Wait for the request and the resulting alert
-    await expect.poll(() => apiCalled).toBe(true);
-    await expect.poll(() => alertMsg).toContain('Impossibile');
+    await expect.poll(() => payload).not.toBeNull();
+    expect(payload).toContain('product=single');
+    expect(payload).toContain('guideSlug=bari-vecchia');
+    expect(payload).toContain('lang=it');
   });
 
   test('language switcher navigates to English', async ({ page }) => {
     await page.goto('/');
-    await page.getByRole('link', { name: /switch language/i }).click();
+    await page.getByRole('link', { name: 'English' }).first().click();
     await expect(page).toHaveURL(/\/en\//);
     await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-    await expect(page.getByRole('heading', { level: 1 })).toContainText('Listen to Bari');
+    await expect(page.getByRole('heading', { level: 1 })).toContainText(
+      /in the words of the people who live here/,
+    );
   });
 
   test('skip-to-content link appears on Tab focus', async ({ page }) => {
@@ -85,6 +96,8 @@ test.describe('Italian homepage', () => {
 test.describe('English homepage', () => {
   test('renders English hero copy', async ({ page }) => {
     await page.goto('/en/');
-    await expect(page.getByText("While you're there.")).toBeVisible();
+    await expect(
+      page.getByText(/Documented audio stories to understand Bari and Puglia as you visit/),
+    ).toBeVisible();
   });
 });

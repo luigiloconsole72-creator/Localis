@@ -10,6 +10,11 @@ import mdx from '@astrojs/mdx';
 export default defineConfig({
   site: 'https://localis.guide',
   output: 'server',
+
+  // La dev toolbar inietta DOM proprio (pannelli, heading, bottoni) che finisce
+  // sotto i selettori dei test e2e, che girano contro `astro dev`. Spenta solo
+  // quando li si esegue: nello sviluppo normale resta.
+  devToolbar: { enabled: process.env.E2E !== '1' },
   adapter: vercel({
     // Inietta lo script di Vercel Web Analytics, servito da /_vercel/insights/
     // sullo stesso dominio: la CSP lo copre gia' con 'self'. Va acceso anche

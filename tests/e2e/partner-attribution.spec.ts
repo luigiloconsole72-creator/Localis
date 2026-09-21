@@ -31,7 +31,9 @@ test.describe('Partner attribution', () => {
 
   test('partner pitch page renders form', async ({ page }) => {
     await page.goto('/diventa-partner');
-    await expect(page.getByRole('heading', { name: /Regala ai tuoi ospiti/i })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { name: /Aiuta i tuoi ospiti a capire la Puglia/i }),
+    ).toBeVisible();
     await expect(page.locator('#partner-form')).toBeVisible();
   });
 });
