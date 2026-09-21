@@ -125,6 +125,7 @@ const guideListLD = itemListLD(
         Six audio stories among trulli, white villages, vineyards and hill roads. No app.
       </p>
       <HeroAudioSample lang="en" src="/audio/trailers/valle-d-itria/alberobello-trailer-en.mp3" guideSlug="alberobello" />
+      <a href="#prezzi" class="mt-md inline-flex items-center gap-xs text-sm font-semibold text-link hover:text-link-pressed no-underline">Guides and pricing <span aria-hidden="true">↓</span></a>
     </div>
   </section>
 
@@ -204,6 +205,82 @@ const guideListLD = itemListLD(
   </section>
 
   {/* NARRATORS */}
+  <section id="prezzi" class="bg-surface-elev border-t border-border">
+    <div class="max-w-wrap mx-auto px-md py-3xl lg:py-4xl">
+      <SectionDivider label="Choose how to listen to Valle d'Itria." />
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-lg max-w-[68rem] mx-auto">
+        <PriceCard
+          product="single"
+          guideSlug="alberobello"
+          lang="en"
+          features={[
+            'One guide of your choice',
+            'Unlimited access, forever',
+            'Italian and English',
+            'Money-back, no questions asked',
+          ]}
+        />
+        <PriceCard
+          product="tris"
+          lang="en"
+          features={[
+            '3 guides of your choice',
+            'Unlimited access, forever',
+            'Money-back, no questions asked',
+          ]}
+        />
+        <PriceCard
+          product="valle-completa"
+          lang="en"
+          primary
+          titleOverride="Pack 6 Guides (Complete Area)"
+          descriptionOverride="All 6 Valle d'Itria guides. Six stories, six places."
+          ctaOverride="Get Pack 6 Guides"
+          features={[
+            "All 6 Valle d'Itria guides",
+            '~3h of storytelling · different voices',
+            'Money-back, no questions asked',
+          ]}
+        />
+      </div>
+    </div>
+  </section>
+
+  <style>
+    .narr-grid {
+      display: grid;
+      grid-template-columns: repeat(1, 1fr);
+      gap: var(--spacing-2xl);
+    }
+    @media (min-width: 640px) { .narr-grid { grid-template-columns: repeat(3, 1fr); } }
+
+    .narr-card {
+      display: flex; flex-direction: column; gap: var(--spacing-md);
+      text-decoration: none; color: inherit;
+      border-top: 1px solid var(--color-border); padding-top: var(--spacing-md);
+      transition: opacity 0.2s;
+    }
+    .narr-card:hover { opacity: 0.82; }
+    .narr-card:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 4px; border-radius: 2px; }
+
+    .narr-photo {
+      width: 100%; aspect-ratio: 3 / 4; overflow: hidden;
+      border-radius: var(--radius-md); background: var(--color-surface-elev);
+      box-shadow: 0 1px 2px oklch(15% 0.012 240 / 0.06), 0 8px 24px -8px oklch(15% 0.012 240 / 0.14);
+    }
+    .narr-photo img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      filter: grayscale(100%) contrast(1.05) brightness(0.97);
+    }
+    .narr-photo-note { margin-top: calc(var(--spacing-md) * -0.55); line-height: 1.35; }
+    .narr-text { display: flex; flex-direction: column; gap: var(--spacing-xs); }
+    .narr-name { font-size: clamp(1.3rem, 2.8vw, 1.6rem); line-height: 1.1; }
+    .narr-bio { line-height: 1.55; }
+
+    @media (prefers-reduced-motion: reduce) { .narr-card { transition: none; } }
+  </style>
+
+  {/* PRICING */}
   <section class="bg-surface border-t border-border">
     <div class="max-w-wrap mx-auto px-md py-3xl lg:py-4xl">
       <div class="flex items-center justify-center gap-sm mb-2xl">
@@ -245,82 +322,6 @@ const guideListLD = itemListLD(
           </li>
         ))}
       </ul>
-    </div>
-  </section>
-
-  <style>
-    .narr-grid {
-      display: grid;
-      grid-template-columns: repeat(1, 1fr);
-      gap: var(--spacing-2xl);
-    }
-    @media (min-width: 640px) { .narr-grid { grid-template-columns: repeat(3, 1fr); } }
-
-    .narr-card {
-      display: flex; flex-direction: column; gap: var(--spacing-md);
-      text-decoration: none; color: inherit;
-      border-top: 1px solid var(--color-border); padding-top: var(--spacing-md);
-      transition: opacity 0.2s;
-    }
-    .narr-card:hover { opacity: 0.82; }
-    .narr-card:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 4px; border-radius: 2px; }
-
-    .narr-photo {
-      width: 100%; aspect-ratio: 3 / 4; overflow: hidden;
-      border-radius: var(--radius-md); background: var(--color-surface-elev);
-      box-shadow: 0 1px 2px oklch(15% 0.012 240 / 0.06), 0 8px 24px -8px oklch(15% 0.012 240 / 0.14);
-    }
-    .narr-photo img {
-      width: 100%; height: 100%; object-fit: cover; display: block;
-      filter: grayscale(100%) contrast(1.05) brightness(0.97);
-    }
-    .narr-photo-note { margin-top: calc(var(--spacing-md) * -0.55); line-height: 1.35; }
-    .narr-text { display: flex; flex-direction: column; gap: var(--spacing-xs); }
-    .narr-name { font-size: clamp(1.3rem, 2.8vw, 1.6rem); line-height: 1.1; }
-    .narr-bio { line-height: 1.55; }
-
-    @media (prefers-reduced-motion: reduce) { .narr-card { transition: none; } }
-  </style>
-
-  {/* PRICING */}
-  <section id="prezzi" class="bg-surface-elev border-t border-border">
-    <div class="max-w-wrap mx-auto px-md py-3xl lg:py-4xl">
-      <SectionDivider label="Choose how to listen to Valle d'Itria." />
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-lg max-w-[68rem] mx-auto">
-        <PriceCard
-          product="single"
-          guideSlug="alberobello"
-          lang="en"
-          features={[
-            'One guide of your choice',
-            'Unlimited access, forever',
-            'Italian and English',
-            'Money-back, no questions asked',
-          ]}
-        />
-        <PriceCard
-          product="tris"
-          lang="en"
-          features={[
-            '3 guides of your choice',
-            'Unlimited access, forever',
-            'Money-back, no questions asked',
-          ]}
-        />
-        <PriceCard
-          product="valle-completa"
-          lang="en"
-          primary
-          titleOverride="Pack 6 Guides (Complete Area)"
-          descriptionOverride="All 6 Valle d'Itria guides. Six stories, six places."
-          ctaOverride="Get Pack 6 Guides"
-          features={[
-            "All 6 Valle d'Itria guides",
-            '~3h of storytelling · different voices',
-            'Money-back, no questions asked',
-          ]}
-        />
-      </div>
     </div>
   </section>
 

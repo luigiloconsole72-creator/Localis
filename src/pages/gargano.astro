@@ -126,6 +126,7 @@ const guideListLD = itemListLD(
         Sei racconti audio tra mare, foresta, paesi interni e isole. Nessuna app.
       </p>
       <HeroAudioSample lang="it" src="/audio/trailers/gargano/gargano-trailer-it.mp3" guideSlug="gargano-vieste" />
+      <a href="#prezzi" class="mt-md inline-flex items-center gap-xs text-sm font-semibold text-link hover:text-link-pressed no-underline">Guide e prezzi <span aria-hidden="true">↓</span></a>
     </div>
   </section>
 
@@ -213,47 +214,44 @@ const guideListLD = itemListLD(
   </section>
 
   {/* NARRATORI */}
-  <section class="bg-surface border-t border-border">
+  <section id="prezzi" class="bg-surface-elev border-t border-border">
     <div class="max-w-wrap mx-auto px-md py-3xl lg:py-4xl">
-      <div class="flex items-center justify-center gap-sm mb-2xl">
-        <span class="block w-7 h-px bg-accent"></span>
-        <span class="text-[10px] font-semibold tracking-[0.32em] uppercase text-accent">Le prospettive del Gargano</span>
-        <span class="block w-7 h-px bg-accent"></span>
+      <SectionDivider label="Scegli come ascoltare il Gargano." />
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-lg max-w-[68rem] mx-auto">
+        <PriceCard
+          product="single"
+          guideSlug="gargano-vieste"
+          lang="it"
+          features={[
+            'Una guida a tua scelta',
+            'Accesso illimitato, per sempre',
+            'Italiano e inglese',
+            'Soddisfatti o rimborsati',
+          ]}
+        />
+        <PriceCard
+          product="tris"
+          lang="it"
+          features={[
+            '3 guide a scelta tra tutte le zone',
+            'Accesso illimitato, per sempre',
+            'Soddisfatti o rimborsati',
+          ]}
+        />
+        <PriceCard
+          product="gargano-completa"
+          lang="it"
+          primary
+          titleOverride="Pack 6 Guide (Intera Zona)"
+          descriptionOverride="Tutte le 6 guide del Gargano. Sei racconti, sei luoghi."
+          ctaOverride="Acquista Pack 6 Guide"
+          features={[
+            'Tutte le 6 guide del Gargano',
+            '~5h di racconto · voci diverse',
+            'Soddisfatti o rimborsati',
+          ]}
+        />
       </div>
-      <p class="font-body text-sm text-ink-muted text-center max-w-[52ch] mx-auto mb-2xl">Ritratti narrativi costruiti su ricerca, fonti e memoria dei luoghi.</p>
-      <ul class="narr-grid list-none p-0 m-0">
-        {[
-          { name: 'Rossella', photo: '/images/authors/rossella-vieste-jun26.jpg', role: 'Voce narrativa della costa di Vieste', bio: 'Cinquantaquattro anni. La famiglia gestisce lo stesso lido dai tempi di suo nonno. Ha visto questa costa cambiare più in sessant\'anni che nei seicento precedenti.', guide: 'Vieste', href: '/guide/gargano-vieste' },
-          { name: 'Ferdinando', photo: '/images/authors/ferdinando-nord-jun26.jpg', role: 'Voce narrativa dei trabucchi', bio: 'Sessantotto anni, di Peschici. Sul trabucco di famiglia da quando aveva undici anni. Il mare del Gargano lo conosce a memoria, ogni corrente, ogni ora del giorno.', guide: 'Costa Nord', href: '/guide/gargano-nord' },
-          { name: "Fra' Salvatore", photo: '/images/authors/fra-salvatore-sacro-jun26.jpg', role: 'Trent\'anni al Santuario di Monte Sant\'Angelo', bio: "Settantatré anni. Frate francescano dal 1978. Ha accompagnato pellegrini dalla Foresta Umbra fino alla grotta dell'Arcangelo — a piedi, come si faceva nel Medioevo.", guide: 'Il Gargano Sacro', href: '/guide/gargano-sacro' },
-          { name: 'Tonino', photo: '/images/authors/tonino-tremiti-jun26.jpg', role: 'Barcaiolo di San Domino', bio: "Settantaquattro anni. Nato alle Tremiti, non le ha mai lasciate. Conosce ogni cala, ogni secca, ogni corrente dell'arcipelago.", guide: 'Isole Tremiti', href: '/guide/gargano-tremiti' },
-          { name: 'Stefano', photo: '/images/authors/stefano-paesi-jun26.jpg', role: 'Guardiaparco da trent\'anni', bio: "Cinquantotto anni, di Vico del Gargano. Trent'anni nel Parco Nazionale del Gargano. Conosce i borghi dell'entroterra come pochi — le strade, le storie, i nomi dei casali abbandonati.", guide: 'I Borghi', href: '/guide/gargano-paesi' },
-          { name: 'Antonello', photo: '/images/authors/antonello-saline-jun26.jpg', role: 'Trent\'anni al controllo qualità del sale', bio: "Cinquantaquattro anni, di Manfredonia. Trent'anni alle saline di Margherita di Savoia. Ha visto le vasche in tutte le ore possibili — dall'alba rosa di luglio alla nebbia di dicembre.", guide: 'Saline', href: '/guide/gargano-saline' },
-        ].map((n) => (
-          <li class="narr-cell">
-            <a href={n.href} class="narr-card" aria-label={`Guida ${n.guide} — voce di ${n.name}`}>
-              <figure class="narr-photo m-0">
-                <img
-                  src={n.photo}
-                  alt={`Ritratto narrativo di ${n.name}`}
-                  title={`${n.name}: ritratto narrativo costruito su ricerca e fonti Localis.`}
-                  loading="lazy"
-                  decoding="async"
-                />
-              </figure>
-              <p class="narr-photo-note font-body text-[10px] font-semibold tracking-[0.18em] uppercase text-ink-subtle m-0">
-                Ritratto narrativo. Costruito su ricerca e fonti Localis.
-              </p>
-              <div class="narr-text">
-                <p class="narr-guide font-body text-[10px] font-semibold tracking-[0.22em] uppercase text-accent m-0">{n.guide}</p>
-                <h3 class="narr-name font-display font-light text-ink m-0">{n.name}</h3>
-                <p class="narr-role font-body text-xs text-ink-subtle m-0">{n.role}</p>
-                <p class="narr-bio font-body text-sm text-ink-muted m-0 mt-xs">{n.bio}</p>
-              </div>
-            </a>
-          </li>
-        ))}
-      </ul>
     </div>
   </section>
 
@@ -302,44 +300,47 @@ const guideListLD = itemListLD(
   </style>
 
   {/* PRICING */}
-  <section id="prezzi" class="bg-surface-elev border-t border-border">
+  <section class="bg-surface border-t border-border">
     <div class="max-w-wrap mx-auto px-md py-3xl lg:py-4xl">
-      <SectionDivider label="Scegli come ascoltare il Gargano." />
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-lg max-w-[68rem] mx-auto">
-        <PriceCard
-          product="single"
-          guideSlug="gargano-vieste"
-          lang="it"
-          features={[
-            'Una guida a tua scelta',
-            'Accesso illimitato, per sempre',
-            'Italiano e inglese',
-            'Soddisfatti o rimborsati',
-          ]}
-        />
-        <PriceCard
-          product="tris"
-          lang="it"
-          features={[
-            '3 guide a scelta tra tutte le zone',
-            'Accesso illimitato, per sempre',
-            'Soddisfatti o rimborsati',
-          ]}
-        />
-        <PriceCard
-          product="gargano-completa"
-          lang="it"
-          primary
-          titleOverride="Pack 6 Guide (Intera Zona)"
-          descriptionOverride="Tutte le 6 guide del Gargano. Sei racconti, sei luoghi."
-          ctaOverride="Acquista Pack 6 Guide"
-          features={[
-            'Tutte le 6 guide del Gargano',
-            '~5h di racconto · voci diverse',
-            'Soddisfatti o rimborsati',
-          ]}
-        />
+      <div class="flex items-center justify-center gap-sm mb-2xl">
+        <span class="block w-7 h-px bg-accent"></span>
+        <span class="text-[10px] font-semibold tracking-[0.32em] uppercase text-accent">Le prospettive del Gargano</span>
+        <span class="block w-7 h-px bg-accent"></span>
       </div>
+      <p class="font-body text-sm text-ink-muted text-center max-w-[52ch] mx-auto mb-2xl">Ritratti narrativi costruiti su ricerca, fonti e memoria dei luoghi.</p>
+      <ul class="narr-grid list-none p-0 m-0">
+        {[
+          { name: 'Rossella', photo: '/images/authors/rossella-vieste-jun26.jpg', role: 'Voce narrativa della costa di Vieste', bio: 'Cinquantaquattro anni. La famiglia gestisce lo stesso lido dai tempi di suo nonno. Ha visto questa costa cambiare più in sessant\'anni che nei seicento precedenti.', guide: 'Vieste', href: '/guide/gargano-vieste' },
+          { name: 'Ferdinando', photo: '/images/authors/ferdinando-nord-jun26.jpg', role: 'Voce narrativa dei trabucchi', bio: 'Sessantotto anni, di Peschici. Sul trabucco di famiglia da quando aveva undici anni. Il mare del Gargano lo conosce a memoria, ogni corrente, ogni ora del giorno.', guide: 'Costa Nord', href: '/guide/gargano-nord' },
+          { name: "Fra' Salvatore", photo: '/images/authors/fra-salvatore-sacro-jun26.jpg', role: 'Trent\'anni al Santuario di Monte Sant\'Angelo', bio: "Settantatré anni. Frate francescano dal 1978. Ha accompagnato pellegrini dalla Foresta Umbra fino alla grotta dell'Arcangelo — a piedi, come si faceva nel Medioevo.", guide: 'Il Gargano Sacro', href: '/guide/gargano-sacro' },
+          { name: 'Tonino', photo: '/images/authors/tonino-tremiti-jun26.jpg', role: 'Barcaiolo di San Domino', bio: "Settantaquattro anni. Nato alle Tremiti, non le ha mai lasciate. Conosce ogni cala, ogni secca, ogni corrente dell'arcipelago.", guide: 'Isole Tremiti', href: '/guide/gargano-tremiti' },
+          { name: 'Stefano', photo: '/images/authors/stefano-paesi-jun26.jpg', role: 'Guardiaparco da trent\'anni', bio: "Cinquantotto anni, di Vico del Gargano. Trent'anni nel Parco Nazionale del Gargano. Conosce i borghi dell'entroterra come pochi — le strade, le storie, i nomi dei casali abbandonati.", guide: 'I Borghi', href: '/guide/gargano-paesi' },
+          { name: 'Antonello', photo: '/images/authors/antonello-saline-jun26.jpg', role: 'Trent\'anni al controllo qualità del sale', bio: "Cinquantaquattro anni, di Manfredonia. Trent'anni alle saline di Margherita di Savoia. Ha visto le vasche in tutte le ore possibili — dall'alba rosa di luglio alla nebbia di dicembre.", guide: 'Saline', href: '/guide/gargano-saline' },
+        ].map((n) => (
+          <li class="narr-cell">
+            <a href={n.href} class="narr-card" aria-label={`Guida ${n.guide} — voce di ${n.name}`}>
+              <figure class="narr-photo m-0">
+                <img
+                  src={n.photo}
+                  alt={`Ritratto narrativo di ${n.name}`}
+                  title={`${n.name}: ritratto narrativo costruito su ricerca e fonti Localis.`}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </figure>
+              <p class="narr-photo-note font-body text-[10px] font-semibold tracking-[0.18em] uppercase text-ink-subtle m-0">
+                Ritratto narrativo. Costruito su ricerca e fonti Localis.
+              </p>
+              <div class="narr-text">
+                <p class="narr-guide font-body text-[10px] font-semibold tracking-[0.22em] uppercase text-accent m-0">{n.guide}</p>
+                <h3 class="narr-name font-display font-light text-ink m-0">{n.name}</h3>
+                <p class="narr-role font-body text-xs text-ink-subtle m-0">{n.role}</p>
+                <p class="narr-bio font-body text-sm text-ink-muted m-0 mt-xs">{n.bio}</p>
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
     </div>
   </section>
 

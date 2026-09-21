@@ -126,6 +126,7 @@ const guideListLD = itemListLD(
         Six live guides. From Vieste to the Tremiti Islands, from the Foresta Umbra to the Margherita salt flats — every voice belongs to someone who actually lives there.
       </p>
       <HeroAudioSample lang="en" src="/audio/trailers/gargano/gargano-trailer-en.mp3" guideSlug="gargano-vieste" />
+      <a href="#prezzi" class="mt-md inline-flex items-center gap-xs text-sm font-semibold text-link hover:text-link-pressed no-underline">Guides and pricing <span aria-hidden="true">↓</span></a>
     </div>
   </section>
 
@@ -213,47 +214,44 @@ const guideListLD = itemListLD(
   </section>
 
   {/* NARRATORS */}
-  <section class="bg-surface border-t border-border">
+  <section id="prezzi" class="bg-surface-elev border-t border-border">
     <div class="max-w-wrap mx-auto px-md py-3xl lg:py-4xl">
-      <div class="flex items-center justify-center gap-sm mb-2xl">
-        <span class="block w-7 h-px bg-accent"></span>
-        <span class="text-[10px] font-semibold tracking-[0.32em] uppercase text-accent">The perspectives of Gargano</span>
-        <span class="block w-7 h-px bg-accent"></span>
+      <SectionDivider label="Choose how to listen to Gargano." />
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-lg max-w-[68rem] mx-auto">
+        <PriceCard
+          product="single"
+          guideSlug="gargano-vieste"
+          lang="en"
+          features={[
+            'One guide of your choice',
+            'Unlimited access, forever',
+            'Italian and English',
+            'Money-back, no questions asked',
+          ]}
+        />
+        <PriceCard
+          product="tris"
+          lang="en"
+          features={[
+            '3 guides of your choice',
+            'Unlimited access, forever',
+            'Money-back, no questions asked',
+          ]}
+        />
+        <PriceCard
+          product="gargano-completa"
+          lang="en"
+          primary
+          titleOverride="Pack 6 Guides (Complete Area)"
+          descriptionOverride="All 6 Gargano guides. Six stories, six landscapes."
+          ctaOverride="Get Pack 6 Guides"
+          features={[
+            'All 6 Gargano guides',
+            '~5h of storytelling · different voices',
+            'Money-back, no questions asked',
+          ]}
+        />
       </div>
-      <p class="font-body text-sm text-ink-muted text-center max-w-[52ch] mx-auto mb-2xl">Narrative portraits built on research, sources and local memory.</p>
-      <ul class="narr-grid list-none p-0 m-0">
-        {[
-          { name: 'Rossella', photo: '/images/authors/rossella-vieste-jun26.jpg', role: 'Third generation beach club, Vieste', bio: "Fifty-four. Her family has run the same beach club since her grandfather's time. She has watched this coastline change more in sixty years than in the six hundred before.", guide: 'Vieste', href: '/en/guide/gargano-vieste' },
-          { name: 'Ferdinando', photo: '/images/authors/ferdinando-nord-jun26.jpg', role: 'Fourth generation trabucco fisherman', bio: 'Sixty-eight, from Peschici. On the family trabucco since he was eleven. He knows the Gargano sea by heart — every current, every hour of the day.', guide: 'North Coast', href: '/en/guide/gargano-nord' },
-          { name: "Fra' Salvatore", photo: '/images/authors/fra-salvatore-sacro-jun26.jpg', role: 'Thirty years at the Sanctuary of Monte Sant\'Angelo', bio: "Seventy-three. Franciscan friar since 1978. He has guided pilgrims from the Foresta Umbra to the Archangel's grotto — on foot, as they did in the Middle Ages.", guide: 'Sacred Gargano', href: '/en/guide/gargano-sacro' },
-          { name: 'Tonino', photo: '/images/authors/tonino-tremiti-jun26.jpg', role: 'Boatman of San Domino', bio: "Seventy-four. Born on the Tremiti Islands, never left. For twenty years he took Lucio Dalla around the sea caves. He knows every cove, every reef, every current of the archipelago.", guide: 'Tremiti Islands', href: '/en/guide/gargano-tremiti' },
-          { name: 'Stefano', photo: '/images/authors/stefano-paesi-jun26.jpg', role: 'Park ranger for thirty years', bio: "Fifty-eight, from Vico del Gargano. Thirty years in the Gargano National Park. He knows the inland villages like few others — the roads, the stories, the names of abandoned farmsteads.", guide: 'The Villages', href: '/en/guide/gargano-paesi' },
-          { name: 'Antonello', photo: '/images/authors/antonello-saline-jun26.jpg', role: 'Thirty years in salt quality control', bio: "Fifty-four, from Manfredonia. Thirty years at the Margherita di Savoia salt works. He has seen the basins at every possible hour — from the pink July dawn to the December fog.", guide: 'Salt Flats', href: '/en/guide/gargano-saline' },
-        ].map((n) => (
-          <li class="narr-cell">
-            <a href={n.href} class="narr-card" aria-label={`Guide ${n.guide} — ${n.name}'s voice`}>
-              <figure class="narr-photo m-0">
-                <img
-                  src={n.photo}
-                  alt={`Evocative portrait of ${n.name}`}
-                  title={`${n.name}: composite editorial character built from research, sources and field material. Evocative portrait.`}
-                  loading="lazy"
-                  decoding="async"
-                />
-              </figure>
-              <p class="narr-photo-note font-body text-[10px] font-semibold tracking-[0.18em] uppercase text-ink-subtle m-0">
-                Composite editorial voice. Evocative portrait.
-              </p>
-              <div class="narr-text">
-                <p class="narr-guide font-body text-[10px] font-semibold tracking-[0.22em] uppercase text-accent m-0">{n.guide}</p>
-                <h3 class="narr-name font-display font-light text-ink m-0">{n.name}</h3>
-                <p class="narr-role font-body text-xs text-ink-subtle m-0">{n.role}</p>
-                <p class="narr-bio font-body text-sm text-ink-muted m-0 mt-xs">{n.bio}</p>
-              </div>
-            </a>
-          </li>
-        ))}
-      </ul>
     </div>
   </section>
 
@@ -302,44 +300,47 @@ const guideListLD = itemListLD(
   </style>
 
   {/* PRICING */}
-  <section id="prezzi" class="bg-surface-elev border-t border-border">
+  <section class="bg-surface border-t border-border">
     <div class="max-w-wrap mx-auto px-md py-3xl lg:py-4xl">
-      <SectionDivider label="Choose how to listen to Gargano." />
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-lg max-w-[68rem] mx-auto">
-        <PriceCard
-          product="single"
-          guideSlug="gargano-vieste"
-          lang="en"
-          features={[
-            'One guide of your choice',
-            'Unlimited access, forever',
-            'Italian and English',
-            'Money-back, no questions asked',
-          ]}
-        />
-        <PriceCard
-          product="tris"
-          lang="en"
-          features={[
-            '3 guides of your choice',
-            'Unlimited access, forever',
-            'Money-back, no questions asked',
-          ]}
-        />
-        <PriceCard
-          product="gargano-completa"
-          lang="en"
-          primary
-          titleOverride="Pack 6 Guides (Complete Area)"
-          descriptionOverride="All 6 Gargano guides. Six stories, six landscapes."
-          ctaOverride="Get Pack 6 Guides"
-          features={[
-            'All 6 Gargano guides',
-            '~5h of storytelling · different voices',
-            'Money-back, no questions asked',
-          ]}
-        />
+      <div class="flex items-center justify-center gap-sm mb-2xl">
+        <span class="block w-7 h-px bg-accent"></span>
+        <span class="text-[10px] font-semibold tracking-[0.32em] uppercase text-accent">The perspectives of Gargano</span>
+        <span class="block w-7 h-px bg-accent"></span>
       </div>
+      <p class="font-body text-sm text-ink-muted text-center max-w-[52ch] mx-auto mb-2xl">Narrative portraits built on research, sources and local memory.</p>
+      <ul class="narr-grid list-none p-0 m-0">
+        {[
+          { name: 'Rossella', photo: '/images/authors/rossella-vieste-jun26.jpg', role: 'Third generation beach club, Vieste', bio: "Fifty-four. Her family has run the same beach club since her grandfather's time. She has watched this coastline change more in sixty years than in the six hundred before.", guide: 'Vieste', href: '/en/guide/gargano-vieste' },
+          { name: 'Ferdinando', photo: '/images/authors/ferdinando-nord-jun26.jpg', role: 'Fourth generation trabucco fisherman', bio: 'Sixty-eight, from Peschici. On the family trabucco since he was eleven. He knows the Gargano sea by heart — every current, every hour of the day.', guide: 'North Coast', href: '/en/guide/gargano-nord' },
+          { name: "Fra' Salvatore", photo: '/images/authors/fra-salvatore-sacro-jun26.jpg', role: 'Thirty years at the Sanctuary of Monte Sant\'Angelo', bio: "Seventy-three. Franciscan friar since 1978. He has guided pilgrims from the Foresta Umbra to the Archangel's grotto — on foot, as they did in the Middle Ages.", guide: 'Sacred Gargano', href: '/en/guide/gargano-sacro' },
+          { name: 'Tonino', photo: '/images/authors/tonino-tremiti-jun26.jpg', role: 'Boatman of San Domino', bio: "Seventy-four. Born on the Tremiti Islands, never left. For twenty years he took Lucio Dalla around the sea caves. He knows every cove, every reef, every current of the archipelago.", guide: 'Tremiti Islands', href: '/en/guide/gargano-tremiti' },
+          { name: 'Stefano', photo: '/images/authors/stefano-paesi-jun26.jpg', role: 'Park ranger for thirty years', bio: "Fifty-eight, from Vico del Gargano. Thirty years in the Gargano National Park. He knows the inland villages like few others — the roads, the stories, the names of abandoned farmsteads.", guide: 'The Villages', href: '/en/guide/gargano-paesi' },
+          { name: 'Antonello', photo: '/images/authors/antonello-saline-jun26.jpg', role: 'Thirty years in salt quality control', bio: "Fifty-four, from Manfredonia. Thirty years at the Margherita di Savoia salt works. He has seen the basins at every possible hour — from the pink July dawn to the December fog.", guide: 'Salt Flats', href: '/en/guide/gargano-saline' },
+        ].map((n) => (
+          <li class="narr-cell">
+            <a href={n.href} class="narr-card" aria-label={`Guide ${n.guide} — ${n.name}'s voice`}>
+              <figure class="narr-photo m-0">
+                <img
+                  src={n.photo}
+                  alt={`Evocative portrait of ${n.name}`}
+                  title={`${n.name}: composite editorial character built from research, sources and field material. Evocative portrait.`}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </figure>
+              <p class="narr-photo-note font-body text-[10px] font-semibold tracking-[0.18em] uppercase text-ink-subtle m-0">
+                Composite editorial voice. Evocative portrait.
+              </p>
+              <div class="narr-text">
+                <p class="narr-guide font-body text-[10px] font-semibold tracking-[0.22em] uppercase text-accent m-0">{n.guide}</p>
+                <h3 class="narr-name font-display font-light text-ink m-0">{n.name}</h3>
+                <p class="narr-role font-body text-xs text-ink-subtle m-0">{n.role}</p>
+                <p class="narr-bio font-body text-sm text-ink-muted m-0 mt-xs">{n.bio}</p>
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
     </div>
   </section>
 

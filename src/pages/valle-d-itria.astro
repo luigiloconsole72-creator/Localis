@@ -125,6 +125,7 @@ const guideListLD = itemListLD(
         Sei racconti audio tra trulli, borghi bianchi, vigne e strade di collina. Nessuna app.
       </p>
       <HeroAudioSample lang="it" src="/audio/trailers/valle-d-itria/alberobello-trailer-it.mp3" guideSlug="alberobello" />
+      <a href="#prezzi" class="mt-md inline-flex items-center gap-xs text-sm font-semibold text-link hover:text-link-pressed no-underline">Guide e prezzi <span aria-hidden="true">↓</span></a>
     </div>
   </section>
 
@@ -213,6 +214,82 @@ const guideListLD = itemListLD(
   </section>
 
   {/* NARRATORI */}
+  <section id="prezzi" class="bg-surface-elev border-t border-border">
+    <div class="max-w-wrap mx-auto px-md py-3xl lg:py-4xl">
+      <SectionDivider label="Scegli come ascoltare la Valle d'Itria." />
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-lg max-w-[68rem] mx-auto">
+        <PriceCard
+          product="single"
+          guideSlug="alberobello"
+          lang="it"
+          features={[
+            'Una guida a tua scelta',
+            'Accesso illimitato, per sempre',
+            'Italiano e inglese',
+            'Soddisfatti o rimborsati',
+          ]}
+        />
+        <PriceCard
+          product="tris"
+          lang="it"
+          features={[
+            '3 guide a scelta tra tutte le zone',
+            'Accesso illimitato, per sempre',
+            'Soddisfatti o rimborsati',
+          ]}
+        />
+        <PriceCard
+          product="valle-completa"
+          lang="it"
+          primary
+          titleOverride="Pack 6 Guide (Intera Zona)"
+          descriptionOverride="Tutte le 6 guide della Valle d'Itria. Sei racconti, sei luoghi."
+          ctaOverride="Acquista Pack 6 Guide"
+          features={[
+            'Tutte le 6 guide della Valle d\'Itria',
+            '~3h di racconto · voci diverse',
+            'Soddisfatti o rimborsati',
+          ]}
+        />
+      </div>
+    </div>
+  </section>
+
+  <style>
+    .narr-grid {
+      display: grid;
+      grid-template-columns: repeat(1, 1fr);
+      gap: var(--spacing-2xl);
+    }
+    @media (min-width: 640px) { .narr-grid { grid-template-columns: repeat(3, 1fr); } }
+
+    .narr-card {
+      display: flex; flex-direction: column; gap: var(--spacing-md);
+      text-decoration: none; color: inherit;
+      border-top: 1px solid var(--color-border); padding-top: var(--spacing-md);
+      transition: opacity 0.2s;
+    }
+    .narr-card:hover { opacity: 0.82; }
+    .narr-card:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 4px; border-radius: 2px; }
+
+    .narr-photo {
+      width: 100%; aspect-ratio: 3 / 4; overflow: hidden;
+      border-radius: var(--radius-md); background: var(--color-surface-elev);
+      box-shadow: 0 1px 2px oklch(15% 0.012 240 / 0.06), 0 8px 24px -8px oklch(15% 0.012 240 / 0.14);
+    }
+    .narr-photo img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      filter: grayscale(100%) contrast(1.05) brightness(0.97);
+    }
+    .narr-photo-note { margin-top: calc(var(--spacing-md) * -0.55); line-height: 1.35; }
+    .narr-text { display: flex; flex-direction: column; gap: var(--spacing-xs); }
+    .narr-name { font-size: clamp(1.3rem, 2.8vw, 1.6rem); line-height: 1.1; }
+    .narr-bio { line-height: 1.55; }
+
+    @media (prefers-reduced-motion: reduce) { .narr-card { transition: none; } }
+  </style>
+
+  {/* PRICING */}
   <section class="bg-surface border-t border-border">
     <div class="max-w-wrap mx-auto px-md py-3xl lg:py-4xl">
       <div class="flex items-center justify-center gap-sm mb-2xl">
@@ -254,82 +331,6 @@ const guideListLD = itemListLD(
           </li>
         ))}
       </ul>
-    </div>
-  </section>
-
-  <style>
-    .narr-grid {
-      display: grid;
-      grid-template-columns: repeat(1, 1fr);
-      gap: var(--spacing-2xl);
-    }
-    @media (min-width: 640px) { .narr-grid { grid-template-columns: repeat(3, 1fr); } }
-
-    .narr-card {
-      display: flex; flex-direction: column; gap: var(--spacing-md);
-      text-decoration: none; color: inherit;
-      border-top: 1px solid var(--color-border); padding-top: var(--spacing-md);
-      transition: opacity 0.2s;
-    }
-    .narr-card:hover { opacity: 0.82; }
-    .narr-card:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 4px; border-radius: 2px; }
-
-    .narr-photo {
-      width: 100%; aspect-ratio: 3 / 4; overflow: hidden;
-      border-radius: var(--radius-md); background: var(--color-surface-elev);
-      box-shadow: 0 1px 2px oklch(15% 0.012 240 / 0.06), 0 8px 24px -8px oklch(15% 0.012 240 / 0.14);
-    }
-    .narr-photo img {
-      width: 100%; height: 100%; object-fit: cover; display: block;
-      filter: grayscale(100%) contrast(1.05) brightness(0.97);
-    }
-    .narr-photo-note { margin-top: calc(var(--spacing-md) * -0.55); line-height: 1.35; }
-    .narr-text { display: flex; flex-direction: column; gap: var(--spacing-xs); }
-    .narr-name { font-size: clamp(1.3rem, 2.8vw, 1.6rem); line-height: 1.1; }
-    .narr-bio { line-height: 1.55; }
-
-    @media (prefers-reduced-motion: reduce) { .narr-card { transition: none; } }
-  </style>
-
-  {/* PRICING */}
-  <section id="prezzi" class="bg-surface-elev border-t border-border">
-    <div class="max-w-wrap mx-auto px-md py-3xl lg:py-4xl">
-      <SectionDivider label="Scegli come ascoltare la Valle d'Itria." />
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-lg max-w-[68rem] mx-auto">
-        <PriceCard
-          product="single"
-          guideSlug="alberobello"
-          lang="it"
-          features={[
-            'Una guida a tua scelta',
-            'Accesso illimitato, per sempre',
-            'Italiano e inglese',
-            'Soddisfatti o rimborsati',
-          ]}
-        />
-        <PriceCard
-          product="tris"
-          lang="it"
-          features={[
-            '3 guide a scelta tra tutte le zone',
-            'Accesso illimitato, per sempre',
-            'Soddisfatti o rimborsati',
-          ]}
-        />
-        <PriceCard
-          product="valle-completa"
-          lang="it"
-          primary
-          titleOverride="Pack 6 Guide (Intera Zona)"
-          descriptionOverride="Tutte le 6 guide della Valle d'Itria. Sei racconti, sei luoghi."
-          ctaOverride="Acquista Pack 6 Guide"
-          features={[
-            'Tutte le 6 guide della Valle d\'Itria',
-            '~3h di racconto · voci diverse',
-            'Soddisfatti o rimborsati',
-          ]}
-        />
-      </div>
     </div>
   </section>
 
