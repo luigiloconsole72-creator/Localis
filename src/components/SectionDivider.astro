@@ -1,16 +1,19 @@
 ---
 export interface Props {
   label?: string;
+  /** Tag della label. 'h2' quando la label e' il titolo vero della sezione:
+      senza, i blocchi che seguono aprono con un h3 e la gerarchia salta. */
+  as?: 'span' | 'h2';
 }
 
-const { label } = Astro.props;
+const { label, as: Tag = 'span' } = Astro.props;
 ---
 <div class="flex items-center gap-md my-2xl">
   <div class="flex-1 h-px bg-border"></div>
   {label && (
-    <span class="text-xs font-semibold tracking-[0.2em] uppercase text-ink-subtle whitespace-nowrap">
+    <Tag class="text-xs font-semibold tracking-[0.2em] uppercase text-ink-subtle whitespace-nowrap m-0">
       {label}
-    </span>
+    </Tag>
   )}
   <div class="flex-1 h-px bg-border"></div>
 </div>

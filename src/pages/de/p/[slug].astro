@@ -102,7 +102,7 @@ const welcomeDe =
   </section>
 
   <section class="max-w-wrap mx-auto px-md py-2xl">
-    <SectionDivider label="Wähle deinen Plan" />
+    <SectionDivider label="Wähle deinen Plan"  as="h2" />
     <div class="grid grid-cols-1 md:grid-cols-2 gap-md max-w-[44rem] mx-auto">
       <PriceCard
         product="single"
@@ -125,7 +125,7 @@ const welcomeDe =
   </section>
 
   <section class="max-w-wrap mx-auto px-md py-2xl">
-    <SectionDivider label="Verfügbare Geschichten" />
+    <SectionDivider label="Verfügbare Geschichten"  as="h2" />
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-md">
       {guides.map((g, i) => (
         <GuideCard guide={g} lang="de" index={i} />

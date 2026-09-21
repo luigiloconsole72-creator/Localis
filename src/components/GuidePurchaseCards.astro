@@ -14,6 +14,8 @@ export interface Props {
   class?: string;
 }
 
+const HEADING = { it: 'Prezzi e pacchetti', en: 'Pricing and packs', de: 'Preise und Pakete' } as const;
+
 const {
   guideSlug,
   lang,
@@ -26,6 +28,7 @@ const {
 ---
 
 <aside class={className}>
+  <h2 class="sr-only">{HEADING[lang]}</h2>
   <PriceCard product="single" guideSlug={guideSlug} lang={lang} features={singleFeatures} />
   <PriceCard product="tris" lang={lang} features={trisFeatures} />
   {zoneBundleProduct && (
