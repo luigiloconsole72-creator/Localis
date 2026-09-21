@@ -87,11 +87,20 @@ describe('i18n helpers', () => {
 });
 
 describe('translation lookup t()', () => {
-  it('returns Italian string for IT lang', () => {
-    expect(t('site.tagline', 'it')).toBe('Audioguide narrative · Puglia');
+  // site.tagline e' stata rimossa: conteneva "audioguida", che BRAND.md vieta
+  // nel copy visibile, e non la rendeva nessuna pagina. Qui si verifica il
+  // footer, che invece finisce sotto gli occhi su ogni pagina del sito.
+  it('returns the footer line in each language', () => {
+    expect(t('footer.copyright', 'it')).toBe('© Localis · Puglia');
+    expect(t('footer.copyright', 'en')).toBe('© Localis · Puglia');
+    expect(t('footer.copyright', 'de')).toBe('© Localis · Apulien');
   });
 
-  it('returns English string for EN lang', () => {
-    expect(t('site.tagline', 'en')).toBe('Narrative audio guides · Puglia');
+  // Il chiodo dice "Le guide spiegano. Noi raccontiamo." due righe piu' su:
+  // il footer non puo' rimangiarselo definendoci una audioguida.
+  it('keeps the forbidden category word out of the footer', () => {
+    for (const lang of ['it', 'en', 'de'] as const) {
+      expect(t('footer.copyright', lang)).not.toMatch(/audioguid|audio guide/i);
+    }
   });
 });

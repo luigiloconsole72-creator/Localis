@@ -50,10 +50,25 @@ test.describe('Guide detail page', () => {
     await expect(page.getByRole('heading', { name: 'Kapitel' })).toBeVisible();
     await expect(
       page.getByRole('heading', {
-        name: /Bari Vecchia verstehen: der Audioguide durch die Altstadt/i,
+        name: /Bari Vecchia verstehen: die Audio-Route durch die Altstadt/i,
       }),
     ).toBeVisible();
   });
+
+  // BRAND.md: "audioguida" solo in <title>/meta, mai nel copy visibile.
+  // Fino al 2026-09-22 l'italiano rispettava la regola e inglese e tedesco no:
+  // 33 e 34 occorrenze visibili su 18 pagine guida, meta' dentro un heading.
+  for (const [path, term] of [
+    ['/guide/bari-vecchia', /audioguid/i],
+    ['/en/guide/bari-vecchia', /audio guide/i],
+    ['/de/guide/bari-vecchia', /audioguide/i],
+  ] as const) {
+    test(`${path} keeps the category word out of the visible copy`, async ({ page }) => {
+      await page.goto(path);
+      const visible = await page.locator('main').innerText();
+      expect(visible).not.toMatch(term);
+    });
+  }
 
   // Il test "soon-status guide is not directly accessible" e' stato rimosso:
   // usava tre-teatri, che dal 2026 e' `status: live` come tutte e 19 le guide.

@@ -53,6 +53,7 @@ const guideListLD = itemListLD(
         Die Geschichte der Sassi, der Höhlenhäuser, der Gravina und einer in Stein gemeißelten Stadt: bitterarm, verlassen, dann wiedergeboren vor den Augen der Welt.
       </p>
       <HeroAudioSample lang="de" src="/audio/trailers/matera/matera-trailer-de.mp3" guideSlug="matera" />
+      <a href="#preise" class="mt-md inline-flex items-center gap-xs text-sm font-semibold text-link hover:text-link-pressed no-underline">Guides und Preise <span aria-hidden="true">↓</span></a>
     </div>
   </section>
 
@@ -259,16 +260,16 @@ const guideListLD = itemListLD(
   {/* PRICING */}
   <section id="preise" class="bg-surface-elev border-t border-border">
     <div class="max-w-wrap mx-auto px-md py-3xl lg:py-4xl">
-      <SectionDivider label="Wähle, wie du Matera hören möchtest." />
+      <SectionDivider label="Wähle, wie du Matera hören möchtest."  as="h2" />
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg max-w-[66rem] mx-auto">
         <PriceCard
           product="single"
           guideSlug="matera"
           lang="de"
           primary
-          titleOverride="Matera Audioguide"
+          titleOverride="Die Erzählung über Matera"
           descriptionOverride="Die Sassi, die Gravina, die Felsenkirchen. Eine vollständige Geschichte."
-          ctaOverride="Matera Audioguide kaufen"
+          ctaOverride="Matera-Erzählung kaufen"
           features={[
             'Unbegrenzter Zugang, für immer',
             'Italienisch, Englisch und Deutsch',
