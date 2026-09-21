@@ -23,6 +23,7 @@ vi.mock('../../src/lib/partners', () => ({
 }));
 
 import { POST } from '../../src/pages/api/checkout';
+import { ALL_GUIDES, BARI_GUIDES } from '../../src/lib/stripe-prices';
 
 describe('POST /api/checkout', () => {
   beforeEach(() => {
@@ -37,8 +38,9 @@ describe('POST /api/checkout', () => {
     const params = new URLSearchParams();
     params.set('product', 'bari-completa');
     params.set('lang', 'it');
-    params.append('selectedSlugs', 'bari-vecchia');
-    params.append('selectedSlugs', 'san-nicola');
+    for (const slug of BARI_GUIDES) {
+      params.append('selectedSlugs', slug);
+    }
 
     const request = new Request('https://localis.guide/api/checkout?redirect=1', {
       method: 'POST',
@@ -60,6 +62,33 @@ describe('POST /api/checkout', () => {
     expect(createSession).toHaveBeenCalledOnce();
   });
 
+  // Prima chi selezionava 17 guide + Matera comprava "Puglia Completa" a 39,99
+  // e riceveva le 18 standard: senza Matera, con dentro una guida che aveva
+  // tolto. Il server sovrascriveva la selezione senza dirlo.
+  it('refuses a fixed-content product when the selection does not match it', async () => {
+    const request = new Request('https://localis.guide/api/checkout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Origin: 'https://localis.guide',
+      },
+      body: JSON.stringify({
+        product: 'puglia-completa',
+        selectedSlugs: [...ALL_GUIDES.slice(0, 17), 'matera'],
+        lang: 'de',
+      }),
+    });
+
+    const response = await POST({
+      request,
+      cookies: { get: () => undefined },
+      url: new URL(request.url),
+    } as never);
+
+    expect(response.status).toBe(400);
+    expect(createSession).not.toHaveBeenCalled();
+  });
+
   it('keeps the JSON response mode for fetch-based callers', async () => {
     createSession.mockResolvedValue({ url: 'https://checkout.stripe.com/c/pay/json_mode' });
 
@@ -71,7 +100,7 @@ describe('POST /api/checkout', () => {
       },
       body: JSON.stringify({
         product: 'bari-completa',
-        selectedSlugs: ['bari-vecchia'],
+        selectedSlugs: [...BARI_GUIDES],
         lang: 'it',
       }),
     });

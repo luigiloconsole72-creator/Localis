@@ -3,7 +3,7 @@ import { getStripe } from '../../lib/stripe';
 import {
   getStripePrice,
   validateSelectedSlugs,
-  PRODUCT_PRICE_CENTS,
+  priceForProduct,
   ALL_GUIDES,
   BARI_GUIDES,
   VALLE_GUIDES,
@@ -92,6 +92,12 @@ function isConfiguredConnectAccount(accountId: string | null | undefined): accou
   return typeof accountId === 'string' && !accountId.includes('REPLACE_WITH_REAL_CONNECT_ID');
 }
 
+function sameSlugSet(a: readonly string[], b: readonly string[]): boolean {
+  if (a.length !== b.length) return false;
+  const bSet = new Set(b);
+  return a.every((slug) => bSet.has(slug));
+}
+
 function resolveFixedSlugs(product: ProductSlug): string[] | null {
   if (product === 'puglia-completa')  return [...ALL_GUIDES];
   if (product === 'bari-completa')    return [...BARI_GUIDES];
@@ -137,6 +143,16 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
   let guide_slugs: string[];
   const fixedSlugs = resolveFixedSlugs(product);
   if (fixedSlugs) {
+    // I prodotti a contenuto fisso hanno la loro lista, ma se il client ne ha
+    // mandata una diversa NON la si sostituisce in silenzio: si rifiuta. Prima
+    // chi selezionava 17 guide + Matera comprava "Puglia Completa" e riceveva
+    // le 18 standard — senza Matera e con dentro una guida che aveva tolto.
+    const requested = body.selectedSlugs ?? [];
+    if (requested.length > 0 && !sameSlugSet(requested, fixedSlugs)) {
+      return redirectMode
+        ? redirectError(url.origin, fallbackCheckoutErrorPath(lang, product, requested[0]))
+        : jsonError(400, `${product} does not match the selected guides`);
+    }
     guide_slugs = fixedSlugs;
   } else if (product === 'single') {
     const slug = body.guideSlug ?? body.selectedSlugs?.[0];
@@ -183,9 +199,9 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
     }
   }
 
-  const totalCents = product === 'custom'
-    ? PRODUCT_PRICE_CENTS.single * guide_slugs.length
-    : PRODUCT_PRICE_CENTS[product];
+  // priceForProduct applica il cap: una selezione libera non costa mai piu'
+  // del modo piu' economico di ottenere almeno quelle guide.
+  const totalCents = priceForProduct(product, guide_slugs.length);
 
   const lineItem: Record<string, unknown> = {};
   if (STORED_PRICE_PRODUCTS.has(product)) {
@@ -341,11 +357,14 @@ function cancelPathFor(lang: Lang, product: ProductSlug, firstGuideSlug: string)
     return '/guide#builder';
   }
 
-  if (lang === 'de') {
-    return product === 'crociera' ? '/de/kreuzfahrt?cancelled=1' : '/de?cancelled=1';
+  if (product === 'crociera') {
+    if (lang === 'de') return '/de/kreuzfahrt?cancelled=1';
+    return lang === 'en' ? '/en/cruise?cancelled=1' : '/crocieristi?cancelled=1';
   }
 
-  const prefix = lang === 'en' ? '/en' : '';
+  // Chi annulla torna sulla guida che stava comprando. Il tedesco finiva sulla
+  // home (/de), e la guida se la doveva ricercare: /de/guide/{slug} esiste.
+  const prefix = lang === 'it' ? '' : `/${lang}`;
   return `${prefix}/guide/${firstGuideSlug}?cancelled=1`;
 }
 

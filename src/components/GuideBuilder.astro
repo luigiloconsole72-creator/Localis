@@ -128,7 +128,10 @@ const ZONE_ORDER = [
           {lang === 'it' ? 'Seleziona almeno 3 guide' : lang === 'de' ? 'Wähle mindestens 3 Guides' : 'Select at least 3 guides'}
         </button>
       </div>
-      <p id="builder-upsell" class="builder-upsell" aria-hidden="true"></p>
+      <p id="builder-upsell" class="builder-upsell"></p>
+      <p class="builder-bonus">
+        <button type="button" id="builder-switch-btn" class="builder-switch-btn" hidden></button>
+      </p>
       <p class="builder-trust">
         ✓ {lang === 'it'
           ? 'Download immediato, ascolto offline · Soddisfatto o rimborsato'
@@ -343,6 +346,38 @@ const ZONE_ORDER = [
     min-height: 1.2em;
   }
 
+  /* La selezione costa gia' quanto un pacchetto che contiene piu' guide:
+     va detto a voce alta, non nascosto nel grigio dell'upsell. */
+  .builder-bonus {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--spacing-sm);
+    max-width: 1280px;
+    margin: var(--spacing-xs) auto 0;
+    padding: 0 var(--spacing-md);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-accent);
+  }
+
+  .builder-switch-btn {
+    padding: 4px var(--spacing-sm);
+    background: none;
+    border: 1px solid currentColor;
+    border-radius: 4px;
+    color: inherit;
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    min-height: 32px;
+  }
+
+  .builder-switch-btn:hover {
+    background: oklch(from var(--color-accent) l c h / 0.15);
+  }
+
   .builder-trust {
     max-width: 1280px;
     margin: var(--spacing-xs) auto 0;
@@ -369,6 +404,8 @@ const ZONE_ORDER = [
 
 <script>
   import { submitCheckoutRedirect } from '../lib/checkout-client';
+  import { formatPrice } from '../lib/format';
+  import { customPriceCents, FREE_CHOICE_TIERS } from '../lib/pricing';
 
   const SINGLE_CENTS = 499;
   const PACK_3_CENTS = 1199;
@@ -380,14 +417,17 @@ const ZONE_ORDER = [
     { product: 'puglia-completa', count: 18 },
   ] as const;
 
-  const fmt = (c: number, lang: string) =>
-    `€${(c / 100).toFixed(2).replace('.', lang === 'en' ? '.' : ',')}`;
+  // Stesso formattatore delle card: prima il builder scriveva "€19,99" e la
+  // PriceCard "€19.99" nella stessa pagina.
+  const fmt = (c: number, l: string) =>
+    formatPrice(c, l === 'en' || l === 'de' ? l : 'it');
 
   const cards = Array.from(document.querySelectorAll<HTMLButtonElement>('.builder-card'));
   const btn = document.getElementById('builder-checkout-btn') as HTMLButtonElement;
   const countBadge = document.getElementById('builder-count') as HTMLElement;
   const statusText = document.getElementById('builder-status-text') as HTMLElement;
   const upsell = document.getElementById('builder-upsell') as HTMLElement;
+  const switchBtn = document.getElementById('builder-switch-btn') as HTMLButtonElement;
   const lang = btn?.dataset.lang ?? 'it';
   const it = lang === 'it';
   const de = lang === 'de';
@@ -422,7 +462,18 @@ const ZONE_ORDER = [
     if (product === 'tris') return PACK_3_CENTS;
     if (product === 'sestina') return PACK_6_CENTS;
     if (product === 'puglia-completa') return PUGLIA_COMPLETA_CENTS;
-    return SINGLE_CENTS * count;
+    return customPriceCents(count);
+  };
+
+  // "Puglia Completa" ha un contenuto fisso: le 18 guide pugliesi. Una
+  // selezione di 18 che comprende Matera (Basilicata) NON e' quel prodotto:
+  // il server la sostituiva in silenzio e il compratore riceveva altro.
+  const hasMatera = () => [...selected].some((slug) => cardZoneBySlug.get(slug) === 'matera');
+  const packForCount = (n: number) => {
+    const tier = TIERS.find((candidate) => candidate.count === n);
+    if (!tier) return null;
+    if (tier.product === 'puglia-completa' && hasMatera()) return null;
+    return tier.product;
   };
 
   const getZoneState = () => {
@@ -452,13 +503,51 @@ const ZONE_ORDER = [
     });
   });
 
+  /**
+   * Col cap sui prezzi, da 9 guide in su si paga gia' il prezzo di tutte e 18.
+   * La riga di upsell lo dice ("Aggiungi N guide · Totale €39,99"); qui si
+   * aggiunge l'unica cosa che le manca, cioe' farlo in un click. Solo per le
+   * 18 pugliesi: e' l'unico pacchetto col contenuto gia' determinato.
+   */
+  function renderSwitch(n: number, customTotal: number) {
+    const isPack = n === 1 || packForCount(n) !== null;
+    const better = isPack
+      ? undefined
+      : FREE_CHOICE_TIERS.find((tier) => tier.count > n && tier.priceCents <= customTotal);
+
+    if (better?.product !== 'puglia-completa') {
+      switchBtn.hidden = true;
+      return;
+    }
+
+    switchBtn.textContent = it
+      ? `Prendi tutte le 18 · ${fmt(better.priceCents, lang)}`
+      : de
+        ? `Alle 18 nehmen · ${fmt(better.priceCents, lang)}`
+        : `Take all 18 · ${fmt(better.priceCents, lang)}`;
+    switchBtn.hidden = false;
+  }
+
+  // Passa alle 18 guide pugliesi: le zone sono gia' sulle card, cosi' la lista
+  // non va riscritta qui (e Matera, che e' in Basilicata, resta fuori).
+  switchBtn.addEventListener('click', () => {
+    selected.clear();
+    cards.forEach((card) => {
+      const isPuglia = card.dataset.zone !== 'matera';
+      card.setAttribute('aria-pressed', isPuglia ? 'true' : 'false');
+      if (isPuglia && card.dataset.slug) selected.add(card.dataset.slug);
+    });
+    updateUI();
+  });
+
   function updateUI() {
     const n = selected.size;
     const zoneState = getZoneState();
     const nextTier = TIERS.find((tier) => tier.count > n) ?? null;
-    const customTotal = n * SINGLE_CENTS;
+    const customTotal = customPriceCents(n);
 
     countBadge.textContent = String(n);
+    renderSwitch(n, customTotal);
 
     if (n === 0) {
       statusText.textContent = it ? 'Nessuna guida selezionata' : de ? 'Noch keine Guides ausgewählt' : 'No guides selected';
@@ -575,7 +664,7 @@ const ZONE_ORDER = [
       return;
     }
 
-    if (n === 18) {
+    if (packForCount(n) === 'puglia-completa') {
       statusText.textContent = it
         ? `${selectedMessage(n)} · Puglia Completa`
         : de
@@ -588,10 +677,10 @@ const ZONE_ORDER = [
           ? `Ganz Apulien kaufen · ${fmt(PUGLIA_COMPLETA_CENTS, lang)}`
           : `Buy All of Puglia · ${fmt(PUGLIA_COMPLETA_CENTS, lang)}`;
       upsell.textContent = it
-        ? 'Hai selezionato tutte le guide disponibili.'
+        ? 'Hai selezionato tutte le 18 guide della Puglia.'
         : de
-          ? 'Du hast alle verfügbaren Guides ausgewählt.'
-          : 'You selected every available guide.';
+          ? 'Du hast alle 18 Guides aus Apulien ausgewählt.'
+          : 'You selected all 18 Puglia guides.';
       return;
     }
 
@@ -645,8 +734,7 @@ const ZONE_ORDER = [
     if (n === 0 || btn.disabled) return;
 
     const slugsArray = [...selected];
-      const tier = TIERS.find((candidate) => candidate.count === n);
-      const product = n === 1 ? 'single' : tier?.product ?? 'custom';
+      const product = n === 1 ? 'single' : packForCount(n) ?? 'custom';
 
     btn.disabled = true;
     const originalText = btn.textContent;

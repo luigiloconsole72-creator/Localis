@@ -1,15 +1,21 @@
 import prices from '../data/stripe-prices.json';
 
-export type ProductSlug =
-  | 'single'
-  | 'custom'
-  | 'tris'
-  | 'sestina'
-  | 'puglia-completa'
-  | 'bari-completa'
-  | 'valle-completa'
-  | 'gargano-completa'
-  | 'crociera';
+// Listino e aritmetica stanno in ./pricing (niente process.env, niente JSON
+// dei price ID) cosi' anche il builder lato client puo' importarli. Qui si
+// ri-esportano: nessun import esistente cambia.
+export type { ProductSlug, Tier } from './pricing';
+export {
+  PRODUCT_PRICE_CENTS,
+  FREE_CHOICE_TIERS,
+  customPriceCents,
+  priceForProduct,
+} from './pricing';
+
+import {
+  FREE_CHOICE_TIERS as TIERS,
+  type ProductSlug,
+  type Tier,
+} from './pricing';
 
 const priceMap = prices as Record<string, string>;
 
@@ -69,37 +75,14 @@ export const CROCIERA_GUIDES: readonly string[] = [
   'bari-tavola',
 ] as const;
 
-// ── Pricing constants (in euro cents) ────────────────────────────────────────
-
-export const PRODUCT_PRICE_CENTS: Record<ProductSlug, number> = {
-  single:              499,
-  custom:              499,
-  tris:               1199,
-  sestina:            1999,
-  'puglia-completa':  3999,
-  'bari-completa':    1999,
-  'valle-completa':   1999,
-  'gargano-completa': 1999,
-  crociera:            799,
-};
-
-// ── Tier definitions ──────────────────────────────────────────────────────────
-
-export type Tier = { product: ProductSlug; count: number; priceCents: number };
 export type GuideZone = 'bari' | 'valle' | 'gargano';
 export type PricingLanguage = 'it' | 'en' | 'de';
-
-export const FREE_CHOICE_TIERS: readonly Tier[] = [
-  { product: 'tris',            count: 3,  priceCents: 1199 },
-  { product: 'sestina',         count: 6,  priceCents: 1999 },
-  { product: 'puglia-completa', count: 18, priceCents: 3999 },
-] as const;
 
 /**
  * Given a selection count, return the matching free-choice tier or null.
  */
 export function getTierForCount(count: number): Tier | null {
-  return FREE_CHOICE_TIERS.find((t) => t.count === count) ?? null;
+  return TIERS.find((t) => t.count === count) ?? null;
 }
 
 export function getCheckoutProductForSelection(selectedSlugs: string[]): ProductSlug {
@@ -111,7 +94,7 @@ export function getCheckoutProductForSelection(selectedSlugs: string[]): Product
  * Next tier above the current selection count (for upsell messaging).
  */
 export function getNextTier(count: number): Tier | null {
-  return FREE_CHOICE_TIERS.find((t) => t.count > count) ?? null;
+  return TIERS.find((t) => t.count > count) ?? null;
 }
 
 export function getZoneForSlug(slug: string): GuideZone | null {
