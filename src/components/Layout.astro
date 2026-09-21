@@ -6,6 +6,7 @@ import Footer from './Footer.astro';
 import StickyPlayer from './StickyPlayer.astro';
 import StructuredData from './StructuredData.astro';
 import Analytics from './Analytics.astro';
+import CheckoutNotice from './CheckoutNotice.astro';
 import CookieBanner from './CookieBanner.astro';
 import { type Lang, allLangUrls } from '../lib/i18n';
 import { organizationLD } from '../lib/seo';
@@ -134,6 +135,7 @@ const partnerSlugFromPath = currentPath.match(/^\/(?:(?:en|de)\/)?p\/([a-z0-9][a
   {!embedded && <Header lang={lang} currentPath={currentPath} langUrlsOverride={langUrlsOverride} />}
 
   <main id="main" class="flex-1">
+    {!embedded && <CheckoutNotice lang={lang} />}
     <slot />
   </main>
 
