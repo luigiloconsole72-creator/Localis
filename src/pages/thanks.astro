@@ -5,7 +5,7 @@ import AudioPlayer from '../components/AudioPlayer.astro';
 import { buildThanksPageModel } from '../lib/thanks-page';
 import { generateAccessToken } from '../lib/jwt';
 import { canonicalGuideSlugs } from '../lib/legacy-slugs';
-import type { Lang } from '../lib/i18n';
+import { localizedHref, type Lang } from '../lib/i18n';
 import { getStripe } from '../lib/stripe';
 
 function normalizeLang(value: string | null | undefined): Lang {
@@ -24,8 +24,8 @@ const UI_COPY = {
     unconfirmedHeading: 'Stiamo preparando il tuo accesso.',
     unconfirmedMessage: (buyerEmail: string | null) =>
       buyerEmail
-        ? `Stiamo verificando l'acquisto associato a ${buyerEmail}. Se il pagamento verra confermato, useremo questa email per inviarti il link di accesso.`
-        : 'Mostriamo le guide acquistate solo dopo la conferma del pagamento. Se hai gia completato l acquisto, controlla la tua email o usa il recupero accesso.',
+        ? `Stiamo verificando l'acquisto associato a ${buyerEmail}. Se il pagamento verrà confermato, useremo questa email per inviarti il link di accesso.`
+        : 'Mostriamo le guide acquistate solo dopo la conferma del pagamento. Se hai già completato l’acquisto, controlla la tua email o usa il recupero accesso.',
     confirmedEmptyHeading: 'Stiamo finalizzando le tue guide.',
   },
   en: {
@@ -53,7 +53,7 @@ const UI_COPY = {
     unconfirmedMessage: (buyerEmail: string | null) =>
       buyerEmail
         ? `Wir prüfen gerade den Kauf für ${buyerEmail}. Wenn die Zahlung bestätigt wird, senden wir den Zugangslink an diese E-Mail-Adresse.`
-        : 'Wir zeigen gekaufte Guides erst nach bestaetigter Zahlung. Wenn du den Checkout schon abgeschlossen hast, pruefe bitte deine E-Mail oder stelle den Zugang wieder her.',
+        : 'Wir zeigen gekaufte Guides erst nach bestätigter Zahlung. Wenn du den Checkout schon abgeschlossen hast, prüfe bitte deine E-Mail oder stelle den Zugang wieder her.',
     confirmedEmptyHeading: 'Wir finalisieren deine Guides.',
   },
 } satisfies Record<
@@ -159,6 +159,8 @@ if (sessionId) {
 }
 
 const ui = UI_COPY[lang];
+const recoverHref = localizedHref('/recover', lang);
+const homeHref = localizedHref('/', lang);
 const success = model.state === 'ready';
 const fallbackHeading = hasConfirmedPayment ? ui.confirmedEmptyHeading : ui.unconfirmedHeading;
 const fallbackMessage = hasConfirmedPayment ? model.primaryMessage : ui.unconfirmedMessage(fallbackBuyerEmail);
@@ -210,13 +212,13 @@ const pageTitle = success ? model.pageTitle : fallbackHeading;
       <section class="max-w-prose rounded-xl border border-border bg-surface-elev p-lg">
         <div class="flex flex-wrap items-center gap-md">
           <a
-            href="/recover"
+            href={recoverHref}
             class="inline-flex items-center gap-xs rounded-md bg-ink px-md py-sm text-sm font-semibold text-surface transition-colors duration-fast no-underline hover:bg-ink/90"
           >
             {ui.recoverCta}
           </a>
           <a
-            href="/"
+            href={homeHref}
             class="inline-flex items-center gap-xs rounded-md border border-border px-md py-sm text-sm font-semibold text-ink transition-colors duration-fast no-underline hover:border-ink"
           >
             {ui.homeCta}
@@ -229,7 +231,7 @@ const pageTitle = success ? model.pageTitle : fallbackHeading;
       {success ? (
         <p>
           {ui.backupMessage}{' '}
-          <a href="/recover" class="text-link hover:text-link-pressed">
+          <a href={recoverHref} class="text-link hover:text-link-pressed">
             {ui.recoverCta}
           </a>
           .

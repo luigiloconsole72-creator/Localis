@@ -40,7 +40,7 @@ const COPY = {
       primaryMessage: 'Puoi iniziare ad ascoltare subito da qui.',
       emailMessage: (buyerEmail: string | null) =>
         buyerEmail
-          ? `Ti abbiamo inviato anche il link di accesso a ${buyerEmail}, cosi puoi ritrovare tutto piu tardi.`
+          ? `Ti abbiamo inviato anche il link di accesso a ${buyerEmail}, così puoi ritrovare tutto più tardi.`
           : 'Ti inviamo subito il link di accesso via email. Controlla anche la cartella spam.',
     },
     empty: {
@@ -73,12 +73,12 @@ const COPY = {
       emailMessage: (buyerEmail: string | null) =>
         buyerEmail
           ? `Wir haben dir den Zugangslink auch an ${buyerEmail} geschickt, damit du später alles wiederfindest.`
-          : 'Wir senden dir den Zugangslink gleich per E-Mail. Bitte pruefe auch den Spam-Ordner.',
+          : 'Wir senden dir den Zugangslink gleich per E-Mail. Bitte prüfe auch den Spam-Ordner.',
     },
     empty: {
       pageTitle: 'Danke.',
       primaryMessage: 'Wir haben deine Zahlung erhalten, aber konnten gerade keine Guides laden.',
-      emailMessage: 'Wir senden dir den Zugangslink gleich per E-Mail. Bitte pruefe auch den Spam-Ordner.',
+      emailMessage: 'Wir senden dir den Zugangslink gleich per E-Mail. Bitte prüfe auch den Spam-Ordner.',
     },
     cardCta: 'Jetzt anhören',
   },

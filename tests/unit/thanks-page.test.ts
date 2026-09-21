@@ -116,7 +116,7 @@ describe('buildThanksPageModel', () => {
       state: 'fallback',
       pageTitle: 'Danke.',
       primaryMessage: 'Wir haben deine Zahlung erhalten, aber konnten gerade keine Guides laden.',
-      emailMessage: 'Wir senden dir den Zugangslink gleich per E-Mail. Bitte pruefe auch den Spam-Ordner.',
+      emailMessage: 'Wir senden dir den Zugangslink gleich per E-Mail. Bitte prüfe auch den Spam-Ordner.',
       cardCta: 'Jetzt anhören',
       cards: [],
     });
