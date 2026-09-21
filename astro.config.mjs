@@ -36,6 +36,11 @@ export default defineConfig({
   // La guida il-meglio-di-bari è stata sostituita da bari-tavola (2026-06-11);
   // i vecchi URL restano nell'indice Google e nei link condivisi.
   redirects: {
+    // Landing per lo scalo della Viking Vesta, rimossa il 2026-09-22 insieme al
+    // coupon VESTA che la giustificava. Chi ha in mano la card stampata non
+    // deve trovare un 404: /en/cruise vende lo stesso Pacchetto Crociera.
+    '/en/vesta': '/en/cruise',
+
     '/guide/il-meglio-di-bari': '/guide/bari-tavola',
     '/en/guide/il-meglio-di-bari': '/en/guide/bari-tavola',
     '/de/guide/il-meglio-di-bari': '/de/guide/bari-tavola',
