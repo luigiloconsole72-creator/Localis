@@ -5,7 +5,7 @@ import HeroAudioSample from '../../components/HeroAudioSample.astro';
 ---
 <Layout
   title="Welcome, Viking Vesta Guests — Bari Audio Guide | Localis"
-  description="A special welcome for Viking Vesta passengers in Bari. Two audio stories of the old town — no app, no account. Use code VESTA for 25% off."
+  description="A special welcome for Viking Vesta passengers in Bari. Two audio stories of the old town — no app, no account."
   lang="en"
   ogImage="/images/covers/porto-bari-vesta.png"
   langUrlsOverride={{ en: '/en/vesta/' }}
@@ -36,18 +36,6 @@ import HeroAudioSample from '../../components/HeroAudioSample.astro';
         Two audio stories of Bari — the old town and its food culture — in a compact walk from the pier. No app. No account. Just scan and listen.
       </p>
 
-      {/* ── DISCOUNT BADGE ── */}
-      <div class="mt-lg inline-flex flex-col sm:flex-row items-start sm:items-center gap-sm bg-surface/90 border border-accent rounded-lg px-md py-sm backdrop-blur-sm">
-        <div>
-          <p class="font-body text-xs text-ink-subtle uppercase tracking-widest mb-[2px]">Exclusive offer for Vesta guests</p>
-          <p class="font-body text-sm text-ink">
-            Use code <strong class="font-semibold text-accent tracking-wider">VESTA</strong> at checkout for <strong>25% off</strong>
-            <span class="text-ink-subtle ml-xs line-through">€7.99</span>
-            <span class="text-ink font-semibold ml-xs">→ €5.99</span>
-          </p>
-        </div>
-      </div>
-
       <HeroAudioSample lang="en" src="/audio/trailers/bari/bari-vecchia-trailer-en.mp3" guideSlug="bari-vecchia" />
 
       <div class="flex flex-col sm:flex-row gap-sm mt-lg">
@@ -57,7 +45,7 @@ import HeroAudioSample from '../../components/HeroAudioSample.astro';
           data-product="crociera"
           data-lang="en"
         >
-          Get the Bari Cruise Pack — €5.99
+          Get the Bari Cruise Pack — €7.99
         </button>
       </div>
     </div>
@@ -158,7 +146,7 @@ import HeroAudioSample from '../../components/HeroAudioSample.astro';
           <span class="font-display font-light text-accent text-4xl leading-none">01</span>
           <h3 class="font-display font-light text-ink text-lg leading-snug">Buy</h3>
           <p class="font-body text-sm text-ink-muted leading-relaxed">
-            Use code <strong class="text-accent">VESTA</strong> at checkout. Credit card, no registration required.
+            Pay by card at checkout. No registration required.
           </p>
         </div>
         <div class="flex flex-col gap-sm">
@@ -180,11 +168,9 @@ import HeroAudioSample from '../../components/HeroAudioSample.astro';
       {/* ── REPEAT OFFER + CTA ── */}
       <div class="bg-surface rounded-lg border border-accent/40 p-lg flex flex-col sm:flex-row items-center justify-between gap-md">
         <div>
-          <p class="font-body text-sm text-ink-subtle mb-xs">Vesta exclusive — 25% off</p>
+          <p class="font-body text-sm text-ink-subtle mb-xs">Bari Cruise Pack</p>
           <p class="font-body text-ink">
-            Code <strong class="text-accent tracking-wider">VESTA</strong> ·
-            <span class="line-through text-ink-subtle">€7.99</span>
-            <strong class="ml-xs">€5.99</strong>
+            Two audio stories of Bari · <strong>€7.99</strong>
           </p>
         </div>
         <button
@@ -209,10 +195,10 @@ import HeroAudioSample from '../../components/HeroAudioSample.astro';
         data-product="crociera"
         data-lang="en"
       >
-        Get the Bari Cruise Pack — €5.99
+        Get the Bari Cruise Pack — €7.99
       </button>
       <p class="font-body text-xs text-ink-subtle leading-relaxed">
-        Use code <strong>VESTA</strong> at checkout · No app · Offline · Yours forever · Money-back, no questions asked
+        No app · Offline · Yours forever · Money-back, no questions asked
       </p>
     </div>
   </section>
@@ -229,7 +215,7 @@ import HeroAudioSample from '../../components/HeroAudioSample.astro';
       data-product="crociera"
       data-lang="en"
     >
-      Bari Cruise Pack — €5.99 (code VESTA)
+      Bari Cruise Pack — €7.99
     </button>
   </div>
 
@@ -250,7 +236,7 @@ import HeroAudioSample from '../../components/HeroAudioSample.astro';
             guide_count: 2,
             guide_slugs: 'bari-vecchia,bari-tavola',
             lang: 'en',
-            value: 5.99,
+            value: 7.99,
             currency: 'EUR',
             cta_source: 'vesta',
           });
