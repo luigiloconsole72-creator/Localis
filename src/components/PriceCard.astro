@@ -1,5 +1,6 @@
 ---
 import { formatPrice } from '../lib/format';
+import { PRODUCT_PRICE_CENTS } from '../lib/stripe-prices';
 import { type Lang } from '../lib/i18n';
 
 export interface Props {
@@ -29,14 +30,11 @@ const isCompleteArea =
   product === 'valle-completa' ||
   product === 'gargano-completa';
 
-const priceCents =
-  isCompleteArea ? 1999
-  : product === 'sestina' ? 1999
-  : product === 'tris' ? 1199
-  : product === 'crociera' ? 799
-  : 499;
+// Il listino sta in un posto solo: quello che il server usa per addebitare.
+// Duplicarlo qui voleva dire poter mostrare un prezzo e incassarne un altro.
+const priceCents = PRODUCT_PRICE_CENTS[product];
 
-const priceLabel = formatPrice(priceCents);
+const priceLabel = formatPrice(priceCents, lang);
 
 const title = titleOverride ?? (
   product === 'tris'

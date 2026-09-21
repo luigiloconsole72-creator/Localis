@@ -19,7 +19,7 @@ const href = isSoon ? '#' : localizedHref(`/guide/${data.slug}`, lang);
 
 const chapterCount = data.chapters.length;
 const durationLabel = formatDuration(guideDurationSeconds(data, lang));
-const priceLabel = formatPrice(data.price_cents);
+const priceLabel = formatPrice(data.price_cents, lang);
 const indexLabel = String(index + 1).padStart(2, '0');
 ---
 <a
