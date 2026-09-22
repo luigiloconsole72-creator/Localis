@@ -186,7 +186,7 @@ import StartMap from '../../components/StartMap.astro';
         <span class="text-ink font-semibold">Zurück zum Kai</span>
       </div>
       <p class="font-body text-sm text-ink-subtle text-center mt-md">
-        Sie können am Kai beginnen und dann hören, wann es für Sie passt. Die Aufnahmen erklären den Ort, nicht jede einzelne Abbiegung.
+        Du kannst am Kai beginnen und dann hören, wann es für dich passt. Die Aufnahmen erklären den Ort, nicht jede einzelne Abbiegung.
       </p>
     </div>
   </section>
@@ -195,7 +195,7 @@ import StartMap from '../../components/StartMap.astro';
   <section class="bg-surface py-xl lg:py-3xl border-b border-border">
     <div class="max-w-wrap mx-auto px-md">
       <h2 class="font-display font-light text-ink text-[clamp(1.5rem,3vw,2.2rem)] leading-tight tracking-[-0.01em] text-center mb-xl">
-        In zwei Minuten sind Sie dabei.
+        In zwei Minuten bist du dabei.
       </h2>
       <div class="grid sm:grid-cols-3 gap-lg mb-xl">
         <div class="flex flex-col gap-sm">
@@ -216,7 +216,7 @@ import StartMap from '../../components/StartMap.astro';
           <span class="font-display font-light text-accent text-4xl leading-none">03</span>
           <h3 class="font-display font-light text-ink text-lg leading-snug">Hören, wann es passt</h3>
           <p class="font-body text-sm text-ink-muted leading-relaxed">
-            Beim Gehen, auf einer Bank oder später auf dem Schiff. Localis erklärt den Ort, ohne Sie Schritt für Schritt zu führen.
+            Beim Gehen, auf einer Bank oder später auf dem Schiff. Localis erklärt den Ort, ohne dich Schritt für Schritt zu führen.
           </p>
         </div>
       </div>
@@ -246,9 +246,9 @@ import StartMap from '../../components/StartMap.astro';
       <ul class="flex flex-col gap-md">
         {[
           'Die beiden Audioerzählungen sind bewusst kurz — zusammen 49 Minuten',
-          'Rechnen Sie mit anderthalb bis zwei Stunden für gemütliches Gehen und Pausen',
-          'Planen Sie 30 Minuten Puffer für den Rückweg zum Kai ein',
-          'Planen Sie immer ausreichend Zeit für den Rückweg zum Schiff ein und prüfen Sie die von Ihrer Reederei angegebene späteste Rückkehrzeit.',
+          'Rechne mit anderthalb bis zwei Stunden für gemütliches Gehen und Pausen',
+          'Plane 30 Minuten Puffer für den Rückweg zum Kai ein',
+          'Plane immer ausreichend Zeit für den Rückweg zum Schiff ein und prüfe die von deiner Reederei angegebene späteste Rückkehrzeit.',
         ].map((item) => (
           <li class="flex items-start gap-md">
             <svg class="w-5 h-5 text-accent flex-shrink-0 mt-[2px]" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -279,11 +279,11 @@ import StartMap from '../../components/StartMap.astro';
           },
           {
             q: 'Was ist, wenn ich das Schiff verpasse?',
-            a: 'Diese Route ist für einen kurzen und kompakten Besuch gedacht. Prüfen Sie immer die von Ihrer Reederei angegebene späteste Rückkehrzeit und planen Sie ausreichend Zeit für den Weg zurück zum Schiff ein.',
+            a: 'Diese Route ist für einen kurzen und kompakten Besuch gedacht. Prüfe immer die von deiner Reederei angegebene späteste Rückkehrzeit und plane ausreichend Zeit für den Weg zurück zum Schiff ein.',
           },
           {
             q: 'Kann ich ihn auch zu Hause nochmal hören?',
-            a: 'Ja, der Guide gehört Ihnen dauerhaft. Viele hören ihn nach der Reise noch einmal.',
+            a: 'Ja, der Guide gehört dir dauerhaft. Viele hören ihn nach der Reise noch einmal.',
           },
           {
             q: 'Sind die Stimmen echt oder KI?',
@@ -303,7 +303,7 @@ import StartMap from '../../components/StartMap.astro';
   <section class="bg-surface-elev py-xl lg:py-3xl">
     <div class="max-w-narrow mx-auto px-md text-center">
       <blockquote class="font-display font-light text-ink text-[clamp(1.2rem,2.5vw,1.7rem)] leading-relaxed tracking-[-0.01em] italic mb-xl">
-        "Wir verkaufen Ihnen keine Führung. Wir geben Ihnen Worte und Geschichten für einen Ort, den Sie auf eigene Weise erleben."
+        "Wir verkaufen dir keine Führung. Wir geben dir Worte und Geschichten für einen Ort, den du auf deine Weise erlebst."
       </blockquote>
       <button
         class="checkout-btn-crociera inline-flex items-center justify-center gap-xs px-lg py-md bg-accent text-white rounded-md font-semibold text-sm hover:bg-accent/90 transition-[background-color,transform] duration-fast hover:-translate-y-[1px] active:translate-y-0 min-h-[48px] mb-md"
@@ -414,7 +414,7 @@ import StartMap from '../../components/StartMap.astro';
       } catch {
         btn.disabled = false;
         btn.textContent = orig;
-        alert('Checkout-Fehler. Bitte versuchen Sie es in einem Moment erneut.');
+        alert('Checkout-Fehler. Bitte versuch es in einem Moment erneut.');
       }
     });
   });
