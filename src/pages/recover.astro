@@ -3,7 +3,7 @@ export const prerender = true;
 import Layout from '../components/Layout.astro';
 ---
 <Layout title="Recupera l'accesso · Localis" lang="it" robots="noindex,nofollow" langUrlsOverride={{ it: '/recover/', en: '/en/recover/', de: '/de/recover/' }}>
-  <main class="max-w-narrow mx-auto px-md py-3xl">
+  <div class="max-w-narrow mx-auto px-md py-3xl">
     <h1 class="font-display text-4xl text-ink mb-md">Recupera la tua guida</h1>
     <p class="text-base text-ink-muted mb-xl max-w-prose">
       Hai perso la mail, o il link ha smesso di funzionare? Scrivi la stessa email che hai usato all&rsquo;acquisto. Il link nuovo arriva in una trentina di secondi.</p>
@@ -29,7 +29,7 @@ import Layout from '../components/Layout.astro';
     <div id="recover-result" class="mt-lg max-w-[28rem] hidden">
       <p class="text-base text-success">Email inviata. Controlla la tua casella (anche spam).</p>
     </div>
-  </main>
+  </div>
 </Layout>
 
 <script>

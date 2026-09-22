@@ -3,7 +3,7 @@ export const prerender = true;
 import Layout from '../../components/Layout.astro';
 ---
 <Layout title="Zugang wiederherstellen · Localis" lang="de" robots="noindex,nofollow" langUrlsOverride={{ it: '/recover/', en: '/en/recover/', de: '/de/recover/' }}>
-  <main class="max-w-narrow mx-auto px-md py-3xl">
+  <div class="max-w-narrow mx-auto px-md py-3xl">
     <h1 class="font-display text-4xl text-ink mb-md">Deine Erzählung zurückholen</h1>
     <p class="text-base text-ink-muted mb-xl max-w-prose">
       E-Mail verlegt, oder der Link geht nicht mehr? Gib dieselbe Adresse ein, mit der du bezahlt hast. Der neue Link ist in etwa 30 Sekunden da.
@@ -30,7 +30,7 @@ import Layout from '../../components/Layout.astro';
     <div id="recover-result" class="mt-lg max-w-[28rem] hidden">
       <p class="text-base text-success">E-Mail unterwegs. Schau im Posteingang nach — und im Spam-Ordner.</p>
     </div>
-  </main>
+  </div>
 </Layout>
 
 <script>

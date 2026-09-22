@@ -168,7 +168,7 @@ const footerMessage = success || hasConfirmedPayment ? model.emailMessage : ui.b
 const pageTitle = success ? model.pageTitle : fallbackHeading;
 ---
 <Layout title={`${pageTitle} · Localis`} lang={lang} robots="noindex,nofollow">
-  <main class="max-w-wrap mx-auto px-md py-3xl">
+  <div class="max-w-wrap mx-auto px-md py-3xl">
     <header class="max-w-prose mb-2xl">
       <p class="font-display italic text-2xl text-accent mb-md">{ui.eyebrow}</p>
       <h1 class="font-display text-4xl text-ink mb-md">{pageTitle}</h1>
@@ -240,7 +240,7 @@ const pageTitle = success ? model.pageTitle : fallbackHeading;
         <p>{footerMessage}</p>
       )}
     </footer>
-  </main>
+  </div>
 
   <script is:inline define:vars={{ sessionId, success, purchaseParams }}>
     if (success) {

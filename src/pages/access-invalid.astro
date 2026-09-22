@@ -3,7 +3,7 @@ export const prerender = true;
 import Layout from '../components/Layout.astro';
 ---
 <Layout title="Link non valido · Localis" lang="it" robots="noindex,nofollow" langUrlsOverride={{ it: '/access-invalid/', en: '/en/access-invalid/', de: '/de/access-invalid/' }}>
-  <main class="max-w-narrow mx-auto px-md py-3xl text-center">
+  <div class="max-w-narrow mx-auto px-md py-3xl text-center">
     <h1 class="font-display text-4xl text-ink mb-lg">Questo link non funziona più</h1>
     <p class="text-base text-ink-muted mb-xl max-w-prose mx-auto">
       Può essere scaduto, oppure aver smesso di funzionare dopo un aggiornamento dei nostri sistemi. Quello che hai comprato è al sicuro: scrivi l'email che hai usato all'acquisto e te ne mandiamo subito uno nuovo.
@@ -11,5 +11,5 @@ import Layout from '../components/Layout.astro';
     <a href="/recover" class="inline-flex px-md py-sm bg-ink text-surface rounded-md font-semibold text-sm hover:bg-ink/90 transition-colors duration-fast no-underline">
       Rimandami il link
     </a>
-  </main>
+  </div>
 </Layout>
