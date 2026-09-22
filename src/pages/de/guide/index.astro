@@ -188,7 +188,7 @@ const guideListLD = itemListLD(
 
       <ol class="list-none p-0 m-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[var(--spacing-lg)] [row-gap:var(--spacing-2xl)] items-start">
         {[
-          { slug: 'matera', title: 'Matera — Die Sassi', subtitle: 'Rosa, 78 Jahre alt, geboren im Sasso Caveoso.', duration: '26 min', area: 'Basilicata', cover: '/images/covers/matera-hero-jun26.webp', alt: 'Matera, die Sassi von oben', price: '€4,99' },
+          { slug: 'matera', title: 'Matera — Die Sassi', subtitle: 'Rosa, 78 Jahre alt, geboren im Sasso Caveoso.', duration: '26 min', area: 'Basilicata', cover: '/images/covers/matera-hero-jun26.webp', alt: 'Matera, die Sassi von oben', price: '4,99 €' },
         ].map((g, i) => (
           <li class="guide-cell" style={`--idx:${i}`}>
             <a href={localizedHref(`/guide/${g.slug}`, 'de')} class="guide-card" aria-label={`${g.title} · ${g.duration}`}>
