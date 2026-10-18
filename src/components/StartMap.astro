@@ -86,7 +86,7 @@ const iframeTitle = lang === 'it' ? 'Mappa punto di partenza' : lang === 'de' ? 
     letter-spacing: 0.01em;
     text-decoration: none;
     border: 1px solid var(--color-ink);
-    border-radius: var(--radius-sm, 4px);
+    border-radius: 9999px;
     color: var(--color-ink);
     background: var(--color-surface);
     transition: background 180ms, color 180ms, transform 180ms;
@@ -95,7 +95,8 @@ const iframeTitle = lang === 'it' ? 'Mappa punto di partenza' : lang === 'de' ? 
     transform: translateY(-1px);
   }
   .start-map-btn-primary {
-    background: var(--color-ink);
+    border-color: var(--color-olive);
+    background: var(--color-olive);
     color: var(--color-surface);
   }
   .start-map-btn-primary:hover {

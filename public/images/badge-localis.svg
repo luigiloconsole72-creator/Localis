@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="260" height="72" viewBox="0 0 260 72" role="img" aria-labelledby="t">
+  <title id="t">La nostra storia su Localis</title>
+  <rect x="0.5" y="0.5" width="259" height="71" rx="12" fill="#FBFAF6" stroke="#DAD1BE"/>
+  <!-- play -->
+  <circle cx="34" cy="36" r="17" fill="#7C6231"/>
+  <polygon points="29,27 43,36 29,45" fill="#FBFAF6"/>
+  <!-- testi: Fraunces per il nome, Hanken Grotesk per la riga sopra; fallback serif/sans -->
+  <text x="62" y="30" font-family="'Hanken Grotesk', system-ui, sans-serif" font-size="11" letter-spacing="2.2" fill="#665D4C">LA NOSTRA STORIA SU</text>
+  <text x="62" y="54" font-family="Fraunces, Georgia, serif" font-size="24" font-weight="300" fill="#1C1813">Loc<tspan fill="#7C6231">alis</tspan></text>
+</svg>
