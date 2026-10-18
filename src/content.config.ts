@@ -238,6 +238,17 @@ const masserie = defineCollection({
     title_it: z.string(),             // titolo del racconto
     audio_it: z.string(),             // es. /audio/masserie/parco-della-grava-it.mp3
     duration_seconds: z.number().int().positive(),   // da ffprobe, mai stimato
+    // Altre lingue: arrivano dopo il sì della masseria (D2, 18/10/2026). Mai promettere
+    // una lingua senza il suo file audio: il selettore compare solo se il campo c'è.
+    audio_en: z.string().optional(),
+    duration_en_seconds: z.number().int().positive().optional(),
+    audio_de: z.string().optional(),
+    duration_de_seconds: z.number().int().positive().optional(),
+    // «breve» = 3 minuti in seconda persona (voce Corrado); «lungo» = i racconti da
+    // 10-15 minuti scritti per le strutture (terza persona). La scheda dichiara durata e voce.
+    format: z.enum(['breve', 'lungo']).default('breve'),
+    voice: z.string().default('Corrado'),            // nome della voce sintetica dichiarata
+    website_url: z.url().optional(),  // si riempie al sì allo scambio di link
     zone_label: z.string(),           // es. "Valle d'Itria"
     zone_href: z.string(),            // es. "/valle-d-itria/"
     description: z.string().max(160),

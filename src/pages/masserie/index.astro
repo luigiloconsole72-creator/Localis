@@ -3,34 +3,75 @@ export const prerender = true;
 import { getCollection } from 'astro:content';
 import Layout from '../../components/Layout.astro';
 import Eyebrow from '../../components/Eyebrow.astro';
+import HeroAudioSample from '../../components/HeroAudioSample.astro';
 
 const masserie = (await getCollection('masserie', (m) => m.data.status === 'published'))
   .sort((a, b) => a.data.name.localeCompare(b.data.name, 'it'));
+
+// Raggruppate per zona, nell'ordine in cui compaiono; la zona rimanda alla sua pagina.
+const zone = new Map<string, { href: string; items: typeof masserie }>();
+for (const m of masserie) {
+  const z = zone.get(m.data.zone_label) ?? { href: m.data.zone_href, items: [] };
+  z.items.push(m);
+  zone.set(m.data.zone_label, z);
+}
+
+const minuti = (s: number) => Math.max(1, Math.round(s / 60));
 ---
 <Layout
-  title="Masserie di Puglia · Localis"
-  description="Brevi racconti delle masserie di Puglia: perché sono fatte così e cosa notare quando ci sei. Tre minuti l'uno, gratis."
+  title="Masserie di Puglia, raccontate · Localis"
+  description="Le masserie di Puglia raccontate una per una: perché sono fatte così, chi ci ha vissuto, cosa notare quando ci sei. Da tre a quindici minuti, con le fonti. Si ascoltano gratis."
   lang="it"
   langUrlsOverride={{ it: '/masserie/' }}
 >
   <article class="max-w-narrow mx-auto px-md py-2xl">
     <Eyebrow class="mb-md">Masserie di Puglia</Eyebrow>
-    <h1 class="font-display text-4xl text-ink mb-lg">Le masserie, raccontate.</h1>
-    <p class="text-lg text-ink-muted leading-relaxed mb-xl">
-      Tre minuti per masseria: perché è fatta così, chi ci ha vissuto, cosa notare quando ci sei.
-      Si ascoltano gratis.
+    <h1 class="font-display text-4xl text-ink mb-lg">Le masserie, <em>raccontate.</em></h1>
+    <p class="text-lg text-ink-muted leading-relaxed mb-md">
+      Una masseria non è una casa di campagna: è un'azienda che doveva bastare a se stessa e sapersi difendere.
+      Qui ne raccontiamo una per volta: perché è fatta così, chi ci ha vissuto, cosa notare quando ci sei.
+      Le storie si ascoltano gratis.
+    </p>
+    <p class="text-sm text-ink-subtle mb-2xl">
+      Da tre a quindici minuti l'una · Fonti in fondo a ogni storia · Voce sintetica, dichiarata
     </p>
 
-    <ul class="space-y-md">
-      {masserie.map((m) => (
-        <li class="rounded-lg border border-border bg-surface-elev p-lg">
-          <a href={`/masserie/${m.data.slug}/`} class="block">
-            <p class="text-xs font-semibold tracking-[0.18em] uppercase text-accent">{m.data.place}</p>
-            <p class="font-display text-2xl text-ink mt-xs">{m.data.name}</p>
-            <p class="text-ink-muted italic">{m.data.title_it} · {Math.round(m.data.duration_seconds / 60)} min</p>
-          </a>
-        </li>
-      ))}
-    </ul>
+    {[...zone.entries()].map(([label, z]) => (
+      <section class="mb-2xl">
+        <h2 class="font-display text-2xl text-ink mb-lg">
+          <a href={z.href} class="no-underline hover:underline underline-offset-4 text-ink">{label}</a>
+        </h2>
+        <ul class="space-y-md">
+          {z.items.map((m) => (
+            <li class="rounded-lg border border-border bg-surface-elev p-lg">
+              <a href={`/masserie/${m.data.slug}/`} class="block no-underline">
+                <p class="text-xs font-semibold tracking-[0.18em] uppercase text-accent">{m.data.place}</p>
+                <p class="font-display text-2xl text-ink mt-xs">{m.data.name}</p>
+                <p class="font-display italic text-lg text-ink-muted mt-2xs">{m.data.title_it}</p>
+              </a>
+              <HeroAudioSample
+                lang="it"
+                src={m.data.audio_it}
+                guideSlug={`masseria-${m.data.slug}`}
+                context="masseria"
+                label={m.data.format === 'lungo'
+                  ? `Ascolta · ${minuti(m.data.duration_seconds)} min · racconto lungo, voce ${m.data.voice}`
+                  : `Ascolta · ${minuti(m.data.duration_seconds)} min · gratis`}
+              />
+              <p class="mt-md text-sm">
+                <a href={`/masserie/${m.data.slug}/`} class="text-link underline underline-offset-2">Il testo e le fonti →</a>
+              </p>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+
+    <div class="rounded-lg border border-border bg-surface-elev p-lg">
+      <p class="text-ink">
+        Gestite una masseria di Puglia? Per correggere, aggiungere o togliere una storia scriveteci a
+        <a href="mailto:hello@localis.guide" class="text-link underline underline-offset-2">hello@localis.guide</a>.
+      </p>
+    </div>
   </article>
 </Layout>

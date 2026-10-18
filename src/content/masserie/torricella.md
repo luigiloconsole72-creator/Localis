@@ -7,21 +7,26 @@ audio_it: /audio/masserie/torricella-it.mp3
 duration_seconds: 184
 zone_label: Valle d'Itria
 zone_href: /valle-d-itria/
-description: "Il Canale di Pirro, la valle carsica rimasta in disparte vicino ad Alberobello, e la famiglia che ci è arrivata con la divisione del latifondo."
+description: "Il Canale di Pirro è una valle carsica rimasta in disparte perché difficile da raggiungere. La terra rossa, i fossili, la famiglia arrivata nel dopoguerra."
 published_at: 2026-10-18
 sources:
-  - type: archive
-    author: Regione Puglia
-    title: "PPTR, scheda PAE0120 — D.M. 01/08/1985, notevole interesse pubblico del Canale di Pirro"
-    url: https://pugliacon.regione.puglia.it/documents/96721/1723405/PAE0120_scheda.pdf/bdacf363-d65f-abd5-fc9a-498ae625eea8
+  - type: website
+    author: Masseria Torricella
+    title: "Sito ufficiale — presentazione e contatti"
+    url: https://www.masseriatorricella.it/
   - type: website
     author: Cantina Masseria Torricella
-    title: "Sito ufficiale — «Il nostro viaggio» e «Le vigne»"
+    title: "«Il nostro viaggio»"
     url: https://www.cantinamasseriatorricella.it/il-nostro-viaggio/
   - type: website
-    author: Agriturismo Masseria Torricella
-    title: "Sito ufficiale — presentazione"
-    url: https://www.masseriatorricella.it/
+    author: Cantina Masseria Torricella
+    title: "«Le vigne»"
+    url: https://www.cantinamasseriatorricella.it/le-vigne/
+  - type: archive
+    author: Regione Puglia, PPTR
+    title: "Scheda PAE0120 — Canale di Pirro (D.M. 01/08/1985, dichiarazione di notevole interesse pubblico)"
+    year: 2019
+    url: https://pugliacon.regione.puglia.it/documents/96721/1723405/PAE0120_scheda.pdf/bdacf363-d65f-abd5-fc9a-498ae625eea8
 ---
 
 Sei nel Canale di Pirro, a pochi chilometri da Alberobello. Il nome fa pensare a un canale d'acqua, ma è una valle: un lungo solco nel calcare, di origine carsica. Parte dal cuore della Murgia dei trulli, scende verso il mare, e il mare non lo raggiunge.

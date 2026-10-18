@@ -4,6 +4,7 @@ import { getCollection, render } from 'astro:content';
 import Layout from '../../components/Layout.astro';
 import Eyebrow from '../../components/Eyebrow.astro';
 import HeroAudioSample from '../../components/HeroAudioSample.astro';
+import StructuredData from '../../components/StructuredData.astro';
 
 export async function getStaticPaths() {
   const masserie = await getCollection('masserie', (m) => m.data.status === 'published');
@@ -14,14 +15,64 @@ const { entry } = Astro.props;
 const d = entry.data;
 const { Content } = await render(entry);
 const path = `/masserie/${d.slug}/`;
-const minutes = Math.round(d.duration_seconds / 60);
+const SITE = 'https://localis.guide';
+const minuti = (s: number) => Math.max(1, Math.round(s / 60));
+const minutes = minuti(d.duration_seconds);
+const lungo = d.format === 'lungo';
+
+// Altre lingue solo se esiste il file audio: mai promettere una lingua che poi parla italiano.
+const altre = [
+  d.audio_en && d.duration_en_seconds ? { lang: 'en' as const, src: d.audio_en, label: `Listen in English · ${minuti(d.duration_en_seconds)} min` } : null,
+  d.audio_de && d.duration_de_seconds ? { lang: 'de' as const, src: d.audio_de, label: `Auf Deutsch hören · ${minuti(d.duration_de_seconds)} Min` } : null,
+].filter((x): x is NonNullable<typeof x> => x !== null);
+
+// L'assaggio della guida di zona (per ora una zona sola: Valle d'Itria → Alberobello).
+const assaggioZona = d.zone_href === '/valle-d-itria/'
+  ? { src: '/audio/trailers/valle-d-itria/alberobello-trailer-it.mp3', guideSlug: 'alberobello' }
+  : null;
+
+const iso = (s: number) => `PT${Math.floor(s / 60)}M${s % 60}S`;
+const ld = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: `${d.name} · ${d.title_it}`,
+    description: d.description,
+    inLanguage: 'it',
+    datePublished: d.published_at.toISOString().slice(0, 10),
+    author: { '@type': 'Organization', name: 'Localis', url: SITE },
+    publisher: { '@type': 'Organization', name: 'Localis', url: SITE },
+    mainEntityOfPage: `${SITE}${path}`,
+    about: {
+      '@type': 'LodgingBusiness',
+      name: d.name,
+      address: { '@type': 'PostalAddress', addressLocality: d.place, addressRegion: 'Puglia', addressCountry: 'IT' },
+      ...(d.website_url ? { url: d.website_url } : {}),
+    },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'AudioObject',
+    name: `${d.name} · ${d.title_it}`,
+    description: d.description,
+    contentUrl: `${SITE}${d.audio_it}`,
+    encodingFormat: 'audio/mpeg',
+    duration: iso(d.duration_seconds),
+    inLanguage: 'it',
+    isAccessibleForFree: true,
+    publisher: { '@type': 'Organization', name: 'Localis', url: SITE },
+  },
+];
 ---
 <Layout
   title={`${d.name} · ${d.title_it} · Localis`}
   description={d.description}
   lang="it"
   langUrlsOverride={{ it: path }}
+  ogType="article"
 >
+  <StructuredData data={ld} />
+
   <nav aria-label="Breadcrumb" class="max-w-narrow mx-auto px-md pt-lg">
     <ol class="flex items-center gap-xs text-sm text-ink-subtle flex-wrap">
       <li><a href="/" class="hover:text-ink transition-colors">Home</a></li>
@@ -42,12 +93,16 @@ const minutes = Math.round(d.duration_seconds / 60);
       src={d.audio_it}
       guideSlug={`masseria-${d.slug}`}
       context="masseria"
-      label={`Ascolta · ${minutes} min · gratis`}
+      label={lungo ? `Ascolta · ${minutes} min · racconto lungo` : `Ascolta · ${minutes} min · gratis`}
     />
+    {altre.map((a) => (
+      <HeroAudioSample lang={a.lang} src={a.src} guideSlug={`masseria-${d.slug}`} context="masseria" label={a.label} />
+    ))}
 
     <p class="text-sm text-ink-subtle mt-md">
-      Racconto scritto da Localis su fonti pubbliche, letto da una voce sintetica.
+      Scritto da Localis su fonti pubbliche, letto da una voce sintetica ({d.voice}).
       Non è una pagina della masseria.
+      {d.website_url && <> <a href={d.website_url} rel="noopener" class="text-link underline underline-offset-2">Il sito della masseria →</a></>}
     </p>
 
     <h2 class="font-display text-2xl text-ink mt-2xl mb-md">Il testo</h2>
@@ -70,8 +125,19 @@ const minutes = Math.round(d.duration_seconds / 60);
       </p>
     </div>
 
-    <p class="mt-xl">
-      <a href={d.zone_href} class="text-link underline underline-offset-2">Gli altri racconti della {d.zone_label} →</a>
-    </p>
+    <section class="mt-3xl border-t border-border pt-2xl">
+      <Eyebrow class="mb-md">La valle intorno</Eyebrow>
+      <h2 class="font-display text-2xl text-ink mb-sm">I paesi della {d.zone_label}, con lo stesso sguardo.</h2>
+      <p class="text-ink-muted leading-relaxed">
+        Le masserie si ascoltano gratis. I racconti dei paesi intorno — perché Alberobello è fatta di coni,
+        cosa si vede da Locorotondo, chi ha costruito Ostuni bianca — sono il nostro catalogo.
+      </p>
+      {assaggioZona && (
+        <HeroAudioSample lang="it" src={assaggioZona.src} guideSlug={assaggioZona.guideSlug} context="masseria-zona" />
+      )}
+      <p class="mt-lg">
+        <a href={`${d.zone_href}#prezzi`} class="text-link underline underline-offset-2">I racconti della {d.zone_label} si comprano da 4,99 € →</a>
+      </p>
+    </section>
   </article>
 </Layout>

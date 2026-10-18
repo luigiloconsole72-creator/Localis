@@ -49,6 +49,11 @@ const pauseLabel = lang === 'de' ? 'Pausieren' : lang === 'it' ? 'Pausa' : 'Paus
 <script>
   import { createAudioAnalyticsTracker } from '../lib/audio-analytics';
 
+  // Un solo racconto per volta: chi parte mette in pausa l'altro (directory delle
+  // masserie, «La valle intorno» sotto una storia). Le icone seguono gli eventi
+  // dell'audio, non il clic, così restano giuste anche quando la pausa arriva da fuori.
+  let current: HTMLAudioElement | null = null;
+
   document.querySelectorAll<HTMLElement>('.hero-sample').forEach((el) => {
     const src = el.dataset.src!;
     const btn = el.querySelector<HTMLButtonElement>('.hero-sample-btn')!;
@@ -80,28 +85,31 @@ const pauseLabel = lang === 'de' ? 'Pausieren' : lang === 'it' ? 'Pausa' : 'Paus
         });
         audio.addEventListener('ended', () => {
           bar.style.width = '0%';
+          tracker?.onEnded();
+        });
+        audio.addEventListener('play', () => {
+          iconPlay.style.display = 'none';
+          iconPause.style.display = '';
+          btn.setAttribute('aria-label', btn.dataset.pauseLabel!);
+        });
+        audio.addEventListener('pause', () => {
           iconPlay.style.display = '';
           iconPause.style.display = 'none';
           btn.setAttribute('aria-label', btn.dataset.playLabel!);
-          tracker?.onEnded();
         });
       }
 
       if (audio.paused) {
+        if (current && current !== audio && !current.paused) current.pause();
+        current = audio;
         audio.play().then(() => {
           tracker?.onPlay();
-          iconPlay.style.display = 'none';
-          iconPause.style.display = '';
-          btn.setAttribute('aria-label', btn.dataset.pauseLabel!);
         }).catch((e) => {
           console.error('[HeroAudio] play() failed:', e, 'src:', src);
         });
       } else {
         audio.pause();
         tracker?.onPause();
-        iconPlay.style.display = '';
-        iconPause.style.display = 'none';
-        btn.setAttribute('aria-label', btn.dataset.playLabel!);
       }
     });
   });
