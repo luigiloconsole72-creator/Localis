@@ -15,33 +15,34 @@
    * Token names with `--color-` prefix auto-generate Tailwind utilities:
    *   bg-surface, text-ink, border-accent, etc.
    */
-  --color-surface: oklch(95% 0.025 65);          /* warm cream parchment */
-  --color-surface-elev: oklch(91% 0.035 60);     /* deeper warm card / manifesto */
-  --color-surface-deep: oklch(98% 0.014 70);     /* near-white, lightly tinted warm */
-  --color-ink: oklch(20% 0.025 240);             /* deep navy-black, primary text */
-  --color-ink-muted: oklch(45% 0.020 240);       /* secondary text */
-  --color-ink-subtle: oklch(55% 0.012 240);      /* labels, eyebrows */
-  --color-border: oklch(83% 0.022 65);           /* warm hairlines, dividers */
-  /* terracotta accent — use sparingly (1-3 uses per screen max).
-   * a11y: 4.4:1 contrast on parchment surface. Safe for LARGE text only
-   * (≥18pt or ≥14pt bold), or as bg-accent block. Never use text-accent on
-   * small body text — fails WCAG AA. */
-  --color-accent: oklch(56% 0.14 45);
-  --color-accent-soft: oklch(85% 0.06 45);
-  --color-link: oklch(46% 0.085 240);            /* muted Adriatic */
-  --color-link-pressed: oklch(38% 0.10 240);
+  --color-surface: #FBFAF6;                      /* carta (come cortese.app) */
+  --color-surface-elev: #F4EDDD;                 /* carta piu' scura, card / manifesto */
+  --color-surface-deep: #FFFFFF;
+  --color-ink: #1C1813;                          /* testo primario */
+  --color-ink-muted: #3A3424;                    /* testo secondario */
+  --color-ink-subtle: #665D4C;                   /* label, eyebrow */
+  --color-border: #EAE4D6;                       /* linee sottili */
+  --color-border-2: #DAD1BE;
+  --color-soft-2: #FBF6EA;
+  /* oro accent. a11y: #7C6231 dà >=4.5:1 su #FBFAF6, usabile anche su testo piccolo. */
+  --color-accent: #7C6231;
+  --color-accent-soft: #F4EDDD;
+  --color-olive: #5E6B48;                        /* bottoni primari (pillole) */
+  --color-olive-d: #46523A;                      /* hover bottoni */
+  --color-link: #7C6231;
+  --color-link-pressed: #1C1813;
   --color-success: oklch(58% 0.12 145);
   --color-warning: oklch(68% 0.16 70);
   --color-error: oklch(54% 0.18 25);
 
   /* === Typography ===
    * --font-* tokens auto-generate utilities: font-display, font-body.
-   * Per .impeccable.md Design Context: Spectral (display) + Schibsted Grotesk (body).
-   * Editorial Italiana del '60 — Spectral italic for emphasis, Schibsted humanist sans
-   * for body. Both load via Google Fonts in Layout.astro. Fraunces + Inter banned.
+   * Fraunces (display) + Hanken Grotesk (body), caricati da Bunny Fonts in Layout.astro.
+   * Fraunces non e' piu' vietato: parentela visiva con Cortese (cortese.app),
+   * deciso da Luigi il 18/10/2026. Inter resta vietato.
    */
-  --font-display: 'Spectral', 'Tiempos Headline', Georgia, serif;
-  --font-body: 'Schibsted Grotesk', system-ui, -apple-system, sans-serif;
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Hanken Grotesk', system-ui, -apple-system, sans-serif;
 
   /* === Type scale (modular 1.25 ratio) ===
    * --text-* tokens auto-generate utilities: text-xs, text-base, text-4xl, etc.
@@ -81,8 +82,8 @@
   --radius-full: 9999px;
 
   /* === Shadows === */
-  --shadow-subtle: 0 1px 2px oklch(20% 0.025 240 / 0.05);
-  --shadow-elev: 0 4px 12px oklch(20% 0.025 240 / 0.06);
+  --shadow-subtle: 0 1px 2px rgba(28,24,19,0.05);
+  --shadow-elev: 0 4px 12px rgba(28,24,19,0.06);
 
   /* === Animation easing === */
   --ease-out-quart: cubic-bezier(0.22, 1, 0.36, 1);
@@ -179,7 +180,7 @@
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
-    font-weight: 400;
+    font-weight: 300;
     line-height: 1.15;
     color: var(--color-ink);
     margin: 0;

@@ -157,14 +157,14 @@ const trustLine =
   {isBuilderProduct ? (
     <a
       href={builderHref}
-      class={`mt-auto w-full px-md py-sm rounded-md font-semibold text-sm text-center transition-colors duration-fast no-underline inline-block ${primary ? 'bg-ink text-surface hover:bg-ink/90' : 'border border-ink text-ink hover:bg-ink hover:text-surface'}`}
+      class={`mt-auto w-full px-md py-sm rounded-full font-semibold text-sm text-center transition-colors duration-fast no-underline inline-block ${primary ? 'bg-olive text-white hover:bg-olive-d' : 'border border-ink text-ink hover:bg-ink hover:text-surface'}`}
     >
       {ctaLabel} · {priceLabel}
     </a>
   ) : (
     <button
       type="button"
-      class={`checkout-btn mt-auto w-full px-md py-sm rounded-md font-semibold text-sm text-center transition-colors duration-fast ${primary ? 'bg-ink text-surface hover:bg-ink/90' : 'border border-ink text-ink hover:bg-ink hover:text-surface'}`}
+      class={`checkout-btn mt-auto w-full px-md py-sm rounded-full font-semibold text-sm text-center transition-colors duration-fast ${primary ? 'bg-olive text-white hover:bg-olive-d' : 'border border-ink text-ink hover:bg-ink hover:text-surface'}`}
       data-product={product}
       data-guide-slug={guideSlug ?? ''}
       data-lang={lang}
