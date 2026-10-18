@@ -13,6 +13,7 @@ const { lang, currentPath, langUrlsOverride } = Astro.props;
 
 const navLinks = [
   { href: localizedHref('/guide', lang), label: lang === 'it' ? 'Guide' : 'Guides' },
+  ...(lang === 'it' ? [{ href: '/masserie/', label: 'Masserie' }] : []),
   { href: localizedHref('/blog', lang),  label: 'Blog' },
   { href: localizedHref('/fonti', lang), label: lang === 'it' ? 'Fonti' : lang === 'de' ? 'Quellen' : 'Sources' },
   { href: localizedHref('/about', lang), label: lang === 'it' ? 'Chi siamo' : lang === 'de' ? 'Über uns' : 'About' },
