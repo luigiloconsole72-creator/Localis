@@ -1,0 +1,496 @@
+---
+// La home di Localis nello stile dell'atlante delle masserie (18/10/2026).
+// I testi sono quelli che c'erano, parola per parola, presi dalle tre home e da
+// Hero / StatsBlock / DestinationsBlock / StepsBlock — che restano com'erano perché
+// li usano anche le pagine di Bari, Gargano e Matera. Una modifica di testo della
+// home si fa QUI, in tutte e tre le lingue.
+import { getCollection } from 'astro:content';
+import { type Lang } from '../lib/i18n';
+import LangPills from './LangPills.astro';
+import HeroAudioSample from './HeroAudioSample.astro';
+
+export interface Props {
+  lang: Lang;
+  currentPath: string;
+}
+const { lang, currentPath } = Astro.props;
+
+const T = {
+  it: {
+    occhiello: 'Racconti audio dei luoghi',
+    h1a: 'La Puglia, raccontata',
+    h1b: 'da chi ci vive.',
+    lede: 'Racconti audio documentati per capire Bari e la Puglia mentre le visiti. Nessuna app.',
+    cta: 'Scopri le guide', ctaHref: '/guide',
+    trailer: '/audio/trailers/home-trailer-it.mp3',
+    heroAlt: 'Una ragazza con le cuffie su un sentiero tra muretti a secco e ulivi, verso una masseria bianca al tramonto',
+    numeri: [
+      { value: '~30 min', label: 'per guida' },
+      { value: 'Senza app', label: 'niente da installare' },
+      { value: '€4,99', label: 'una guida' },
+    ],
+    claim: 'Non ti dicono dove andare: ti fanno capire dove sei.',
+    intro: "Localis è un racconto audio del luogo: storie, contesto e prospettive dichiarate per capire come quel posto è diventato ciò che è oggi. Nessuna app: ricevi un link, premi play e ascolti quando vuoi — sul posto, da casa prima di partire, o al ritorno.",
+    manifesto: ['I luoghi non si consumano.', 'Si comprendono.'],
+    cambiaOcchiello: 'Cosa cambia davvero',
+    cambiaH: ['Non aggiungiamo informazioni.', 'Cambiamo quello che vedi.'],
+    cambia: [
+      ['Una signora che fa le orecchiette.', 'Una donna che continua un gesto tramandato da generazioni.'],
+      ['Un muro imbiancato a calce.', 'Secoli di difesa dal sole e dalle epidemie.'],
+      ['Un santo portato in processione.', 'Una città che ancora si riconosce in lui.'],
+    ],
+    zoneOcchiello: 'Le destinazioni',
+    zoneH: 'Scegli la tua zona.',
+    zoneSub: "Bari, Valle d'Itria, Gargano e Matera: racconti audio da ascoltare sul posto, prima di partire o al ritorno.",
+    zone: [
+      { href: '/bari', name: 'Bari', tagline: 'Sei racconti per capire la città.', guides: '6 guide', cover: '/images/covers/bari-landing-v2.jpg', alt: 'Vicolo del Borgo Antico di Bari con colonne romane e palazzi storici' },
+      { href: '/valle-d-itria', name: "Valle d'Itria", tagline: 'Trulli, vini e borghi bianchi.', guides: '6 guide', cover: '/images/covers/valle-d-itria-landing.jpg', alt: "Valle d'Itria, trulli e vigneti sotto il sole di Puglia" },
+      { href: '/gargano', name: 'Gargano', tagline: 'Il promontorio che guarda il mondo.', guides: '6 guide', cover: '/images/covers/gargano-landing.jpg', alt: 'Gargano, promontorio sul mare Adriatico' },
+      { href: '/matera', name: 'Matera', tagline: 'I Sassi, la Gravina e il racconto di Rosa.', guides: '1 guida', cover: '/images/covers/matera-golden-hour-jun26.webp', alt: "Matera, i Sassi visti dall'alto" },
+    ],
+    prezziId: 'prezzi',
+    prezziH: 'Una guida, un pack o tutta la Puglia.',
+    prezzi: [['Guida singola', '€4,99'], ['Pack 3', '€11,99'], ['Pack 6', '€19,99']],
+    prezziNota: '~30 min ciascuna · Pack 6 Guide funziona anche mescolando guide di zone diverse.',
+    prezziCta: 'Costruisci il tuo pacchetto', prezziHref: '/guide#builder',
+    rimborso: 'Rimborso semplice — scrivi a hello@localis.guide, soldi indietro senza domande.',
+    feature: [
+      {
+        occhiello: 'Hai poche ore?', h: 'Poche ore a Bari?',
+        italic: 'Ascolta due racconti selezionati per capire la città senza perdere tempo.',
+        body: 'Acquisti con email e carta. Ti arriva un link permanente: lo apri quando vuoi, premi play, ascolti. In strada mentre cammini, sul divano prima di partire, in treno al ritorno. Sono racconti, non audio museali che descrivono ciò che hai davanti — ti portano dentro Bari, anche se non ci sei ancora.',
+        bullets: ['Ascolto libero · sul posto, prima, dopo, ovunque', 'Magic link via email · zero password, zero account', 'Link permanente · la guida è tua, riascolti per sempre'],
+        img: '/images/covers/nave-crociera.jpg',
+        alt: 'Gruppo di crocieristi sbarca a Bari davanti alla nave MSC Splendida; lungomare del porto sullo sfondo, sole pieno',
+        caption: 'Bari, porto crociere. Anche con poche ore a terra, è un modo per capire il luogo prima ancora di attraversarlo.',
+        cta: 'Scopri il percorso per crocieristi', href: '/crocieristi',
+      },
+      {
+        occhiello: 'Da dove vengono le storie', h: 'Scritte in Puglia.', italic: 'Con fonti verificabili.',
+        body: 'Ogni guida nasce da ricerca editoriale: fonti storiche, fonti istituzionali e, quando presente, memoria locale raccolta sul territorio. Nella pagina Fonti pubblichiamo i riferimenti utilizzati per costruire i racconti.',
+        bullets: ['Scritte da chi la Puglia la vive · ricerca e memoria locale', 'Guide pubblicate · Bari, Valle d’Itria, Gargano', 'Italiano, inglese e tedesco · testi curati lingua per lingua', 'Tutto verificabile · ogni claim su /fonti, capitolo per capitolo'],
+        img: '/images/covers/fonti-ricerca.jpg',
+        alt: 'Scrivania di ricerca: libri di storia barese, taccuino aperto con appunti su Bari Vecchia, cartoline d’epoca della città, mappa storica e quotidiano ‘L’Eco di Bari’ sulle reliquie di San Nicola',
+        caption: 'La scrivania prima della voce. Libri, appunti, cartoline, ritagli — ogni capitolo nasce da qui.',
+        cta: 'Il nostro metodo', href: '/metodo',
+      },
+    ],
+    passiOcchiello: 'In tre minuti, sei dentro', passiH: 'Tre passi.', passiItalic: 'Una terra che parla, quando vuoi tu.',
+    passi: [
+      { title: 'Scegli la destinazione', body: "Bari, Valle d'Itria, Gargano — ogni zona ha la sua guida." },
+      { title: 'Apri il link', body: 'Niente app. Compri, ti arriva un link, premi play.' },
+      { title: 'Ascolta', body: 'Le storie partono quando sei pronto a capire. In camera, in treno, su una panchina — il momento è tuo.' },
+    ],
+    passiCta: 'Inizia ora', passiHref: '/guide/bari-vecchia',
+  },
+  en: {
+    occhiello: 'Audio stories of places',
+    h1a: 'Puglia, in the words',
+    h1b: 'of the people who live here.',
+    lede: 'Documented audio stories to understand Bari and Puglia as you visit. No app needed.',
+    cta: 'Explore the stories', ctaHref: '/en/guide',
+    trailer: '/audio/trailers/home-trailer-en.mp3',
+    heroAlt: 'A young woman with headphones on a path between dry-stone walls and olive trees, towards a white masseria at sunset',
+    numeri: [
+      { value: '~30 min', label: 'per guide' },
+      { value: 'No app', label: 'nothing to install' },
+      { value: '€4.99', label: 'one guide' },
+    ],
+    claim: "They don't tell you where to go. They help you understand where you are.",
+    intro: 'Localis is an audio story of the place: the history, the context, a point of view — so you understand how it became what it is. No app: you get a link, press play, listen whenever you want — on location, from home before you leave, or after.',
+    manifesto: ["Places aren't consumed.", "They're understood."],
+    cambiaOcchiello: 'What actually changes',
+    cambiaH: ["We don't add information.", 'We change what you see.'],
+    cambia: [
+      ['A woman making orecchiette.', 'Someone continuing a gesture handed down for generations.'],
+      ['A wall whitewashed with lime.', 'Centuries of defense against the sun and disease.'],
+      ['A saint carried in procession.', 'A city that still recognizes itself in him.'],
+    ],
+    zoneOcchiello: 'The destinations',
+    zoneH: 'Choose your area.',
+    zoneSub: "Bari, Valle d'Itria, Gargano and Matera: audio stories to listen on the spot, before you leave or after you return.",
+    zone: [
+      { href: '/en/bari', name: 'Bari', tagline: 'Six stories to understand the city.', guides: '6 guides live', cover: '/images/covers/bari-landing-v2.jpg', alt: "Lane of Bari's Old Town with ancient Roman columns" },
+      { href: '/en/valle-d-itria', name: "Valle d'Itria", tagline: 'Trullos, wines and white villages.', guides: '6 guides live', cover: '/images/covers/valle-d-itria-landing.jpg', alt: "Valle d'Itria, trulli and vineyards under the Puglia sun" },
+      { href: '/en/gargano', name: 'Gargano', tagline: 'The promontory that faces the world.', guides: '6 guides live', cover: '/images/covers/gargano-landing.jpg', alt: 'Gargano promontory over the Adriatic sea' },
+      { href: '/en/matera', name: 'Matera', tagline: "The Sassi, the Gravina and Rosa's story.", guides: '1 guide live', cover: '/images/covers/matera-golden-hour-jun26.webp', alt: 'Matera, the Sassi from above' },
+    ],
+    prezziId: 'prezzi',
+    prezziH: 'One guide, a pack, or all of Puglia.',
+    prezzi: [['Single guide', '€4.99'], ['Pack 3', '€11.99'], ['Pack 6', '€19.99']],
+    prezziNota: '~30 min each · Pack 6 Guides also works when you mix guides from different areas.',
+    prezziCta: 'Build your package', prezziHref: '/en/guide#builder',
+    rimborso: 'Simple refund — write to hello@localis.guide, money back, no questions.',
+    feature: [
+      {
+        occhiello: 'Only a few hours?', h: 'Only a few hours in Bari?',
+        italic: 'Listen to two selected stories to understand the city without wasting time.',
+        body: "You pay with email and card. You receive a permanent link: open it whenever you want, press play, listen. On the street while you walk, on the couch before you leave, on the train coming back. These are stories, not museum audio describing what's in front of you — they take you inside Bari, even if you're not there yet.",
+        bullets: ['Free listening · on-site, before, after, anywhere', 'Magic link via email · zero passwords, zero accounts', 'Permanent link · the guide is yours, replay forever'],
+        img: '/images/covers/nave-crociera.jpg',
+        alt: 'Group of cruise passengers disembarking in Bari in front of the MSC Splendida; port lungomare in the background, full sunlight',
+        caption: 'Bari, cruise port. For them the story starts the moment they step off the ship.',
+        cta: 'Discover the cruise route', href: '/en/cruise',
+      },
+      {
+        occhiello: 'Where the stories come from', h: 'Written in Puglia.', italic: 'With verifiable sources.',
+        body: 'Every guide begins with editorial research: historical sources, institutional sources and, when present, local memory gathered on the ground. On the Sources page we publish the references used to build each story.',
+        bullets: ['Written by people who live here · research and local memory', "Published guides · Bari, Valle d'Itria, Gargano", 'Italian, English and German · each text crafted in its own language', 'Fully verifiable · every claim on /en/fonti, chapter by chapter'],
+        img: '/images/covers/fonti-ricerca.jpg',
+        alt: "Research desk: Bari history books, open notebook with Old Bari notes, vintage postcards of the city, a historical map and the newspaper 'L'Eco di Bari' on San Nicola's relics",
+        caption: 'The desk before the voice. Books, notes, postcards, clippings — every chapter starts here.',
+        cta: 'Our method', href: '/en/method',
+      },
+    ],
+    passiOcchiello: "Three minutes in, you're there", passiH: 'Three steps.', passiItalic: 'A land that speaks, whenever you want.',
+    passi: [
+      { title: 'Choose a destination', body: "Bari, Valle d'Itria, Gargano — every zone has its own guide." },
+      { title: 'Open the link', body: 'No app. Buy, get a link, press play.' },
+      { title: 'Listen', body: "The stories begin when you're ready to understand. In your room, on a train, on a bench — the moment is yours." },
+    ],
+    passiCta: 'Start now', passiHref: '/en/guide/bari-vecchia',
+  },
+  de: {
+    occhiello: 'Audioerzählungen über Orte',
+    h1a: 'Apulien, erzählt',
+    h1b: 'von Menschen, die hier leben.',
+    lede: 'Dokumentierte Audioerzählungen, um Bari und Apulien während des Besuchs wirklich zu verstehen. Keine App.',
+    cta: 'Erzählungen entdecken', ctaHref: '/de/guide',
+    trailer: '/audio/trailers/home-trailer-de.mp3',
+    heroAlt: 'Eine junge Frau mit Kopfhörern auf einem Weg zwischen Trockenmauern und Olivenbäumen, zu einer weißen Masseria im Abendlicht',
+    numeri: [
+      { value: '~30 Min.', label: 'pro Erzählung' },
+      { value: 'Keine App', label: 'nichts zu installieren' },
+      { value: '4,99 €', label: 'eine Erzählung' },
+    ],
+    claim: 'Sie sagen dir nicht, wohin du gehen sollst. Sie helfen dir zu verstehen, wo du bist.',
+    intro: 'Localis ist eine Audio-Erzählung über den Ort: Geschichte, Kontext und ein erklärter Blickwinkel, damit du verstehst, wie dieser Ort zu dem wurde, was er heute ist. Keine App: Du bekommst einen Link, drückst Play und hörst, wann du willst — vor Ort, von zu Hause vor der Reise oder danach.',
+    manifesto: ['Orte verbraucht man nicht.', 'Man versteht sie.'],
+    cambiaOcchiello: 'Was sich wirklich ändert',
+    cambiaH: ['Wir fügen keine Informationen hinzu.', 'Wir verändern, was du siehst.'],
+    cambia: [
+      ['Eine Frau, die Orecchiette macht.', 'Jemand, der eine über Generationen weitergegebene Geste fortführt.'],
+      ['Eine weiß gekalkte Mauer.', 'Jahrhundertelanger Schutz vor Sonne und Seuchen.'],
+      ['Ein Heiliger, in Prozession getragen.', 'Eine Stadt, die sich bis heute in ihm wiedererkennt.'],
+    ],
+    zoneOcchiello: 'Die Reiseziele',
+    zoneH: 'Wähle deine Region.',
+    zoneSub: "Bari, Valle d'Itria, Gargano und Matera: Audiogeschichten zum Hören vor Ort, vor der Abreise oder nach der Rückkehr.",
+    zone: [
+      { href: '/de/bari', name: 'Bari', tagline: 'Sechs Erzählungen, um die Stadt zu verstehen.', guides: '6 Erzählungen', cover: '/images/covers/bari-landing-v2.jpg', alt: 'Gasse in der Altstadt von Bari mit antiken römischen Säulen' },
+      { href: '/de/valle-d-itria', name: "Valle d'Itria", tagline: 'Trulli, Wein und weiße Dörfer.', guides: '6 Erzählungen', cover: '/images/covers/valle-d-itria-landing.jpg', alt: "Valle d'Itria mit Trulli und Weinbergen unter der Sonne Apuliens" },
+      { href: '/de/gargano', name: 'Gargano', tagline: 'Das Vorgebirge mit Blick auf die Welt.', guides: '6 Erzählungen', cover: '/images/covers/gargano-landing.jpg', alt: 'Gargano-Vorgebirge über der Adria' },
+      { href: '/de/matera', name: 'Matera', tagline: 'Die Sassi, die Gravina und Rosas Erzählung.', guides: '1 Erzählung', cover: '/images/covers/matera-golden-hour-jun26.webp', alt: 'Matera, die Sassi von oben' },
+    ],
+    prezziId: 'preise',
+    prezziH: 'Eine Erzählung, ein Pack oder ganz Apulien.',
+    prezzi: [['Einzelner Guide', '4,99 €'], ['Pack 3', '11,99 €'], ['Pack 6', '19,99 €']],
+    prezziNota: 'je ~30 Min. · Pack 6 funktioniert auch mit Guides aus verschiedenen Gebieten.',
+    prezziCta: 'Paket zusammenstellen', prezziHref: '/de/guide#builder',
+    rimborso: 'Einfache Rückerstattung — schreib an hello@localis.guide, Geld zurück ohne Fragen.',
+    feature: [
+      {
+        occhiello: 'Nur wenige Stunden?', h: 'Nur wenige Stunden in Bari?',
+        italic: 'Hör zwei ausgewählte Erzählungen und versteh die Stadt — ohne Zeit zu verlieren.',
+        body: 'Du kaufst mit E-Mail und Karte. Danach bekommst du einen dauerhaften Link: öffnen, Play drücken, hören. Auf der Straße beim Gehen, auf dem Sofa vor der Reise oder im Zug zurück. Das sind Erzählungen, keine Museums-Audios, die nur beschreiben, was vor dir steht — sie bringen dich nach Bari hinein, auch wenn du noch nicht dort bist.',
+        bullets: ['Freies Hören · vor Ort, vorher, danach, überall', 'Magic Link per E-Mail · kein Passwort, kein Konto', 'Dauerhafter Link · die Guide gehört dir, immer wieder hörbar'],
+        img: '/images/covers/nave-crociera.jpg',
+        alt: 'Kreuzfahrtgäste gehen in Bari vor der MSC Splendida von Bord; im Hintergrund Hafenpromenade und helles Sonnenlicht',
+        caption: 'Bari, Kreuzfahrthafen. Auch mit wenigen Stunden an Land kann die Erzählung beginnen, bevor man die Stadt wirklich durchquert.',
+        cta: 'Route für Kreuzfahrtgäste entdecken', href: '/de/kreuzfahrt',
+      },
+      {
+        occhiello: 'Woher die Geschichten kommen', h: 'In Apulien geschrieben.', italic: 'Mit überprüfbaren Quellen.',
+        body: 'Jede Guide entsteht aus redaktioneller Recherche: historische Quellen, institutionelle Quellen und, wenn vorhanden, lokale Erinnerung, die vor Ort gesammelt wurde. Auf der Seite Quellen veröffentlichen wir die Referenzen, aus denen die Erzählungen gebaut sind.',
+        bullets: ['Von Menschen geschrieben, die hier leben · Recherche und lokale Erinnerung', "Veröffentlichte Guides · Bari, Valle d'Itria, Gargano", 'Italienisch, Englisch und Deutsch · Texte sprachgenau ausgearbeitet', 'Nachprüfbar · jede belegte Aussage auf /de/fonti, Kapitel für Kapitel'],
+        img: '/images/covers/fonti-ricerca.jpg',
+        alt: 'Recherche-Schreibtisch: Bücher zur Geschichte Baris, offenes Notizbuch, historische Postkarten, Karte und Zeitungsausschnitt über die Reliquien des heiligen Nikolaus',
+        caption: 'Der Schreibtisch vor der Stimme. Bücher, Notizen, Postkarten, Ausschnitte — jedes Kapitel beginnt hier.',
+        cta: 'Unsere Methode', href: '/de/methode',
+      },
+    ],
+    passiOcchiello: 'In wenigen Minuten bereit', passiH: 'Drei Schritte.', passiItalic: 'Ein Land, das spricht. Dann, wenn du hören willst.',
+    passi: [
+      { title: 'Ort wählen', body: "Bari, Valle d'Itria, Gargano: Jede Gegend hat ihre eigene Audioerzählung." },
+      { title: 'Link öffnen', body: 'Keine App. Du kaufst, bekommst einen Link und drückst auf Play.' },
+      { title: 'Anhören', body: 'Die Geschichten beginnen, wenn du bereit bist zu verstehen. Im Zimmer, im Zug, auf einer Bank — der Moment gehört dir.' },
+    ],
+    passiCta: 'Jetzt starten', passiHref: '/de/guide/bari-vecchia',
+  },
+} as const;
+
+const t = T[lang];
+// Le masserie sono solo in italiano: la banda compare solo nella home italiana.
+const masserie = lang === 'it' ? await getCollection('masserie', (m) => m.data.status === 'published') : [];
+const due = (n: number) => String(n).padStart(2, '0');
+---
+<!-- Apertura -->
+<section class="h-apertura">
+  <img src="/images/hero/landing-puglia.jpg" alt={t.heroAlt} class="h-apertura-foto" width="1980" height="1485" fetchpriority="high" />
+  <div class="h-velo" aria-hidden="true"></div>
+  <div class="h-apertura-testo">
+    <div class="h-pills"><LangPills lang={lang} currentPath={currentPath} /></div>
+    <p class="h-occhiello">{t.occhiello}</p>
+    <h1><span>{t.h1a}</span> <em>{t.h1b}</em></h1>
+    <p class="h-lede">{t.lede}</p>
+    <div class="h-audio"><HeroAudioSample lang={lang} src={t.trailer} /></div>
+    <div class="h-azioni">
+      <a href={t.ctaHref} class="h-pill">{t.cta}</a>
+      {lang === 'it' && <a href="/masserie/" class="h-link-chiaro">Le masserie di Puglia, raccontate →</a>}
+    </div>
+    <ul class="h-numeri">
+      {t.numeri.map((n) => <li><strong>{n.value}</strong> {n.label}</li>)}
+    </ul>
+  </div>
+</section>
+
+<!-- Manifesto -->
+<section class="h-manifesto">
+  <div class="h-manifesto-dentro">
+    <blockquote>{t.manifesto[0]}<br /><em>{t.manifesto[1]}</em></blockquote>
+    <div class="h-manifesto-testo">
+      <p class="h-claim">{t.claim}</p>
+      <p>{t.intro}</p>
+    </div>
+  </div>
+</section>
+
+<!-- Cosa cambia davvero -->
+<section class="h-sezione h-stretto">
+  <p class="h-occhiello h-scuro">{t.cambiaOcchiello}</p>
+  <h2 class="h-titolo">{t.cambiaH[0]}<br /><em>{t.cambiaH[1]}</em></h2>
+  <ol class="h-tavola">
+    {t.cambia.map(([prima, dopo], i) => (
+      <li>
+        <span class="h-tavola-num">{['I', 'II', 'III'][i]}</span>
+        <span class="h-tavola-prima">{prima}</span>
+        <span class="h-tavola-freccia" aria-hidden="true">→</span>
+        <span class="h-tavola-dopo">{dopo}</span>
+      </li>
+    ))}
+  </ol>
+</section>
+
+<!-- Le zone -->
+<section class="h-sezione h-largo" id="zone">
+  <div class="h-testa">
+    <div>
+      <p class="h-occhiello h-scuro">{t.zoneOcchiello}</p>
+      <h2 class="h-titolo">{t.zoneH}</h2>
+    </div>
+    <p class="h-testa-sub">{t.zoneSub}</p>
+  </div>
+  <div class="h-zone">
+    {t.zone.map((z, i) => (
+      <a href={z.href} class:list={['h-zona', { 'h-zona-grande': i === 0 }]} style={`--ritardo:${i * 90}ms`}>
+        <img src={z.cover} alt={z.alt} loading="lazy" decoding="async" />
+        <span class="h-zona-num">{due(i + 1)}</span>
+        <span class="h-zona-testo">
+          <span class="h-zona-nome">{z.name}</span>
+          <span class="h-zona-tag">{z.tagline}</span>
+          <span class="h-zona-guide">{z.guides} →</span>
+        </span>
+      </a>
+    ))}
+  </div>
+</section>
+
+{masserie.length > 0 && (
+  <!-- Le masserie (solo IT) -->
+  <section class="h-sezione h-largo">
+    <a href="/masserie/" class="h-masserie">
+      <span class="h-masserie-testo">
+        <span class="h-occhiello">Nuovo · gratis</span>
+        <span class="h-masserie-h">Le masserie di Puglia, <em>raccontate.</em></span>
+        <span class="h-masserie-sub">{masserie.length} masserie della Valle d'Itria, una per una: perché sono fatte così, chi ci ha vissuto, cosa notare quando ci sei. Da tre a quindici minuti, con le fonti.</span>
+        <span class="h-pill h-pill-chiara">Apri l'atlante →</span>
+      </span>
+      <span class="h-masserie-nomi" aria-hidden="true">
+        {masserie.slice(0, 6).map((m) => <span>{m.data.name.replace(/^Masseria (Fortificata )?/, '')}</span>)}
+      </span>
+    </a>
+  </section>
+)}
+
+<!-- Prezzi -->
+<section class="h-sezione h-stretto" id={t.prezziId}>
+  <div class="h-prezzi">
+    <h2 class="h-titolo h-centro">{t.prezziH}</h2>
+    <ul class="h-cartellini">
+      {t.prezzi.map(([nome, prezzo]) => <li><span>{nome}</span><strong>{prezzo}</strong></li>)}
+    </ul>
+    <p class="h-nota">{t.prezziNota}</p>
+    <a href={t.prezziHref} class="h-pill">{t.prezziCta} →</a>
+    <p class="h-nota h-piccola">{t.rimborso}</p>
+  </div>
+</section>
+
+<!-- Crocieristi e fonti -->
+{t.feature.map((f, i) => (
+  <section class:list={['h-sezione', 'h-largo', 'h-feature', { 'h-feature-rovescio': i % 2 === 1 }]}>
+    <figure class="h-feature-foto">
+      <img src={f.img} alt={f.alt} loading="lazy" decoding="async" />
+      <figcaption>{f.caption}</figcaption>
+    </figure>
+    <div class="h-feature-testo">
+      <p class="h-occhiello h-scuro">{f.occhiello}</p>
+      <h2 class="h-titolo">{f.h} <em>{f.italic}</em></h2>
+      <p class="h-feature-body">{f.body}</p>
+      <ul class="h-elenco">{f.bullets.map((b) => <li>{b}</li>)}</ul>
+      <a href={f.href} class="h-link">{f.cta} →</a>
+    </div>
+  </section>
+))}
+
+<!-- Tre passi -->
+<section class="h-sezione h-largo" id="come-funziona">
+  <p class="h-occhiello h-scuro h-centro">{t.passiOcchiello}</p>
+  <h2 class="h-titolo h-centro">{t.passiH} <em>{t.passiItalic}</em></h2>
+  <ol class="h-passi">
+    {t.passi.map((p, i) => (
+      <li>
+        <span class="h-passi-num">{due(i + 1)}</span>
+        <span class="h-passi-titolo">{p.title}</span>
+        <span class="h-passi-body">{p.body}</span>
+      </li>
+    ))}
+  </ol>
+  <p class="h-centro"><a href={t.passiHref} class="h-pill">▶ {t.passiCta}</a></p>
+</section>
+
+<style>
+  /* ---------- comuni ---------- */
+  .h-sezione { padding: 5rem 1rem 0; margin: 0 auto; }
+  .h-stretto { max-width: 52rem; }
+  .h-largo { max-width: 80rem; }
+  /* il global dà ai <p> max-width 65ch: per centrarli serve anche il margine automatico */
+  .h-centro { text-align: center; margin-left: auto; margin-right: auto; }
+  .h-occhiello { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: #e8d3a3; margin-bottom: 0.9rem; }
+  .h-scuro { color: var(--color-accent); }
+  .h-titolo { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.9rem, 4vw, 2.9rem); line-height: 1.08; letter-spacing: -0.015em; color: var(--color-ink); }
+  .h-titolo em { color: var(--color-accent); }
+  .h-pill {
+    display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.85rem 1.45rem; border-radius: 999px;
+    background: var(--color-olive); color: #fbfaf6; font-weight: 600; text-decoration: none; min-height: 48px;
+    transition: background 0.25s, transform 0.25s;
+  }
+  .h-pill:hover { background: var(--color-olive-d); transform: translateY(-1px); }
+  .h-link { color: var(--color-link); text-decoration: underline; text-underline-offset: 3px; font-weight: 600; }
+  .seppia, .h-zona img, .h-feature-foto img, .h-apertura-foto { filter: sepia(0.5) saturate(0.85) contrast(1.04) brightness(0.96); }
+
+  /* ---------- apertura ---------- */
+  .h-apertura { position: relative; min-height: min(92vh, 820px); display: flex; align-items: flex-end; overflow: hidden; isolation: isolate; }
+  .h-apertura-foto { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 62% 40%; z-index: -2; filter: sepia(0.35) saturate(0.9) contrast(1.03); animation: h-lento 18s ease-out both; }
+  .h-velo {
+    position: absolute; inset: 0; z-index: -1;
+    background:
+      linear-gradient(90deg, rgba(28,24,19,0.86) 0%, rgba(28,24,19,0.55) 45%, rgba(28,24,19,0.05) 80%),
+      linear-gradient(0deg, rgba(28,24,19,0.6) 0%, rgba(28,24,19,0) 50%),
+      linear-gradient(180deg, rgba(28,24,19,0.35) 0%, rgba(28,24,19,0) 35%);
+  }
+  .h-apertura-testo { width: 100%; max-width: 80rem; margin: 0 auto; padding: 5.5rem 1rem 3rem; color: #fbfaf6; animation: h-su 0.9s cubic-bezier(.2,.7,.2,1) both; }
+  .h-pills { margin-bottom: 1.6rem; }
+  /* LangPills è pensato per il fondo chiaro: sull'apertura scura lo schiariamo da qui */
+  .h-pills :global(.lang-pill) { color: rgba(251,250,246,0.78); border-color: rgba(251,250,246,0.35); }
+  .h-pills :global(.lang-pill:hover) { color: #e8d3a3; border-color: #e8d3a3; }
+  .h-pills :global(.lang-pill--active) { color: #fbfaf6; border-color: #fbfaf6; }
+  .h-apertura h1 { font-family: var(--font-display); font-weight: 400; font-size: var(--text-5xl); line-height: 1.02; letter-spacing: -0.02em; max-width: 14ch; color: #fbfaf6; }
+  .h-apertura h1 em { color: #e8d3a3; display: block; }
+  .h-lede { margin-top: 1.2rem; max-width: 34rem; font-family: var(--font-display); font-style: italic; font-size: 1.25rem; line-height: 1.5; color: rgba(251,250,246,0.92); }
+  .h-audio { margin-top: 1.5rem; max-width: 26rem; }
+  .h-azioni { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.5rem; margin-top: 1.5rem; }
+  .h-link-chiaro { color: #e8d3a3; text-decoration: underline; text-underline-offset: 4px; font-weight: 600; }
+  .h-numeri { display: flex; flex-wrap: wrap; gap: 0.4rem 1.6rem; margin-top: 2rem; padding-top: 1.2rem; border-top: 1px solid rgba(251,250,246,0.2); font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(251,250,246,0.78); }
+  .h-numeri strong { font-family: var(--font-display); font-size: 1.3rem; letter-spacing: 0; text-transform: none; color: #fbfaf6; font-weight: 400; margin-right: 0.3rem; }
+
+  /* ---------- manifesto ---------- */
+  .h-manifesto { background: var(--color-ink); color: #fbfaf6; }
+  .h-manifesto-dentro { max-width: 80rem; margin: 0 auto; padding: 4.5rem 1rem; display: grid; gap: 2.5rem; align-items: center; }
+  @media (min-width: 900px) { .h-manifesto-dentro { grid-template-columns: 1.2fr 1fr; gap: 4rem; } }
+  .h-manifesto blockquote { margin: 0; font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.6rem); line-height: 1.05; letter-spacing: -0.02em; }
+  .h-manifesto blockquote em { color: #e8d3a3; }
+  .h-claim { font-family: var(--font-display); font-size: 1.35rem; line-height: 1.3; margin-bottom: 1rem; color: #fbfaf6; }
+  .h-manifesto-testo p:not(.h-claim) { color: rgba(251,250,246,0.75); line-height: 1.7; }
+
+  /* ---------- cosa cambia ---------- */
+  .h-tavola { list-style: none; margin: 2.5rem 0 0; padding: 0; border-top: 1px solid var(--color-border-2); }
+  .h-tavola li { display: grid; grid-template-columns: 2.5rem 1fr; gap: 0.3rem 1rem; padding: 1.3rem 0; border-bottom: 1px solid var(--color-border-2); align-items: baseline; }
+  .h-tavola-num { font-family: var(--font-display); font-style: italic; color: var(--color-accent); grid-row: span 2; }
+  .h-tavola-prima { color: var(--color-ink-subtle); }
+  .h-tavola-freccia { display: none; color: var(--color-accent); }
+  .h-tavola-dopo { font-family: var(--font-display); font-size: 1.25rem; line-height: 1.3; color: var(--color-ink); }
+  @media (min-width: 760px) {
+    .h-tavola li { grid-template-columns: 3rem 1fr 2rem 1.3fr; }
+    .h-tavola-num { grid-row: auto; }
+    .h-tavola-freccia { display: inline; text-align: center; }
+  }
+
+  /* ---------- zone ---------- */
+  .h-testa { display: grid; gap: 1rem; align-items: end; margin-bottom: 2rem; }
+  @media (min-width: 900px) { .h-testa { grid-template-columns: 1fr 1fr; } }
+  .h-testa-sub { color: var(--color-ink-muted); line-height: 1.6; max-width: 32rem; }
+  .h-zone { display: grid; gap: 1rem; grid-template-columns: 1fr; }
+  @media (min-width: 700px) { .h-zone { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1000px) {
+    .h-zone { grid-template-columns: 1.4fr 1fr 1fr; grid-template-rows: 1fr 1fr; }
+    .h-zona-grande { grid-row: span 2; }
+    .h-zona:nth-child(4) { grid-column: span 2; }
+  }
+  .h-zona { position: relative; display: flex; align-items: flex-end; min-height: 16rem; border-radius: 16px; overflow: hidden; isolation: isolate; text-decoration: none; color: #fbfaf6; animation: h-su 0.8s cubic-bezier(.2,.7,.2,1) both; animation-delay: var(--ritardo); }
+  .h-zona-grande { min-height: 24rem; }
+  .h-zona img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; transition: transform 0.8s cubic-bezier(.2,.7,.2,1), filter 0.6s; }
+  .h-zona::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(0deg, rgba(28,24,19,0.82) 0%, rgba(28,24,19,0.15) 60%), color-mix(in oklab, var(--color-accent) 14%, transparent); }
+  .h-zona:hover img { transform: scale(1.05); filter: sepia(0.3) saturate(0.95) contrast(1.04); }
+  .h-zona-num { position: absolute; top: 1rem; left: 1.2rem; font-family: var(--font-display); font-size: 1.1rem; color: #e8d3a3; }
+  .h-zona-testo { display: flex; flex-direction: column; gap: 0.3rem; padding: 1.4rem 1.4rem 1.5rem; }
+  .h-zona-nome { font-family: var(--font-display); font-size: clamp(1.8rem, 3.5vw, 2.6rem); line-height: 1; }
+  .h-zona-grande .h-zona-nome { font-size: clamp(2.4rem, 5vw, 3.6rem); }
+  .h-zona-tag { font-family: var(--font-display); font-style: italic; color: rgba(251,250,246,0.88); }
+  .h-zona-guide { margin-top: 0.4rem; font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; color: #e8d3a3; }
+
+  /* ---------- masserie ---------- */
+  .h-masserie { display: grid; gap: 2rem; padding: 2.5rem 2rem; border-radius: 18px; background: var(--color-olive); color: #fbfaf6; text-decoration: none; align-items: center; position: relative; overflow: hidden; }
+  @media (min-width: 900px) { .h-masserie { grid-template-columns: 1.3fr 1fr; padding: 3rem 3.5rem; } }
+  .h-masserie-testo { display: flex; flex-direction: column; align-items: flex-start; gap: 0.8rem; }
+  .h-masserie-h { font-family: var(--font-display); font-size: clamp(1.9rem, 4vw, 2.8rem); line-height: 1.05; }
+  .h-masserie-h em { color: #e8d3a3; }
+  .h-masserie-sub { color: rgba(251,250,246,0.85); line-height: 1.6; max-width: 34rem; }
+  .h-pill-chiara { background: #fbfaf6; color: var(--color-olive-d); margin-top: 0.4rem; }
+  .h-masserie:hover .h-pill-chiara { background: #f4eddd; }
+  .h-masserie-nomi { display: flex; flex-direction: column; gap: 0.2rem; font-family: var(--font-display); font-style: italic; font-size: clamp(1.2rem, 2.2vw, 1.6rem); color: rgba(251,250,246,0.55); }
+  .h-masserie-nomi span:nth-child(odd) { padding-left: 1.5rem; }
+
+  /* ---------- prezzi ---------- */
+  .h-prezzi { display: flex; flex-direction: column; align-items: center; gap: 1.2rem; text-align: center; padding: 3rem 1.5rem; border: 1px solid var(--color-border-2); border-radius: 18px; background: var(--color-surface-elev); }
+  .h-cartellini { list-style: none; padding: 0; margin: 0.5rem 0 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; }
+  .h-cartellini li { display: flex; flex-direction: column; gap: 0.2rem; min-width: 9rem; padding: 1rem 1.25rem; border-radius: 12px; background: var(--color-surface-deep); border: 1px solid var(--color-border); }
+  .h-cartellini span { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-ink-subtle); }
+  .h-cartellini strong { font-family: var(--font-display); font-size: 1.8rem; font-weight: 400; color: var(--color-ink); }
+  .h-nota { color: var(--color-ink-muted); font-size: 0.9rem; max-width: 34rem; }
+  .h-piccola { font-size: 0.78rem; color: var(--color-ink-subtle); }
+
+  /* ---------- feature ---------- */
+  .h-feature { display: grid; gap: 2rem; align-items: center; }
+  @media (min-width: 900px) { .h-feature { grid-template-columns: 1fr 1fr; gap: 4rem; } .h-feature-rovescio .h-feature-foto { order: 2; } }
+  .h-feature-foto { margin: 0; }
+  .h-feature-foto img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 16px; box-shadow: 0 30px 60px -40px rgba(60,45,20,0.55); }
+  .h-feature-foto figcaption { margin-top: 0.8rem; font-family: var(--font-display); font-style: italic; font-size: 0.95rem; color: var(--color-ink-subtle); }
+  .h-feature-testo .h-titolo em { display: block; font-size: 0.6em; line-height: 1.3; margin-top: 0.4rem; }
+  .h-feature-body { margin-top: 1.2rem; color: var(--color-ink-muted); line-height: 1.7; }
+  .h-elenco { list-style: none; padding: 0; margin: 1.2rem 0 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; }
+  .h-elenco li { padding-left: 1.4rem; position: relative; color: var(--color-ink); font-size: 0.95rem; }
+  .h-elenco li::before { content: '—'; position: absolute; left: 0; color: var(--color-accent); }
+
+  /* ---------- passi ---------- */
+  .h-passi { list-style: none; padding: 0; margin: 2.5rem 0 2rem; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); }
+  .h-passi li { position: relative; display: flex; flex-direction: column; gap: 0.4rem; padding: 1.5rem; border: 1px solid var(--color-border); border-radius: 14px; background: var(--color-surface-deep); }
+  .h-passi li::before { content: ''; position: absolute; left: 1.5rem; right: 1.5rem; top: 0; height: 3px; background: linear-gradient(90deg, var(--color-accent), transparent); }
+  .h-passi-num { font-family: var(--font-display); font-size: 2.8rem; font-weight: 300; line-height: 1; color: var(--color-accent); }
+  .h-passi-titolo { font-family: var(--font-display); font-size: 1.3rem; color: var(--color-ink); }
+  .h-passi-body { color: var(--color-ink-muted); line-height: 1.6; font-size: 0.95rem; }
+  #come-funziona { padding-bottom: 5rem; }
+
+  @keyframes h-su { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+  @keyframes h-lento { from { transform: scale(1.08); } to { transform: scale(1); } }
+  @media (prefers-reduced-motion: reduce) { .h-apertura-foto, .h-apertura-testo, .h-zona { animation: none; } }
+</style>
