@@ -6,6 +6,8 @@ import PriceCard from '../components/PriceCard.astro';
 import LangPills from '../components/LangPills.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
 import HeroAudioSample from '../components/HeroAudioSample.astro';
+import { getCollection } from 'astro:content';
+import Eyebrow from '../components/Eyebrow.astro';
 import StructuredData from '../components/StructuredData.astro';
 import { itemListLD } from '../lib/seo';
 
@@ -87,6 +89,9 @@ const guideListLD = itemListLD(
   "Audioguide della Valle d'Itria",
   guides.map((guide) => `https://localis.guide/guide/${guide.slug}`),
 );
+
+const masserieValle = (await getCollection('masserie', (m) => m.data.status === 'published' && m.data.zone_href === '/valle-d-itria/'))
+  .sort((a, b) => a.data.name.localeCompare(b.data.name, 'it'));
 ---
 <Layout
   title="Valle d'Itria — Audioguide narrative tra trulli e borghi · Localis"
@@ -212,6 +217,27 @@ const guideListLD = itemListLD(
       </ol>
     </div>
   </section>
+
+  {/* LE MASSERIE DELLA VALLE — storie gratis, porta verso /masserie/ */}
+  {masserieValle.length > 0 && (
+    <section class="border-t border-border">
+      <div class="max-w-narrow mx-auto px-md py-2xl lg:py-3xl">
+        <Eyebrow class="mb-md">Le masserie della valle</Eyebrow>
+        <h2 class="font-display text-3xl text-ink mb-md">Raccontate una per una. Si ascoltano gratis.</h2>
+        <ul class="divide-y divide-border">
+          {masserieValle.map((m) => (
+            <li>
+              <a href={`/masserie/${m.data.slug}/`} class="flex flex-wrap items-baseline gap-x-md gap-y-2xs py-sm no-underline hover:underline underline-offset-4">
+                <span class="font-display text-xl text-ink">{m.data.name}</span>
+                <span class="text-sm text-ink-muted">{m.data.place} · {Math.max(1, Math.round(m.data.duration_seconds / 60))} min</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+        <p class="mt-lg"><a href="/masserie/" class="text-link underline underline-offset-2">Tutte le masserie →</a></p>
+      </div>
+    </section>
+  )}
 
   {/* NARRATORI */}
   <section id="prezzi" class="bg-surface-elev border-t border-border">

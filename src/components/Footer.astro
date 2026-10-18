@@ -32,6 +32,19 @@ const year = new Date().getFullYear();
       <p class="text-sm text-ink-subtle">
         {t('footer.copyright', lang)} · {year}
       </p>
+      <p class="text-sm text-ink-subtle mt-2xs">
+        {lang === 'it'
+          ? 'Della stessa famiglia di '
+          : lang === 'de'
+            ? 'Aus derselben Familie wie '
+            : 'From the same family as '}
+        <a href="https://cortese.app" rel="noopener" class="text-ink-muted hover:text-ink underline underline-offset-2">Cortése</a>
+        {lang === 'it'
+          ? ', il concierge digitale per masserie e dimore.'
+          : lang === 'de'
+            ? ', dem digitalen Concierge für Masserie und historische Häuser.'
+            : ', the digital concierge for masserie and historic houses.'}
+      </p>
     </div>
 
     <nav class="flex flex-wrap items-center gap-x-lg gap-y-sm lg:justify-end">
@@ -59,6 +72,14 @@ const year = new Date().getFullYear();
       >
         {lang === 'it' ? 'Crocieristi' : lang === 'de' ? 'Kreuzfahrtgäste' : 'Cruise guests'}
       </a>
+      {lang === 'it' && (
+        <a
+          href="/masserie/"
+          class="text-sm text-ink-muted hover:text-ink no-underline transition-colors duration-fast"
+        >
+          Masserie
+        </a>
+      )}
       <a
         href={localizedHref('/termini', lang)}
         class="text-sm text-ink-muted hover:text-ink no-underline transition-colors duration-fast"
