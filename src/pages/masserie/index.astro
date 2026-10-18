@@ -2,21 +2,25 @@
 export const prerender = true;
 import { getCollection } from 'astro:content';
 import Layout from '../../components/Layout.astro';
-import Eyebrow from '../../components/Eyebrow.astro';
-import HeroAudioSample from '../../components/HeroAudioSample.astro';
+import MasseriaCard from '../../components/MasseriaCard.astro';
+import MasserieMappa from '../../components/MasserieMappa.astro';
+import { COMUNI, comuneDi, inOrdine, minuti } from '../../lib/masserie';
 
-const masserie = (await getCollection('masserie', (m) => m.data.status === 'published'))
-  .sort((a, b) => a.data.name.localeCompare(b.data.name, 'it'));
+const masserie = inOrdine(await getCollection('masserie', (m) => m.data.status === 'published'));
 
-// Raggruppate per zona, nell'ordine in cui compaiono; la zona rimanda alla sua pagina.
-const zone = new Map<string, { href: string; items: typeof masserie }>();
+const conteggi: Record<string, number> = {};
 for (const m of masserie) {
-  const z = zone.get(m.data.zone_label) ?? { href: m.data.zone_href, items: [] };
-  z.items.push(m);
-  zone.set(m.data.zone_label, z);
+  const c = comuneDi(m.data.place);
+  if (c) conteggi[c.slug] = (conteggi[c.slug] ?? 0) + 1;
 }
-
-const minuti = (s: number) => Math.max(1, Math.round(s / 60));
+const comuniPresenti = COMUNI.filter((c) => conteggi[c.slug]);
+// I capitoli dell'atlante: un paese, una foto, le sue masserie (numerate in ordine d'atlante).
+const capitoli = comuniPresenti.map((c) => ({
+  comune: c,
+  voci: masserie.map((m, i) => ({ m, numero: i + 1 })).filter(({ m }) => comuneDi(m.data.place)?.slug === c.slug),
+}));
+const durate = masserie.map((m) => minuti(m.data.duration_seconds));
+const da = Math.min(...durate), a = Math.max(...durate);
 ---
 <Layout
   title="Masserie di Puglia, raccontate · Localis"
@@ -24,80 +28,302 @@ const minuti = (s: number) => Math.max(1, Math.round(s / 60));
   lang="it"
   langUrlsOverride={{ it: '/masserie/' }}
 >
-  <article class="max-w-narrow mx-auto px-md py-2xl">
-    <Eyebrow class="mb-md">Masserie di Puglia</Eyebrow>
-    <h1 class="font-display text-4xl text-ink mb-lg">Le masserie, <em>raccontate.</em></h1>
-    <div class="text-lg text-ink-muted leading-relaxed space-y-md mb-lg max-w-prose">
-      <p>
-        Una masseria non è una casa di campagna: è un'azienda. La parola viene da <em>massaro</em>, chi
-        amministrava la terra per un proprietario che in campagna veniva di rado. Intorno alla corte stava
-        tutto: le stalle, l'aia, la cisterna, il frantoio, una cappella. In Valle d'Itria le stalle erano trulli.
+  <!-- Apertura -->
+  <section class="apertura">
+    <img src="/images/hero/landing-puglia.jpg" alt="" class="apertura-foto" fetchpriority="high" />
+    <div class="apertura-velo"></div>
+    <div class="apertura-testo">
+      <p class="occhiello">Masserie di Puglia · un atlante</p>
+      <h1>Le masserie, <em>raccontate.</em></h1>
+      <p class="apertura-lead">
+        {masserie.length} masserie della Valle d'Itria, una per una: perché sono fatte così, chi ci ha
+        vissuto, cosa notare quando ci sei. Si ascoltano dal telefono, gratis.
       </p>
-      <p>
-        Le mura non erano decorazione. In una terra di confine, esposta alle incursioni dal mare e ai banditi,
-        dal Cinquecento le masserie hanno preso in prestito i pezzi dei castelli: una porta sola, torri,
-        caditoie sopra l'ingresso.
-      </p>
-      <p>
-        Dentro quelle mura è passata l'economia della Puglia: grano e pecore, tratturi, jazzi, trappeti
-        dell'olio. Erano il punto d'incontro fra la grande proprietà e il lavoro contadino, finché il Novecento
-        non le ha svuotate.
-      </p>
-      <p>
-        Oggi valgono per questo: sono la memoria del luogo scritta in pietra, dove ogni muro a secco e ogni
-        cisterna risponde a un problema vero con quello che la terra dava. Chi le riapre per ospitare, con
-        rispetto, le tiene vive nel modo più antico che esista: facendole abitare.
-      </p>
-      <p>
-        Qui le raccontiamo una per volta: perché è fatta così, chi ci ha vissuto, cosa notare quando ci sei.
-        Le storie si ascoltano gratis.
-      </p>
+      <ul class="numeri">
+        <li><strong>{masserie.length}</strong> storie</li>
+        <li><strong>{comuniPresenti.length}</strong> paesi</li>
+        <li><strong>{da}–{a}</strong> minuti l'una</li>
+        <li>fonti per ogni riga</li>
+      </ul>
+      <a href="#atlante" class="apertura-cta">Apri l'atlante ↓</a>
     </div>
-    <p class="text-sm text-ink-subtle mb-sm">
-      Da tre a quindici minuti l'una · Fonti in fondo a ogni storia · Voce sintetica, dichiarata
-    </p>
-    <p class="text-xs text-ink-subtle mb-2xl max-w-prose">
-      Fonti dell'introduzione: Regione Puglia, PPTR, <a href="https://pugliacon.regione.puglia.it/documents/96721/919501/4.4.6_Manufatti+rurali.pdf/bae97647-4193-a4e4-a270-609778a5431d" rel="noopener" class="text-link underline underline-offset-2">Linee guida per il recupero, la manutenzione e il riuso dell'edilizia e dei beni rurali</a> (2015) ·
-      Treccani, <a href="https://www.treccani.it/vocabolario/masseria/" rel="noopener" class="text-link underline underline-offset-2">Vocabolario, voce «masseria»</a> ·
-      Vito Bianchi, <em>Apulia. The Masserie</em>, Mario Adda Editore (2012).
-    </p>
+  </section>
 
-    {[...zone.entries()].map(([label, z]) => (
-      <section class="mb-2xl">
-        <h2 class="font-display text-2xl text-ink mb-lg">
-          <a href={z.href} class="no-underline hover:underline underline-offset-4 text-ink">{label}</a>
-        </h2>
-        <ul class="space-y-md">
-          {z.items.map((m) => (
-            <li class="rounded-lg border border-border bg-surface-elev p-lg">
-              <a href={`/masserie/${m.data.slug}/`} class="block no-underline">
-                <p class="text-xs font-semibold tracking-[0.18em] uppercase text-accent">{m.data.place}</p>
-                <p class="font-display text-2xl text-ink mt-xs">{m.data.name}</p>
-                <p class="font-display italic text-lg text-ink-muted mt-2xs">{m.data.title_it}</p>
-              </a>
-              <HeroAudioSample
-                lang="it"
-                src={m.data.audio_it}
-                guideSlug={`masseria-${m.data.slug}`}
-                context="masseria"
-                label={m.data.format === 'lungo'
-                  ? `Ascolta · ${minuti(m.data.duration_seconds)} min · racconto lungo, voce ${m.data.voice}`
-                  : `Ascolta · ${minuti(m.data.duration_seconds)} min · gratis`}
-              />
-              <p class="mt-md text-sm">
-                <a href={`/masserie/${m.data.slug}/`} class="text-link underline underline-offset-2">Il testo e le fonti →</a>
-              </p>
-            </li>
+  <!-- Mappa e filtri -->
+  <section id="atlante" class="max-w-7xl mx-auto px-md pt-3xl">
+    <div class="atlante-griglia">
+      <div class="atlante-intro">
+        <p class="occhiello occhiello-scuro">Dove sono</p>
+        <h2 class="font-display text-3xl text-ink leading-tight">Tra la Murgia dei trulli e il mare.</h2>
+        <p class="text-ink-muted leading-relaxed mt-md">
+          Le masserie stanno dove stava il lavoro: sulle colline dei trulli, nella piana degli ulivi, a pochi
+          chilometri dalla costa. Scegli un paese, o ascoltale tutte.
+        </p>
+        <div class="filtri" role="group" aria-label="Filtra per paese">
+          <button type="button" class="filtro" data-comune="tutte" aria-pressed="true">Tutte <span>{masserie.length}</span></button>
+          {comuniPresenti.map((c) => (
+            <button type="button" class="filtro" data-comune={c.slug} aria-pressed="false">{c.label} <span>{conteggi[c.slug]}</span></button>
           ))}
-        </ul>
+        </div>
+      </div>
+      <MasserieMappa conteggi={conteggi} />
+    </div>
+  </section>
+
+  <!-- Le storie -->
+  <section class="max-w-7xl mx-auto px-md pt-3xl pb-2xl">
+    <div class="storie-testa">
+      <h2 class="font-display text-3xl text-ink">Le storie</h2>
+      <p class="storie-conta" aria-live="polite"><span id="conta">{masserie.length}</span> da ascoltare</p>
+    </div>
+    {capitoli.map(({ comune, voci }) => (
+      <section class:list={['capitolo', { 'capitolo-singolo': voci.length === 1 }]} data-comune={comune.slug}>
+        <div class="capitolo-foto">
+          {comune.img && <img src={comune.img} alt={comune.imgAlt ?? ''} loading="lazy" decoding="async" />}
+          <div class="capitolo-testo">
+            <h3>{comune.label}</h3>
+            <p>{voci.length} {voci.length === 1 ? 'masseria' : 'masserie'}</p>
+          </div>
+        </div>
+        <div class="storie">
+          {voci.map(({ m, numero }, i) => <MasseriaCard entry={m} numero={numero} foto={false} ritardo={i * 80} />)}
+        </div>
       </section>
     ))}
+  </section>
 
-    <div class="rounded-lg border border-border bg-surface-elev p-lg">
-      <p class="text-ink">
-        Gestite una masseria di Puglia? Per correggere, aggiungere o togliere una storia scriveteci a
-        <a href="mailto:hello@localis.guide" class="text-link underline underline-offset-2">hello@localis.guide</a>.
+  <!-- Che cos'era una masseria -->
+  <section class="saggio">
+    <div class="max-w-5xl mx-auto px-md py-3xl">
+      <p class="occhiello">Prima di ascoltare</p>
+      <h2 class="font-display text-4xl text-ink leading-tight mb-xl">Che cos'era una masseria.</h2>
+      <div class="saggio-colonne">
+        <p>
+          Una masseria non è una casa di campagna: è un'azienda. La parola viene da <em>massaro</em>, chi
+          amministrava la terra per un proprietario che in campagna veniva di rado. Intorno alla corte stava
+          tutto: le stalle, l'aia, la cisterna, il frantoio, una cappella. In Valle d'Itria le stalle erano trulli.
+        </p>
+        <p>
+          Le mura non erano decorazione. In una terra di confine, esposta alle incursioni dal mare e ai banditi,
+          dal Cinquecento le masserie hanno preso in prestito i pezzi dei castelli: una porta sola, torri,
+          caditoie sopra l'ingresso.
+        </p>
+        <p>
+          Dentro quelle mura è passata l'economia della Puglia: grano e pecore, tratturi, jazzi, trappeti
+          dell'olio. Erano il punto d'incontro fra la grande proprietà e il lavoro contadino, finché il Novecento
+          non le ha svuotate.
+        </p>
+        <p>
+          Oggi valgono per questo: sono la memoria del luogo scritta in pietra, dove ogni muro a secco e ogni
+          cisterna risponde a un problema vero con quello che la terra dava. Chi le riapre per ospitare, con
+          rispetto, le tiene vive nel modo più antico che esista: facendole abitare.
+        </p>
+      </div>
+      <p class="saggio-fonti">
+        Fonti: Regione Puglia, PPTR, <a href="https://pugliacon.regione.puglia.it/documents/96721/919501/4.4.6_Manufatti+rurali.pdf/bae97647-4193-a4e4-a270-609778a5431d" rel="noopener">Linee guida per il recupero, la manutenzione e il riuso dell'edilizia e dei beni rurali</a> (2015) ·
+        Treccani, <a href="https://www.treccani.it/vocabolario/masseria/" rel="noopener">Vocabolario, voce «masseria»</a> ·
+        Vito Bianchi, <em>Apulia. The Masserie</em>, Mario Adda Editore (2012).
+        Voce sintetica, dichiarata. Le foto delle schede sono dei paesi, non delle masserie.
       </p>
     </div>
-  </article>
+  </section>
+
+  <!-- Per chi gestisce una masseria -->
+  <section class="max-w-5xl mx-auto px-md py-3xl">
+    <div class="gestori">
+      <p class="font-display text-2xl text-ink leading-snug">Gestite una masseria di Puglia?</p>
+      <p class="text-ink-muted mt-sm">
+        Per correggere, aggiungere o togliere una storia, o per avere la cornicetta con il QR in reception,
+        scriveteci a <a href="mailto:hello@localis.guide" class="text-link underline underline-offset-2">hello@localis.guide</a>.
+      </p>
+    </div>
+  </section>
 </Layout>
+
+<script>
+  // Filtro per paese: i bottoni e i punti della mappa fanno la stessa cosa.
+  const carte = [...document.querySelectorAll<HTMLElement>('.capitolo')];
+  const bottoni = [...document.querySelectorAll<HTMLButtonElement>('.filtro')];
+  const pin = [...document.querySelectorAll<SVGGElement>('.pin')];
+  const conta = document.getElementById('conta');
+
+  function scegli(comune: string) {
+    const tutte = comune === 'tutte';
+    let n = 0;
+    for (const c of carte) {
+      const visibile = tutte || c.dataset.comune === comune;
+      c.hidden = !visibile;
+      if (visibile) n += c.querySelectorAll('.mcard').length;
+    }
+    for (const b of bottoni) b.setAttribute('aria-pressed', String(b.dataset.comune === comune));
+    for (const p of pin) p.classList.toggle('attivo', p.dataset.comune === comune);
+    if (conta) conta.textContent = String(n);
+  }
+
+  for (const b of bottoni) b.addEventListener('click', () => scegli(b.dataset.comune ?? 'tutte'));
+  for (const p of pin) {
+    const vai = () => {
+      const giaAttivo = p.classList.contains('attivo');
+      scegli(giaAttivo ? 'tutte' : p.dataset.comune ?? 'tutte');
+    };
+    p.addEventListener('click', vai);
+    p.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); vai(); }
+    });
+  }
+</script>
+
+<style>
+  .apertura {
+    position: relative;
+    min-height: min(88vh, 760px);
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .apertura-foto {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 60% 40%;
+    filter: sepia(0.35) saturate(0.9) contrast(1.03);
+    z-index: -2;
+    animation: lento 18s ease-out both;
+  }
+  .apertura-velo {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      linear-gradient(90deg, rgba(28, 24, 19, 0.86) 0%, rgba(28, 24, 19, 0.55) 45%, rgba(28, 24, 19, 0.05) 80%),
+      linear-gradient(0deg, rgba(28, 24, 19, 0.6) 0%, rgba(28, 24, 19, 0) 50%),
+      linear-gradient(180deg, rgba(28, 24, 19, 0.35) 0%, rgba(28, 24, 19, 0) 35%);
+  }
+  .apertura-testo {
+    width: 100%;
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 6rem 1rem 3.5rem;
+    color: #fbfaf6;
+    animation: su 0.9s cubic-bezier(.2,.7,.2,1) both;
+  }
+  .apertura h1 {
+    font-family: var(--font-display);
+    font-size: var(--text-5xl);
+    line-height: 1.02;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    max-width: 12ch;
+    color: #fbfaf6;
+  }
+  .apertura h1 em { color: #e8d3a3; }
+  .apertura-lead { margin-top: 1.25rem; max-width: 34rem; font-size: 1.15rem; line-height: 1.6; color: rgba(251, 250, 246, 0.92); }
+  .numeri {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.4rem;
+    margin-top: 1.6rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(251, 250, 246, 0.8);
+  }
+  .numeri strong { font-family: var(--font-display); font-size: 1.25rem; letter-spacing: 0; color: #fbfaf6; font-weight: 400; margin-right: 0.25rem; }
+  .apertura-cta {
+    display: inline-block;
+    margin-top: 2rem;
+    padding: 0.85rem 1.4rem;
+    border-radius: 999px;
+    background: var(--color-olive);
+    color: #fbfaf6;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.25s;
+  }
+  .apertura-cta:hover { background: var(--color-olive-d); }
+
+  .occhiello {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #e8d3a3;
+    margin-bottom: 0.9rem;
+  }
+  .occhiello-scuro { color: var(--color-accent); }
+
+  .atlante-griglia { display: grid; gap: 2rem; align-items: center; }
+  @media (min-width: 900px) { .atlante-griglia { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 3.5rem; } }
+  .filtri { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; }
+  .filtro {
+    border: 1px solid var(--color-border-2);
+    background: var(--color-surface-deep);
+    color: var(--color-ink);
+    border-radius: 999px;
+    padding: 0.5rem 0.95rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+  .filtro span { color: var(--color-ink-subtle); margin-left: 0.2rem; font-variant-numeric: tabular-nums; }
+  .filtro:hover { border-color: var(--color-accent); }
+  .filtro[aria-pressed='true'] { background: var(--color-olive); border-color: var(--color-olive); color: #fbfaf6; }
+  .filtro[aria-pressed='true'] span { color: rgba(251, 250, 246, 0.75); }
+
+  .storie-testa { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--color-border-2); padding-bottom: 0.8rem; }
+  .storie-conta { font-size: 0.9rem; color: var(--color-ink-subtle); }
+  .storie { display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); }
+  .capitolo { margin-bottom: 3rem; }
+  @media (min-width: 900px) {
+    .capitolo-singolo { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 1.25rem; align-items: stretch; }
+    .capitolo-singolo .capitolo-foto { height: auto; min-height: 17rem; margin-bottom: 0; }
+    .capitolo-singolo .storie { grid-template-columns: 1fr; }
+  }
+  .capitolo[hidden] { display: none; }
+  .capitolo-foto {
+    position: relative;
+    height: clamp(11rem, 26vw, 17rem);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: flex-end;
+    isolation: isolate;
+    background: var(--color-surface-elev);
+  }
+  .capitolo-foto img {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2;
+    filter: sepia(0.55) saturate(0.85) contrast(1.04) brightness(0.95);
+  }
+  .capitolo-foto::after {
+    content: ''; position: absolute; inset: 0; z-index: -1;
+    background: linear-gradient(90deg, rgba(28, 24, 19, 0.7) 0%, rgba(28, 24, 19, 0.15) 60%), color-mix(in oklab, var(--color-accent) 16%, transparent);
+  }
+  .capitolo-testo { padding: 1.5rem 1.75rem; color: #fbfaf6; }
+  .capitolo-testo h3 { color: #fbfaf6; font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 400; line-height: 1; letter-spacing: -0.015em; }
+  .capitolo-testo p { margin-top: 0.4rem; font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase; color: #e8d3a3; }
+
+  .saggio { background: var(--color-surface-elev); border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border); }
+  .saggio-colonne { font-size: 1.08rem; line-height: 1.75; color: var(--color-ink-muted); }
+  .saggio-colonne p + p { margin-top: 1rem; }
+  .saggio-colonne p:first-child::first-letter {
+    float: left;
+    font-family: var(--font-display);
+    font-size: 4.2rem;
+    line-height: 0.85;
+    padding: 0.35rem 0.6rem 0 0;
+    color: var(--color-accent);
+  }
+  @media (min-width: 900px) { .saggio-colonne { columns: 2; column-gap: 3rem; } .saggio-colonne p { break-inside: avoid; } }
+  .saggio-fonti { margin-top: 2rem; font-size: 0.78rem; color: var(--color-ink-subtle); max-width: 48rem; }
+  .saggio-fonti a { color: var(--color-link); text-decoration: underline; text-underline-offset: 2px; }
+
+  .gestori { border-left: 3px solid var(--color-accent); padding: 0.5rem 0 0.5rem 1.5rem; }
+
+  @keyframes su { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+  @keyframes lento { from { transform: scale(1.08); } to { transform: scale(1); } }
+  @media (prefers-reduced-motion: reduce) { .apertura-foto, .apertura-testo { animation: none; } }
+</style>

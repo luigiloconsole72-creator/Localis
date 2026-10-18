@@ -1,0 +1,141 @@
+---
+import { COMUNI, RIFERIMENTI } from '../lib/masserie';
+
+export interface Props {
+  /** Quante masserie per comune (slug → numero). */
+  conteggi: Record<string, number>;
+}
+const { conteggi } = Astro.props;
+
+// Proiezione semplice e onesta: gradi → pixel, con la longitudine accorciata del
+// coseno della latitudine (40,8° → 0,757), così le distanze restano in proporzione.
+const LNG0 = 17.16, LAT0 = 40.985, PY = 1150, PX = PY * 0.757;
+const x = (lng: number) => Math.round((lng - LNG0) * PX + 24);
+const y = (lat: number) => Math.round((LAT0 - lat) * PY + 16);
+const W = x(17.69) + 24, H = y(40.6) + 16;
+
+// Costa adriatica, da nord-ovest a sud-est (punti indicativi: Monopoli, Capitolo,
+// Savelletri, Torre Canne, Rosa Marina, Villanova). Disegno, non cartografia.
+const costa: [number, number][] = [
+  [17.25, 40.985], [17.305, 40.952], [17.362, 40.914], [17.413, 40.876],
+  [17.468, 40.836], [17.527, 40.797], [17.583, 40.783], [17.64, 40.756], [17.69, 40.733],
+];
+const costaD = costa.map(([lng, lat], i) => `${i ? 'L' : 'M'}${x(lng)},${y(lat)}`).join(' ');
+const mareD = `${costaD} L${W},${y(40.733)} L${W},0 L${x(17.25)},0 Z`;
+
+const conMasserie = COMUNI.filter((c) => (conteggi[c.slug] ?? 0) > 0);
+const senza = [
+  ...COMUNI.filter((c) => !(conteggi[c.slug] ?? 0)).map((c) => ({ label: c.label, lat: c.lat, lng: c.lng })),
+  ...RIFERIMENTI,
+];
+---
+<figure class="mappa">
+  <svg viewBox={`0 0 ${W} ${H}`} role="group" aria-label="Mappa illustrata della Valle d'Itria con i paesi delle masserie raccontate">
+    <defs>
+      <pattern id="onde" width="26" height="12" patternUnits="userSpaceOnUse">
+        <path d="M0 8 q6.5 -5 13 0 t13 0" fill="none" stroke="currentColor" stroke-width="0.9" opacity="0.35" />
+      </pattern>
+      <radialGradient id="luce" cx="35%" cy="55%" r="70%">
+        <stop offset="0" stop-color="#fbf6ea" />
+        <stop offset="1" stop-color="#f1e8d4" />
+      </radialGradient>
+    </defs>
+
+    <rect width={W} height={H} fill="url(#luce)" />
+
+    <!-- la Murgia dei trulli: curve di livello disegnate, solo per dare il rilievo -->
+    <g class="murgia" fill="none" stroke="currentColor">
+      {[0, 1, 2, 3, 4].map((i) => (
+        <ellipse cx={x(17.3)} cy={y(40.74)} rx={120 - i * 21} ry={64 - i * 11} transform={`rotate(-24 ${x(17.3)} ${y(40.74)})`} />
+      ))}
+    </g>
+    <text class="etichetta-zona" x={x(17.21)} y={y(40.66)}>Murgia dei trulli</text>
+
+    <!-- il mare -->
+    <path d={mareD} class="mare" />
+    <path d={mareD} fill="url(#onde)" class="onde" />
+    <path d={costaD} class="costa" />
+    <text class="etichetta-mare" x={x(17.52)} y={y(40.93)}>Mare Adriatico</text>
+
+    <!-- paesi di riferimento -->
+    {senza.map((r) => (
+      <g class="riferimento">
+        <circle cx={x(r.lng)} cy={y(r.lat)} r="2.6" />
+        <text x={x(r.lng) + 7} y={y(r.lat) + 4}>{r.label}</text>
+      </g>
+    ))}
+
+    <!-- i paesi con le masserie raccontate -->
+    {conMasserie.map((c) => (
+      <g class="pin" role="button" tabindex="0" data-comune={c.slug}
+         aria-label={`${c.label}: ${conteggi[c.slug]} ${conteggi[c.slug] === 1 ? 'masseria' : 'masserie'}`}>
+        <circle class="pin-alone" cx={x(c.lng)} cy={y(c.lat)} r="19" />
+        <circle class="pin-punto" cx={x(c.lng)} cy={y(c.lat)} r="12" />
+        <text class="pin-num" x={x(c.lng)} y={y(c.lat) + 4.5}>{conteggi[c.slug]}</text>
+        <text class="pin-nome" x={x(c.lng)} y={y(c.lat) + 32}>{c.label}</text>
+      </g>
+    ))}
+
+    <!-- rosa dei venti minima -->
+    <g class="nord" transform={`translate(${W - 34} ${H - 40})`}>
+      <path d="M0 -14 L5 4 L0 0 L-5 4 Z" />
+      <text y="18">N</text>
+    </g>
+  </svg>
+  <figcaption>
+    Ogni punto è un paese, non l'indirizzo della masseria: il numero dice quante storie ci sono intorno.
+    Tocca un paese per vederle.
+  </figcaption>
+</figure>
+
+<style>
+  .mappa { margin: 0; }
+  .mappa svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 18px;
+    border: 1px solid var(--color-border-2);
+    color: var(--color-accent);
+    box-shadow: 0 30px 60px -40px rgba(60, 45, 20, 0.5);
+  }
+  .murgia ellipse { stroke-width: 0.8; opacity: 0.22; stroke-dasharray: 2 4; }
+  .mare { fill: #e9e4d2; }
+  .onde { color: var(--color-olive); }
+  .costa { fill: none; stroke: var(--color-accent); stroke-width: 1.6; stroke-linejoin: round; opacity: 0.75; }
+  .etichetta-mare, .etichetta-zona {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 15px;
+    fill: var(--color-ink-subtle);
+    letter-spacing: 0.08em;
+  }
+  .etichetta-zona { font-size: 13px; opacity: 0.8; }
+  .riferimento circle { fill: var(--color-ink-subtle); opacity: 0.6; }
+  .riferimento text { font-size: 11px; fill: var(--color-ink-subtle); font-family: var(--font-body); }
+
+  .pin { cursor: pointer; outline: none; }
+  .pin-alone { fill: var(--color-olive); opacity: 0.16; transition: opacity 0.3s, r 0.3s; }
+  .pin-punto { fill: var(--color-olive); stroke: #fbfaf6; stroke-width: 2.5; transition: fill 0.3s; }
+  .pin-num { fill: #fbfaf6; font: 600 12px var(--font-body); text-anchor: middle; pointer-events: none; }
+  .pin-nome {
+    font-family: var(--font-display);
+    font-size: 15px;
+    fill: var(--color-ink);
+    text-anchor: middle;
+    paint-order: stroke;
+    stroke: #f6efdf;
+    stroke-width: 4px;
+  }
+  .pin:hover .pin-alone, .pin:focus-visible .pin-alone { opacity: 0.32; }
+  .pin:focus-visible .pin-punto { stroke: var(--color-ink); }
+  .pin.attivo .pin-punto { fill: var(--color-accent); }
+  .pin.attivo .pin-alone { fill: var(--color-accent); opacity: 0.3; animation: respiro 2.4s ease-in-out infinite; }
+  .nord path { fill: var(--color-ink-subtle); }
+  .nord text { font: 600 10px var(--font-body); fill: var(--color-ink-subtle); text-anchor: middle; }
+
+  figcaption { margin-top: 0.7rem; font-size: 0.8rem; color: var(--color-ink-subtle); }
+
+  @keyframes respiro { 50% { opacity: 0.12; } }
+  @media (prefers-reduced-motion: reduce) { .pin.attivo .pin-alone { animation: none; } }
+</style>

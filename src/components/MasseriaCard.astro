@@ -1,0 +1,188 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import HeroAudioSample from './HeroAudioSample.astro';
+import { comuneDi, minuti } from '../lib/masserie';
+
+export interface Props {
+  entry: CollectionEntry<'masserie'>;
+  /** Numero d'ordine nell'atlante (1 = «01»). */
+  numero: number;
+  /** Ritardo dell'entrata a scena, per lo scorrimento a cascata. */
+  ritardo?: number;
+  /** Con la foto del paese in testa. Senza, quando la foto è già nel capitolo o nella pagina. */
+  foto?: boolean;
+}
+
+const { entry, numero, ritardo = 0, foto = true } = Astro.props;
+const d = entry.data;
+const c = comuneDi(d.place);
+const href = `/masserie/${d.slug}/`;
+const lungo = d.format === 'lungo';
+const meta = lungo
+  ? `Racconto lungo · ${minuti(d.duration_seconds)} min · voce ${d.voice}`
+  : `${minuti(d.duration_seconds)} min · voce ${d.voice}`;
+---
+<article class:list={['mcard', { 'mcard-senza-foto': !foto }]} data-comune={c?.slug ?? 'altro'} style={`--ritardo:${ritardo}ms`}>
+  {foto ? (
+    <a href={href} class="mcard-foto" tabindex="-1" aria-hidden="true">
+      {c?.img && <img src={c.img} alt="" loading="lazy" decoding="async" />}
+      <span class="mcard-num">{String(numero).padStart(2, '0')}</span>
+      {c && <span class="mcard-luogo">{c.label} · il territorio</span>}
+    </a>
+  ) : (
+    <span class="mcard-num-testo" aria-hidden="true">{String(numero).padStart(2, '0')}</span>
+  )}
+  <div class="mcard-corpo">
+    <p class="mcard-place">{d.place}</p>
+    <h3 class="mcard-nome"><a href={href}>{d.name}</a></h3>
+    <p class="mcard-titolo">{d.title_it}</p>
+    <p class="mcard-meta">{meta}{lungo ? '' : ' · gratis'}</p>
+    <HeroAudioSample
+      lang="it"
+      src={d.audio_it}
+      guideSlug={`masseria-${d.slug}`}
+      context="masseria"
+      label={`Ascolta · ${minuti(d.duration_seconds)} min`}
+    />
+    <a href={href} class="mcard-link">Il testo e le fonti →</a>
+  </div>
+</article>
+
+<style>
+  .mcard {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-surface-deep);
+    border: 1px solid var(--color-border);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: transform 0.35s cubic-bezier(.2,.7,.2,1), box-shadow 0.35s, border-color 0.35s;
+    animation: mcard-in 0.7s cubic-bezier(.2,.7,.2,1) both;
+    animation-delay: var(--ritardo);
+  }
+  .mcard:hover {
+    transform: translateY(-3px);
+    border-color: color-mix(in oklab, var(--color-accent) 35%, var(--color-border));
+    box-shadow: 0 18px 40px -24px rgba(60, 45, 20, 0.45);
+  }
+  .mcard[hidden] { display: none; }
+
+  /* La foto: sempre lo stesso viraggio caldo, così dieci foto diverse sembrano una serie. */
+  .mcard-foto {
+    position: relative;
+    display: block;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    background: var(--color-surface-elev);
+  }
+  .mcard-foto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: sepia(0.55) saturate(0.85) contrast(1.04) brightness(0.96);
+    transform: scale(1.02);
+    transition: transform 0.8s cubic-bezier(.2,.7,.2,1), filter 0.6s;
+  }
+  .mcard:hover .mcard-foto img { transform: scale(1.07); filter: sepia(0.35) saturate(0.95) contrast(1.04); }
+  .mcard-foto::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgba(28, 24, 19, 0) 45%, rgba(28, 24, 19, 0.62) 100%),
+      color-mix(in oklab, var(--color-accent) 18%, transparent);
+    mix-blend-mode: multiply;
+    pointer-events: none;
+  }
+  .mcard-num {
+    position: absolute;
+    z-index: 1;
+    left: 0.9rem;
+    bottom: 0.35rem;
+    font-family: var(--font-display);
+    font-size: 3.4rem;
+    line-height: 1;
+    font-weight: 300;
+    color: #fbfaf6;
+    letter-spacing: -0.02em;
+    text-shadow: 0 2px 18px rgba(0, 0, 0, 0.25);
+  }
+  .mcard-luogo {
+    position: absolute;
+    z-index: 1;
+    right: 0.8rem;
+    bottom: 0.9rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(251, 250, 246, 0.88);
+  }
+
+  .mcard-senza-foto { background: var(--color-surface-deep); position: relative; }
+  .mcard-senza-foto::before {
+    content: '';
+    position: absolute;
+    left: 1.15rem;
+    right: 1.15rem;
+    top: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--color-accent), transparent);
+  }
+  .mcard-num-testo {
+    display: block;
+    padding: 1.1rem 1.15rem 0;
+    font-family: var(--font-display);
+    font-size: 2.8rem;
+    font-weight: 300;
+    line-height: 1;
+    color: var(--color-accent);
+    letter-spacing: -0.02em;
+  }
+  .mcard-senza-foto .mcard-corpo { padding-top: 0.5rem; }
+
+  .mcard-corpo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 1.15rem 1.15rem 1.25rem;
+    flex: 1;
+  }
+  .mcard-place {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+  }
+  .mcard-nome {
+    font-family: var(--font-display);
+    font-size: 1.45rem;
+    line-height: 1.15;
+    color: var(--color-ink);
+  }
+  .mcard-nome a { color: inherit; text-decoration: none; }
+  .mcard-nome a:hover { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+  .mcard-titolo {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--color-ink-muted);
+  }
+  .mcard-meta { font-size: 0.8rem; color: var(--color-ink-subtle); margin-bottom: 0.4rem; }
+  .mcard-link {
+    margin-top: auto;
+    padding-top: 0.6rem;
+    font-size: 0.85rem;
+    color: var(--color-link);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  @keyframes mcard-in {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mcard, .mcard-foto img { animation: none; transition: none; }
+  }
+</style>
