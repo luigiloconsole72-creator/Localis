@@ -6,16 +6,18 @@ export interface Props {
   src?: string;
   guideSlug?: string;
   context?: string;
+  /** Scritta accanto al play; di default quella dell'assaggio da 1 minuto. */
+  label?: string;
 }
 
 const { lang, src = '/audio/trailers/home-trailer-it.mp3', guideSlug, context = 'hero' } = Astro.props;
 const audioAssetId = src.split('/').pop()?.replace(/\.mp3$/i, '') || 'unknown';
 
-const label = lang === 'de'
+const label = Astro.props.label ?? (lang === 'de'
   ? 'Hörprobe · 1 Min · gratis'
   : lang === 'it'
     ? 'Ascolta un assaggio · 1 min · gratis'
-    : 'Listen to a sample · 1 min · free';
+    : 'Listen to a sample · 1 min · free');
 
 const playLabel = lang === 'de' ? 'Abspielen' : lang === 'it' ? 'Play' : 'Play';
 const pauseLabel = lang === 'de' ? 'Pausieren' : lang === 'it' ? 'Pausa' : 'Pause';

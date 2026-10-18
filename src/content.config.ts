@@ -225,4 +225,26 @@ const blog = defineCollection({
   }),
 });
 
-export const collections = { guides, partners, sources, blog };
+// ─── Masserie ────────────────────────────────────────────────────────────────
+// Un racconto breve (≈3 min) per masseria, gratis per tutti, scritto da fonti
+// pubbliche. Il corpo del file è la trascrizione di quello che dice la voce.
+// Solo italiano finché la masseria non accetta la cornicetta.
+const masserie = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/masserie' }),
+  schema: z.object({
+    slug: z.string(),
+    name: z.string(),                 // es. "Masseria Parco della Grava"
+    place: z.string(),                // es. "Pezze di Greco, Fasano"
+    title_it: z.string(),             // titolo del racconto
+    audio_it: z.string(),             // es. /audio/masserie/parco-della-grava-it.mp3
+    duration_seconds: z.number().int().positive(),   // da ffprobe, mai stimato
+    zone_label: z.string(),           // es. "Valle d'Itria"
+    zone_href: z.string(),            // es. "/valle-d-itria/"
+    description: z.string().max(160),
+    sources: z.array(sourceEntry).min(1),
+    published_at: z.date(),
+    status: z.enum(['published', 'draft']).default('published'),
+  }),
+});
+
+export const collections = { guides, partners, sources, blog, masserie };

@@ -1,0 +1,77 @@
+---
+export const prerender = true;
+import { getCollection, render } from 'astro:content';
+import Layout from '../../components/Layout.astro';
+import Eyebrow from '../../components/Eyebrow.astro';
+import HeroAudioSample from '../../components/HeroAudioSample.astro';
+
+export async function getStaticPaths() {
+  const masserie = await getCollection('masserie', (m) => m.data.status === 'published');
+  return masserie.map((entry) => ({ params: { slug: entry.data.slug }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const d = entry.data;
+const { Content } = await render(entry);
+const path = `/masserie/${d.slug}/`;
+const minutes = Math.round(d.duration_seconds / 60);
+---
+<Layout
+  title={`${d.name} · ${d.title_it} · Localis`}
+  description={d.description}
+  lang="it"
+  langUrlsOverride={{ it: path }}
+>
+  <nav aria-label="Breadcrumb" class="max-w-narrow mx-auto px-md pt-lg">
+    <ol class="flex items-center gap-xs text-sm text-ink-subtle flex-wrap">
+      <li><a href="/" class="hover:text-ink transition-colors">Home</a></li>
+      <li aria-hidden="true" class="text-ink-subtle/50">›</li>
+      <li><a href="/masserie/" class="hover:text-ink transition-colors">Masserie</a></li>
+      <li aria-hidden="true" class="text-ink-subtle/50">›</li>
+      <li aria-current="page" class="text-ink-muted">{d.name}</li>
+    </ol>
+  </nav>
+
+  <article class="max-w-narrow mx-auto px-md py-xl">
+    <Eyebrow class="mb-md">Masserie di Puglia · {d.place}</Eyebrow>
+    <h1 class="font-display text-4xl text-ink leading-tight mb-sm">{d.name}</h1>
+    <p class="font-display italic text-xl text-ink-muted mb-lg">{d.title_it}</p>
+
+    <HeroAudioSample
+      lang="it"
+      src={d.audio_it}
+      guideSlug={`masseria-${d.slug}`}
+      context="masseria"
+      label={`Ascolta · ${minutes} min · gratis`}
+    />
+
+    <p class="text-sm text-ink-subtle mt-md">
+      Racconto scritto da Localis su fonti pubbliche, letto da una voce sintetica.
+      Non è una pagina della masseria.
+    </p>
+
+    <h2 class="font-display text-2xl text-ink mt-2xl mb-md">Il testo</h2>
+    <div class="prose prose-ink max-w-prose">
+      <Content />
+    </div>
+
+    <h2 class="font-display text-2xl text-ink mt-2xl mb-md">Le fonti</h2>
+    <ul class="text-sm text-ink-muted space-y-xs">
+      {d.sources.map((s) => (
+        <li>{s.author && <>{s.author}, </>}{s.url ? <a href={s.url} class="text-link underline underline-offset-2" rel="noopener">{s.title}</a> : <em>{s.title}</em>}{s.publisher && <>, {s.publisher}</>}{s.year && <> ({s.year})</>}</li>
+      ))}
+    </ul>
+
+    <div class="mt-2xl rounded-lg border border-border bg-surface-elev p-lg">
+      <p class="text-ink">
+        Gestite questa masseria e c'è qualcosa da correggere, o da togliere?
+        Scriveteci a <a href="mailto:hello@localis.guide" class="text-link underline underline-offset-2">hello@localis.guide</a>:
+        lo sistemiamo.
+      </p>
+    </div>
+
+    <p class="mt-xl">
+      <a href={d.zone_href} class="text-link underline underline-offset-2">Gli altri racconti della {d.zone_label} →</a>
+    </p>
+  </article>
+</Layout>

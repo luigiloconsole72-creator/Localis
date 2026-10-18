@@ -1,0 +1,36 @@
+---
+export const prerender = true;
+import { getCollection } from 'astro:content';
+import Layout from '../../components/Layout.astro';
+import Eyebrow from '../../components/Eyebrow.astro';
+
+const masserie = (await getCollection('masserie', (m) => m.data.status === 'published'))
+  .sort((a, b) => a.data.name.localeCompare(b.data.name, 'it'));
+---
+<Layout
+  title="Masserie di Puglia · Localis"
+  description="Brevi racconti delle masserie di Puglia: perché sono fatte così e cosa notare quando ci sei. Tre minuti l'uno, gratis."
+  lang="it"
+  langUrlsOverride={{ it: '/masserie/' }}
+>
+  <article class="max-w-narrow mx-auto px-md py-2xl">
+    <Eyebrow class="mb-md">Masserie di Puglia</Eyebrow>
+    <h1 class="font-display text-4xl text-ink mb-lg">Le masserie, raccontate.</h1>
+    <p class="text-lg text-ink-muted leading-relaxed mb-xl">
+      Tre minuti per masseria: perché è fatta così, chi ci ha vissuto, cosa notare quando ci sei.
+      Si ascoltano gratis.
+    </p>
+
+    <ul class="space-y-md">
+      {masserie.map((m) => (
+        <li class="rounded-lg border border-border bg-surface-elev p-lg">
+          <a href={`/masserie/${m.data.slug}/`} class="block">
+            <p class="text-xs font-semibold tracking-[0.18em] uppercase text-accent">{m.data.place}</p>
+            <p class="font-display text-2xl text-ink mt-xs">{m.data.name}</p>
+            <p class="text-ink-muted italic">{m.data.title_it} · {Math.round(m.data.duration_seconds / 60)} min</p>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </article>
+</Layout>

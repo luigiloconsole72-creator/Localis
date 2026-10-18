@@ -132,6 +132,16 @@ export const GET: APIRoute = async ({ site }) => {
     });
   }
 
+  // Masserie: solo italiano, finché i racconti non sono tradotti
+  const masserie = await getCollection('masserie', (m) => m.data.status === 'published');
+  if (masserie.length) {
+    entries.push({ path: '/masserie/', changefreq: 'weekly', priority: 0.6, alternates: { it: '/masserie/' } });
+  }
+  for (const m of masserie) {
+    const path = `/masserie/${m.data.slug}/`;
+    entries.push({ path, changefreq: 'monthly', priority: 0.6, lastmod: m.data.published_at, alternates: { it: path } });
+  }
+
   const seen = new Set<string>();
   const uniqueEntries = entries.filter((entry) => {
     if (seen.has(entry.path)) return false;
