@@ -27,13 +27,48 @@ const minuti = (s: number) => Math.max(1, Math.round(s / 60));
   <article class="max-w-narrow mx-auto px-md py-2xl">
     <Eyebrow class="mb-md">Masserie di Puglia</Eyebrow>
     <h1 class="font-display text-4xl text-ink mb-lg">Le masserie, <em>raccontate.</em></h1>
-    <p class="text-lg text-ink-muted leading-relaxed mb-md">
-      Una masseria non è una casa di campagna: è un'azienda che doveva bastare a se stessa e sapersi difendere.
-      Qui ne raccontiamo una per volta: perché è fatta così, chi ci ha vissuto, cosa notare quando ci sei.
-      Le storie si ascoltano gratis.
-    </p>
-    <p class="text-sm text-ink-subtle mb-2xl">
+    <div class="text-lg text-ink-muted leading-relaxed space-y-md mb-lg max-w-prose">
+      <p>
+        Una masseria non è una casa di campagna. È un'azienda: la parola viene da <em>massaro</em>, chi
+        amministrava la terra per conto di un proprietario che in campagna ci veniva di rado. Intorno a una
+        corte lastricata stavano tutto il lavoro e tutta la vita: la casa del massaro a pian terreno e quella
+        del padrone al piano di sopra, le stalle, i depositi, l'aia dove si batteva il grano, il pozzo o la
+        cisterna per l'acqua piovana, il frantoio, spesso scavato nella roccia, e quasi sempre una cappella.
+        In Valle d'Itria i depositi e le stalle erano trulli, messi in fila dentro la cinta.
+      </p>
+      <p>
+        Le mura non erano decorazione. La Puglia è stata per secoli una terra di confine, esposta alle
+        incursioni dal mare e ai banditi da terra: così, dal Cinquecento, le masserie hanno preso in prestito i
+        pezzi dei castelli, una porta sola, torri d'angolo, garitte, feritoie, e le caditoie sopra l'ingresso.
+        Dovevano bastare a se stesse e sapersi difendere.
+      </p>
+      <p>
+        Dentro quelle mura è passata l'economia della regione. Grano e pecore, prima di tutto: le grandi
+        masserie cerealicole e pastorali erano gli anelli di una rete che univa i pascoli, i tratturi della
+        transumanza, gli jazzi dove si tenevano le greggi, le neviere, i trappeti dell'olio. Erano, come dice la
+        Regione nelle sue linee guida, il trait d'union tra la grande proprietà fondiaria e il lavoro contadino.
+        Poi il Novecento le ha svuotate: la riforma agraria ha spezzato i latifondi, la gente è andata in
+        paese, e molte masserie sono rimaste sole con i loro ulivi.
+      </p>
+      <p>
+        Oggi valgono per questo. Sono la memoria del luogo scritta in pietra: ogni muro a secco, ogni cisterna,
+        ogni cono di trullo risponde a un problema vero, il caldo, l'acqua che manca, la roccia che c'è
+        dappertutto, risolto con quello che la terra dava. La Regione le considera patrimonio da conoscere
+        prima di toccarle, perché un restauro sbagliato le cancella quanto l'abbandono. E chi oggi le riapre
+        per ospitare, se lo fa con rispetto, le tiene vive nel modo più antico che esista: facendole abitare.
+      </p>
+      <p>
+        Qui le raccontiamo una per volta: perché è fatta così, chi ci ha vissuto, cosa notare quando ci sei.
+        Le storie si ascoltano gratis.
+      </p>
+    </div>
+    <p class="text-sm text-ink-subtle mb-sm">
       Da tre a quindici minuti l'una · Fonti in fondo a ogni storia · Voce sintetica, dichiarata
+    </p>
+    <p class="text-xs text-ink-subtle mb-2xl max-w-prose">
+      Fonti dell'introduzione: Regione Puglia, PPTR, <a href="https://pugliacon.regione.puglia.it/documents/96721/919501/4.4.6_Manufatti+rurali.pdf/bae97647-4193-a4e4-a270-609778a5431d" rel="noopener" class="text-link underline underline-offset-2">Linee guida per il recupero, la manutenzione e il riuso dell'edilizia e dei beni rurali</a> (2015) ·
+      Treccani, <a href="https://www.treccani.it/vocabolario/masseria/" rel="noopener" class="text-link underline underline-offset-2">Vocabolario, voce «masseria»</a> ·
+      Vito Bianchi, <em>Apulia. The Masserie</em>, Mario Adda Editore (2012).
     </p>
 
     {[...zone.entries()].map(([label, z]) => (
