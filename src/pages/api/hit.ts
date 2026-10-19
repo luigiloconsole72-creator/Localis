@@ -16,17 +16,25 @@ export const prerender = false;
 // Il percorso arriva dal browser e finisce come campo di un hash Redis: niente
 // query, niente host, lunghezza limitata.
 const PATH = /^\/[a-z0-9\-/_.]{0,119}$/;
+// Le storie delle masserie: per loro si tiene anche l'ora (UTC), perche' dopo
+// la mail alla struttura conta sapere QUANDO la pagina viene aperta e la voce
+// fatta partire, non solo quante volte.
+const MASSERIA = /^\/masserie\/[a-z0-9-]+\/$/;
 
 export const POST: APIRoute = async ({ request, url }) => {
   try {
     const path = (url.searchParams.get('p') || '').toLowerCase();
     const ua = request.headers.get('user-agent') || '';
+    // e=play: la voce e' partita (lo manda HeroAudioSample). Senza e: pagina vista.
+    const play = url.searchParams.get('e') === 'play';
     if (PATH.test(path) && ua && !BOT.test(ua)) {
-      const day = new Date().toISOString().slice(0, 10);
-      await Promise.all([
-        kvHIncrBy('scan-counts', day, `v:${path}`),
-        kvHIncrBy('scan-counts', day, 'v:__all'),
-      ]);
+      const now = new Date();
+      const day = now.toISOString().slice(0, 10);
+      const prefix = play ? 'a' : 'v';
+      const fields = [`${prefix}:${path}`];
+      if (!play) fields.push('v:__all');
+      if (MASSERIA.test(path)) fields.push(`${prefix}h:${path}@${now.toISOString().slice(11, 13)}`);
+      await Promise.all(fields.map((f) => kvHIncrBy('scan-counts', day, f)));
     }
   } catch {
     /* un contatore che fallisce non deve disturbare la pagina */

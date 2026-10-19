@@ -128,6 +128,27 @@ describe('/api/hit conta le pagine viste', () => {
     });
   });
 
+  // Dopo la mail alla masseria si vuole sapere QUANDO la storia viene aperta e
+  // ascoltata: per /masserie/<slug>/ il contatore tiene anche l'ora, e e=play
+  // (mandato dal player) finisce sotto "a:" invece che "v:".
+  it('per una storia di masseria tiene anche l ora, e l ascolto a parte', async () => {
+    const hh = new Date().toISOString().slice(11, 13);
+    await hit('/masserie/ayroldi/');
+    const play = new URL('https://localis.guide/api/hit?p=%2Fmasserie%2Fayroldi%2F&e=play');
+    await POST({
+      url: play,
+      request: new Request(play, { method: 'POST', headers: { 'user-agent': browser } }),
+    } as unknown as APIContext);
+
+    expect(await kvHGetAll('scan-counts', today)).toEqual({
+      'v:/masserie/ayroldi/': 1,
+      'v:__all': 1,
+      [`vh:/masserie/ayroldi/@${hh}`]: 1,
+      'a:/masserie/ayroldi/': 1,
+      [`ah:/masserie/ayroldi/@${hh}`]: 1,
+    });
+  });
+
   it('ignora un percorso che non e un percorso del sito', async () => {
     await hit('https://altrosito.example/pagina');
     await hit(`/${'x'.repeat(200)}`);

@@ -67,6 +67,10 @@ const pauseLabel = lang === 'de' ? 'Pausieren' : lang === 'it' ? 'Pausa' : 'Paus
     const guideLang = el.dataset.lang || 'it';
     const audioAssetId = el.dataset.audioAssetId || src.split('/').pop()?.replace(/\.mp3$/i, '') || 'unknown';
     let tracker: ReturnType<typeof createAudioAnalyticsTracker> | null = null;
+    // Ascolto di una storia di masseria: un colpo al contatore di casa (/api/hit,
+    // senza cookie ne' consenso), una volta per pagina. GA4 lo vede solo dopo il
+    // consenso, cioe' per una frazione di chi ascolta.
+    let ascoltoContato = false;
 
     btn.addEventListener('click', () => {
       if (!audio) {
@@ -104,6 +108,15 @@ const pauseLabel = lang === 'de' ? 'Pausieren' : lang === 'it' ? 'Pausa' : 'Paus
         current = audio;
         audio.play().then(() => {
           tracker?.onPlay();
+          if (!ascoltoContato && el.dataset.audioContext === 'masseria' && guideSlug?.startsWith('masseria-')) {
+            ascoltoContato = true;
+            try {
+              if (navigator.sendBeacon && !window.location.search.includes('localis_internal=1')) {
+                const pagina = '/masserie/' + guideSlug.slice('masseria-'.length) + '/';
+                navigator.sendBeacon('/api/hit?p=' + encodeURIComponent(pagina) + '&e=play');
+              }
+            } catch (e) {}
+          }
         }).catch((e) => {
           console.error('[HeroAudio] play() failed:', e, 'src:', src);
         });
