@@ -1,0 +1,57 @@
+/* Pagine interne nello stile dell'atlante (Chi siamo, Fonti). Le aperture sono
+   in components/AtlanteTesta.astro; qui solo il corpo. */
+
+.ab-corpo { max-width: 80rem; margin: 0 auto; padding: 3.5rem 1rem 5rem; }
+
+.ab-saggio { max-width: 48rem; font-size: 1.08rem; line-height: 1.75; color: var(--color-ink-muted); }
+.ab-saggio > p:first-child::first-letter {
+  float: left;
+  font-family: var(--font-display);
+  font-size: 4.2rem;
+  line-height: 0.85;
+  padding: 0.35rem 0.6rem 0 0;
+  color: var(--color-accent);
+}
+
+.ab-roadmap { margin-top: 3.5rem; max-width: 48rem; }
+.ab-roadmap h2 { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.9rem, 4vw, 2.6rem); color: var(--color-ink); margin-bottom: 1.5rem; }
+.ab-tappe { list-style: none; padding: 0; margin: 0; border-left: 2px solid var(--color-border-2); }
+.ab-tappe li { position: relative; padding: 0 0 1.4rem 1.6rem; color: var(--color-ink-muted); line-height: 1.6; }
+.ab-tappe li::before {
+  content: '';
+  position: absolute;
+  left: -7px;
+  top: 0.45rem;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--color-surface);
+  border: 2px solid var(--color-accent);
+}
+.ab-tappe li:first-child::before { background: var(--color-accent); }
+.ab-tappe strong { display: block; font-family: var(--font-display); font-weight: 400; font-size: 1.25rem; color: var(--color-ink); }
+
+/* ---------- Fonti ---------- */
+.fo-intro { max-width: 48rem; padding: 1.4rem 1.6rem; border-left: 3px solid var(--color-accent); background: var(--color-surface-elev); border-radius: 0 12px 12px 0; }
+.fo-intro p { color: var(--color-ink-muted); line-height: 1.7; }
+
+.fo-indice { margin: 2.5rem 0 1rem; }
+.fo-indice-titolo { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--color-accent); margin-bottom: 0.9rem; }
+.fo-indice ol { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.6rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr)); }
+.fo-indice a { display: flex; align-items: baseline; gap: 0.7rem; padding: 0.9rem 1rem; border: 1px solid var(--color-border); border-radius: 12px; background: var(--color-surface-deep); text-decoration: none; color: var(--color-ink); font-family: var(--font-display); font-size: 1.05rem; line-height: 1.25; transition: border-color 0.25s, transform 0.25s; }
+.fo-indice a:hover { border-color: var(--color-accent); transform: translateY(-2px); }
+.fo-indice a span { font-size: 1.5rem; font-weight: 300; color: var(--color-accent); }
+
+.fo-guida { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--color-border-2); scroll-margin-top: 5rem; }
+.fo-guida-testa { display: grid; grid-template-columns: auto 1fr; column-gap: 1.1rem; align-items: baseline; margin-bottom: 1rem; }
+.fo-guida-testa > :not(.fo-num) { grid-column: 2; }
+.fo-num { grid-row: span 2; font-family: var(--font-display); font-size: clamp(2.6rem, 5vw, 3.6rem); font-weight: 300; line-height: 1; color: var(--color-accent); }
+
+.fo-capitolo { margin-bottom: 0.75rem; border: 1px solid var(--color-border); border-radius: 12px; background: var(--color-surface-deep); padding: 0 1.2rem; max-width: 56rem; }
+.fo-capitolo > summary { list-style: none; cursor: pointer; padding: 1rem 2rem 1rem 0; position: relative; }
+.fo-capitolo > summary::-webkit-details-marker { display: none; }
+.fo-capitolo > summary::after { content: '+'; position: absolute; right: 0; top: 50%; transform: translateY(-50%); font-family: var(--font-display); font-size: 1.5rem; color: var(--color-accent); transition: transform 0.25s; }
+.fo-capitolo[open] > summary::after { transform: translateY(-50%) rotate(45deg); }
+.fo-capitolo > summary h3 { margin: 0 !important; }
+.fo-capitolo[open] { padding-bottom: 1rem; border-color: color-mix(in oklab, var(--color-accent) 35%, var(--color-border)); }
+.fo-capitolo a { color: var(--color-link); text-decoration: underline; text-underline-offset: 2px; }

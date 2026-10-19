@@ -1,7 +1,8 @@
 ---
 export const prerender = true;
 import Layout from '../../components/Layout.astro';
-import Eyebrow from '../../components/Eyebrow.astro';
+import AtlanteTesta from '../../components/AtlanteTesta.astro';
+import '../../styles/atlante-pagine.css';
 import AuthorProfileGrid from '../../components/AuthorProfileGrid.astro';
 
 const profiles = [
@@ -24,14 +25,11 @@ const profiles = [
   description="Localis is an independent editorial studio: verifiable research, local voices, and guides written on the ground."
   lang="en"
 >
-  <article class="max-w-wrap mx-auto px-md py-2xl">
-    <Eyebrow class="mb-md">About us</Eyebrow>
-    <h1 class="font-display text-4xl sm:text-5xl text-ink mb-md">Localis is an editorial team, not a content generator.</h1>
-    <p class="font-display italic text-xl text-ink-muted max-w-prose mb-xl">
-      We study the sources, walk the places, then write. That is how every guide is made.
-    </p>
+  <AtlanteTesta occhiello="About us" titolo="Localis is an editorial team, not a content generator." lede="We study the sources, walk the places, then write. That is how every guide is made." img="/images/covers/festa-san-nicola.webp" alt="The feast of San Nicola in Bari" />
 
-    <section class="prose prose-ink max-w-prose mb-2xl">
+  <article class="ab-corpo">
+
+    <section class="prose prose-ink ab-saggio">
       <p>
         We do it because a place isn't understood from a plaque on a monument. It's understood through stories: why that city turned out the way it did, why the people who live there are the way they are. We want you to go home not just with photos, but knowing you truly understood where you were — and the people who live there. <em>Understand a place, don't just pass through it.</em>
       </p>
@@ -47,9 +45,9 @@ const profiles = [
 
     <AuthorProfileGrid title="People behind the guides" profiles={profiles} />
 
-    <section class="prose prose-ink max-w-prose">
+    <section class="ab-roadmap">
       <h2>Roadmap</h2>
-      <ul>
+      <ul class="ab-tappe">
         <li><strong>Edition 01 - Puglia:</strong> guides published between October 2025 and May 2026.</li>
         <li><strong>In progress:</strong> new Puglian destinations.</li>
         <li><strong>Edition 02:</strong> a new area is planned for 2027.</li>

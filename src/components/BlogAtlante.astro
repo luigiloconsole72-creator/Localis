@@ -1,0 +1,72 @@
+---
+// Indice del blog nello stile dell'atlante, in tre lingue. I testi sono quelli che
+// c'erano nelle tre pagine blog/index, parola per parola.
+import { getCollection } from 'astro:content';
+import { type Lang } from '../lib/i18n';
+import AtlanteTesta from './AtlanteTesta.astro';
+
+export interface Props { lang: Lang }
+const { lang } = Astro.props;
+
+const T = {
+  it: { occhiello: 'Lettura gratuita', lede: 'Articoli di storia e cultura sulla Puglia — scritti per chi vuole capire prima di visitare. Non spoilerano le audioguide.', vuoto: 'Presto disponibile.', base: '/blog/', locale: 'it-IT', leggi: 'Leggi', alt: 'Trulli tra le vigne della Valle d\'Itria' },
+  en: { occhiello: 'Free reading', lede: 'History and culture articles about Puglia — written for travelers who want to understand before they visit.', vuoto: 'Coming soon.', base: '/en/blog/', locale: 'en-GB', leggi: 'Read', alt: "Trulli among the vineyards of the Valle d'Itria" },
+  de: { occhiello: 'Kostenlose Lektüre', lede: 'Geschichte und Kultur Apuliens — für Reisende, die verstehen möchten, bevor sie besuchen.', vuoto: 'Demnächst verfügbar.', base: '/de/blog/', locale: 'de-DE', leggi: 'Lesen', alt: "Trulli zwischen den Weinbergen der Valle d'Itria" },
+} as const;
+const t = T[lang];
+
+const articles = (
+  await getCollection('blog', (e) => e.data.lang === lang && e.data.status === 'published')
+).sort((a, b) => b.data.published_at.getTime() - a.data.published_at.getTime());
+const data = (d: Date) => d.toLocaleDateString(t.locale, { day: 'numeric', month: 'long', year: 'numeric' });
+---
+<AtlanteTesta occhiello={t.occhiello} titolo="Blog" lede={t.lede} img="/images/covers/trulli-vigneto.webp" alt={t.alt} />
+
+<section class="b-corpo">
+  {articles.length === 0 ? (
+    <p class="b-vuoto">{t.vuoto}</p>
+  ) : (
+    <ul class="b-griglia" role="list">
+      {articles.map((a, i) => (
+        <li class:list={['b-voce', { 'b-prima': i === 0 }]} style={`--ritardo:${Math.min(i, 8) * 60}ms`}>
+          <a href={`${t.base}${a.data.slug}/`} class="b-carta">
+            <span class="b-foto">
+              <img src={a.data.cover} alt={a.data.cover_alt} width={a.data.cover_width} height={a.data.cover_height} loading={i < 3 ? 'eager' : 'lazy'} decoding="async" />
+              <span class="b-zona">{a.data.zone_label}</span>
+            </span>
+            <span class="b-testo">
+              <span class="b-titolo">{a.data.title}</span>
+              <span class="b-desc">{a.data.description}</span>
+              <span class="b-piede">
+                <time datetime={a.data.published_at.toISOString().split('T')[0]}>{data(a.data.published_at)}</time>
+                <span class="b-leggi">{t.leggi} →</span>
+              </span>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  )}
+</section>
+
+<style>
+  .b-corpo { max-width: 80rem; margin: 0 auto; padding: 3rem 1rem 5rem; }
+  .b-vuoto { color: var(--color-ink-muted); }
+  .b-griglia { list-style: none; padding: 0; margin: 0; display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); }
+  .b-voce { animation: b-su 0.7s cubic-bezier(.2,.7,.2,1) both; animation-delay: var(--ritardo); }
+  @media (min-width: 900px) { .b-prima { grid-column: span 2; } .b-prima .b-carta { flex-direction: row; } .b-prima .b-foto { flex: 1.2; aspect-ratio: auto; min-height: 20rem; } .b-prima .b-testo { flex: 1; justify-content: center; } .b-prima .b-titolo { font-size: 1.9rem; } }
+  .b-carta { display: flex; flex-direction: column; height: 100%; border-radius: 14px; overflow: hidden; border: 1px solid var(--color-border); background: var(--color-surface-deep); text-decoration: none; transition: transform 0.35s cubic-bezier(.2,.7,.2,1), box-shadow 0.35s, border-color 0.35s; }
+  .b-carta:hover { transform: translateY(-3px); border-color: color-mix(in oklab, var(--color-accent) 35%, var(--color-border)); box-shadow: 0 18px 40px -24px rgba(60,45,20,0.45); }
+  .b-foto { position: relative; display: block; aspect-ratio: 16 / 10; overflow: hidden; background: var(--color-surface-elev); }
+  .b-foto img { width: 100%; height: 100%; object-fit: cover; filter: sepia(0.5) saturate(0.85) contrast(1.04) brightness(0.96); transition: transform 0.8s cubic-bezier(.2,.7,.2,1), filter 0.6s; }
+  .b-carta:hover .b-foto img { transform: scale(1.05); filter: sepia(0.3) saturate(0.95) contrast(1.04); }
+  .b-foto::after { content: ''; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(28,24,19,0.55) 0%, rgba(28,24,19,0) 45%); }
+  .b-zona { position: absolute; z-index: 1; left: 1rem; bottom: 0.8rem; font-size: 0.68rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: #e8d3a3; }
+  .b-testo { display: flex; flex-direction: column; gap: 0.5rem; padding: 1.15rem 1.2rem 1.25rem; flex: 1; }
+  .b-titolo { font-family: var(--font-display); font-size: 1.3rem; line-height: 1.2; color: var(--color-ink); }
+  .b-desc { font-size: 0.92rem; line-height: 1.55; color: var(--color-ink-muted); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .b-piede { margin-top: auto; padding-top: 0.6rem; display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; font-size: 0.78rem; color: var(--color-ink-subtle); }
+  .b-leggi { color: var(--color-link); font-weight: 600; }
+  @keyframes b-su { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .b-voce { animation: none; } .b-carta, .b-foto img { transition: none; } }
+</style>

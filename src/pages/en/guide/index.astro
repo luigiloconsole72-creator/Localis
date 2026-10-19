@@ -1,6 +1,7 @@
 ---
 export const prerender = true;
 import Layout from '../../../components/Layout.astro';
+import AtlanteTesta from '../../../components/AtlanteTesta.astro';
 import GuideBuilder from '../../../components/GuideBuilder.astro';
 import StructuredData from '../../../components/StructuredData.astro';
 import { getCollection } from 'astro:content';
@@ -61,34 +62,19 @@ const guideListLD = itemListLD(
   lang="en"
 >
   <StructuredData data={guideListLD} />
+  <AtlanteTesta occhiello="All guides" titolo="Puglia, told place by place." lede="Documented audio stories to understand Bari, the Itria Valley and Gargano." img="/images/hero/hero-bari-tramonto.jpg" alt="Bari at sunset, from the seafront" />
   <div class="max-w-wrap mx-auto px-md py-2xl lg:py-3xl">
-    <header class="mb-3xl max-w-[52ch]">
-      <div class="flex items-center gap-sm mb-md">
-        <span class="block w-7 h-px bg-accent"></span>
-        <span class="text-[11px] font-semibold tracking-[0.24em] uppercase text-accent">
-          All guides
-        </span>
-      </div>
-      <h1 class="font-display text-ink leading-[1.05] tracking-[-0.014em] mb-md text-[clamp(2rem,5vw,3.2rem)]">
-        <span class="font-light">Puglia, told place by place.</span>
-        <span class="block font-body font-normal text-ink-muted mt-sm text-[clamp(1.1rem,2.2vw,1.45rem)] leading-relaxed tracking-normal">
-          Documented audio stories to understand Bari, the Itria Valley and Gargano.
-        </span>
-      </h1>
-      <p class="font-body text-base sm:text-lg leading-relaxed text-ink-muted">
-        Here you'll find documented audio stories, written in Puglia, to understand places while you visit them or before you leave. Every guide is built from research, consultable sources and writing designed to bring you into the meaning of each place.
-      </p>
-      <p class="font-body text-sm leading-relaxed text-ink-muted mt-sm">
-        You can buy a single guide, or build a pack of 3 or 6 guides.
-      </p>
-    </header>
+    <div class="guide-intro">
+      <p>Here you'll find documented audio stories, written in Puglia, to understand places while you visit them or before you leave. Every guide is built from research, consultable sources and writing designed to bring you into the meaning of each place.</p>
+      <p class="guide-intro-pack">You can buy a single guide, or build a pack of 3 or 6 guides.</p>
+    </div>
 
     <section class="mb-3xl lg:mb-4xl" aria-labelledby="area-bari">
-      <div class="flex items-baseline gap-md mb-2xl border-b border-border pb-md">
-        <h2 id="area-bari" class="font-display font-light text-[clamp(1.5rem,3.5vw,2.2rem)] text-ink tracking-tight">
+      <div class="zona-testa">
+        <h2 id="area-bari" class="zona-h2">
           Bari
         </h2>
-        <span class="font-body text-sm text-ink-muted">6 guides</span>
+        <span class="zona-conta">6 guides</span>
       </div>
 
       <ol class="list-none p-0 m-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[var(--spacing-lg)] [row-gap:var(--spacing-2xl)] items-start">
@@ -115,11 +101,11 @@ const guideListLD = itemListLD(
     </section>
 
     <section aria-labelledby="area-valle">
-      <div class="flex items-baseline gap-md mb-2xl border-b border-border pb-md">
-        <h2 id="area-valle" class="font-display font-light text-[clamp(1.5rem,3.5vw,2.2rem)] text-ink tracking-tight">
+      <div class="zona-testa">
+        <h2 id="area-valle" class="zona-h2">
           Valle d'Itria
         </h2>
-        <span class="font-body text-sm text-ink-muted">6 guides</span>
+        <span class="zona-conta">6 guides</span>
       </div>
 
       <ol class="list-none p-0 m-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[var(--spacing-lg)] [row-gap:var(--spacing-2xl)] items-start">
@@ -146,11 +132,11 @@ const guideListLD = itemListLD(
     </section>
 
     <section class="mt-3xl lg:mt-4xl" aria-labelledby="area-gargano">
-      <div class="flex items-baseline gap-md mb-2xl border-b border-border pb-md">
-        <h2 id="area-gargano" class="font-display font-light text-[clamp(1.5rem,3.5vw,2.2rem)] text-ink tracking-tight">
+      <div class="zona-testa">
+        <h2 id="area-gargano" class="zona-h2">
           Gargano
         </h2>
-        <span class="font-body text-sm text-ink-muted">6 guides</span>
+        <span class="zona-conta">6 guides</span>
       </div>
 
       <ol class="list-none p-0 m-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[var(--spacing-lg)] [row-gap:var(--spacing-2xl)] items-start">
@@ -178,11 +164,11 @@ const guideListLD = itemListLD(
 
     {/* ——— MATERA ——— */}
     <section class="mt-3xl lg:mt-4xl" aria-labelledby="area-matera">
-      <div class="flex items-baseline gap-md mb-2xl border-b border-border pb-md">
-        <h2 id="area-matera" class="font-display font-light text-[clamp(1.5rem,3.5vw,2.2rem)] text-ink tracking-tight">
+      <div class="zona-testa">
+        <h2 id="area-matera" class="zona-h2">
           Matera
         </h2>
-        <span class="font-body text-sm text-ink-muted">1 guide</span>
+        <span class="zona-conta">1 guide</span>
       </div>
 
       <ol class="list-none p-0 m-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[var(--spacing-lg)] [row-gap:var(--spacing-2xl)] items-start">
@@ -228,7 +214,8 @@ const guideListLD = itemListLD(
     height: 100%;
     text-decoration: none;
     color: inherit;
-    border-top: 1px solid var(--color-ink);
+    border-top: 3px solid transparent;
+    border-image: linear-gradient(90deg, var(--color-accent), transparent) 1;
     padding-top: var(--spacing-md);
     transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
   }
@@ -256,7 +243,7 @@ const guideListLD = itemListLD(
     height: 100%;
     object-fit: cover;
     display: block;
-    filter: saturate(0.94) contrast(1.04);
+    filter: sepia(0.45) saturate(0.88) contrast(1.04) brightness(0.97);
     transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
   }
 
@@ -341,4 +328,13 @@ const guideListLD = itemListLD(
       transition: none;
     }
   }
+
+  .guide-intro { max-width: 48rem; margin: 0 0 3.5rem; padding: 1.4rem 1.6rem; border-left: 3px solid var(--color-accent); background: var(--color-surface-elev); border-radius: 0 12px 12px 0; }
+  .guide-intro p { color: var(--color-ink-muted); line-height: 1.7; }
+  .guide-intro-pack { margin-top: 0.6rem; font-size: 0.9rem; }
+  .zona-testa { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 2rem; padding-bottom: 0.9rem; border-bottom: 1px solid var(--color-border-2); }
+  .zona-h2 { font-family: var(--font-display); font-weight: 400; font-size: clamp(2rem, 4.5vw, 3rem); line-height: 1; letter-spacing: -0.015em; color: var(--color-ink); }
+  .zona-conta { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-accent); }
+  .guide-price { border-radius: 999px; }
+  .guide-photo { border-radius: 14px; }
 </style>

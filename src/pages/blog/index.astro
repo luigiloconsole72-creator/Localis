@@ -1,74 +1,15 @@
 ---
-/**
- * Indice blog — versione italiana.
- * URL: localis.guide/blog/
- */
 export const prerender = true;
-
-import { getCollection } from 'astro:content';
 import Layout from '../../components/Layout.astro';
-
-const articles = (
-  await getCollection('blog', (e) => e.data.lang === 'it' && e.data.status === 'published')
-).sort((a, b) => b.data.published_at.getTime() - a.data.published_at.getTime());
+import BlogAtlante from '../../components/BlogAtlante.astro';
 
 const langUrlsOverride = { it: '/blog/', en: '/en/blog/', de: '/de/blog/' };
 ---
-
 <Layout
   title="Blog — Approfondimenti sulla Puglia · Localis"
   description="Articoli di storia, cultura e pianificazione viaggio sulla Puglia: Bari, Valle d'Itria, Gargano. Gratuiti, basati su fonti d'archivio."
   lang="it"
   langUrlsOverride={langUrlsOverride}
 >
-  <div class="max-w-wrap mx-auto px-md py-2xl">
-    <header class="max-w-narrow mx-auto mb-2xl">
-      <p class="text-xs font-semibold tracking-[0.20em] uppercase text-accent mb-sm">Lettura gratuita</p>
-      <h1 class="font-display text-4xl text-ink leading-tight mb-md">Blog</h1>
-      <p class="text-lg text-ink-muted">
-        Articoli di storia e cultura sulla Puglia — scritti per chi vuole capire prima di visitare.
-        Non spoilerano le audioguide.
-      </p>
-    </header>
-
-    {articles.length === 0 ? (
-      <p class="text-ink-muted max-w-narrow mx-auto">Presto disponibile.</p>
-    ) : (
-      <ul class="max-w-narrow mx-auto grid gap-lg" role="list">
-        {articles.map((article) => (
-          <li>
-            <a
-              href={`/blog/${article.data.slug}/`}
-              class="group grid sm:grid-cols-[200px_1fr] gap-md rounded-lg border border-border hover:border-accent/40 hover:bg-surface-elev transition-colors no-underline overflow-hidden"
-            >
-              <img
-                src={article.data.cover}
-                alt={article.data.cover_alt}
-                width={article.data.cover_width}
-                height={article.data.cover_height}
-                loading="lazy"
-                decoding="async"
-                class="w-full h-32 sm:h-full object-cover"
-              />
-              <div class="flex flex-col gap-xs p-md sm:pl-0">
-                <span class="text-xs font-semibold tracking-[0.16em] uppercase text-accent">
-                  {article.data.zone_label}
-                </span>
-                <span class="font-display text-xl text-ink leading-snug group-hover:text-accent/90 transition-colors">
-                  {article.data.title}
-                </span>
-                <span class="text-sm text-ink-muted line-clamp-2">{article.data.description}</span>
-                <time
-                  datetime={article.data.published_at.toISOString().split('T')[0]}
-                  class="text-xs text-ink-subtle mt-auto"
-                >
-                  {article.data.published_at.toLocaleDateString('it-IT', { day: 'numeric', month: 'long', year: 'numeric' })}
-                </time>
-              </div>
-            </a>
-          </li>
-        ))}
-      </ul>
-    )}
-  </div>
+  <BlogAtlante lang="it" />
 </Layout>

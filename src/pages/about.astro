@@ -1,7 +1,8 @@
 ---
 export const prerender = true;
 import Layout from '../components/Layout.astro';
-import Eyebrow from '../components/Eyebrow.astro';
+import AtlanteTesta from '../components/AtlanteTesta.astro';
+import '../styles/atlante-pagine.css';
 import AuthorProfileGrid from '../components/AuthorProfileGrid.astro';
 
 const profiles = [
@@ -24,14 +25,11 @@ const profiles = [
   description="Localis è una casa editoriale indipendente: ricerca verificabile, voci locali e guide scritte sul territorio."
   lang="it"
 >
-  <article class="max-w-wrap mx-auto px-md py-2xl">
-    <Eyebrow class="mb-md">Chi siamo</Eyebrow>
-    <h1 class="font-display text-4xl sm:text-5xl text-ink mb-md">Localis è una redazione, non un generatore.</h1>
-    <p class="font-display italic text-xl text-ink-muted max-w-prose mb-xl">
-      Studiamo le fonti, camminiamo i luoghi, poi scriviamo. I racconti nascono così.
-    </p>
+  <AtlanteTesta occhiello="Chi siamo" titolo="Localis è una redazione, non un generatore." lede="Studiamo le fonti, camminiamo i luoghi, poi scriviamo. I racconti nascono così." img="/images/covers/festa-san-nicola.webp" alt="La festa di San Nicola a Bari" />
 
-    <section class="prose prose-ink max-w-prose mb-2xl">
+  <article class="ab-corpo">
+
+    <section class="prose prose-ink ab-saggio">
       <p>
         Lo facciamo perché un luogo non si capisce dalla targa di un monumento. Si capisce dalle storie: perché quella città è diventata così, perché chi ci vive è fatto così. Vogliamo che torni a casa non solo con le foto, ma con la consapevolezza di aver capito davvero dove sei stato — e le persone che ci vivono. <em>Capire un luogo, non attraversarlo.</em>
       </p>
@@ -46,9 +44,9 @@ const profiles = [
 
     <AuthorProfileGrid title="Le persone dietro le guide" profiles={profiles} />
 
-    <section class="prose prose-ink max-w-prose">
+    <section class="ab-roadmap">
       <h2>Roadmap</h2>
-      <ul>
+      <ul class="ab-tappe">
         <li><strong>Edizione 01 - Puglia:</strong> guide pubblicate tra ottobre 2025 e maggio 2026.</li>
         <li><strong>In lavorazione:</strong> nuove destinazioni pugliesi.</li>
         <li><strong>Edizione 02:</strong> nuova area prevista nel 2027.</li>

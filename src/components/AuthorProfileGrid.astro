@@ -13,24 +13,39 @@ export interface Props {
 
 const { title, profiles } = Astro.props;
 ---
-<section class="mb-2xl">
-  <h2 class="font-display text-3xl text-ink mb-lg">{title}</h2>
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
-    {profiles.map((profile) => (
-      <article class="rounded-xl border border-border bg-surface-deep p-md">
+<section class="ap-sezione">
+  <h2 class="ap-titolo">{title}</h2>
+  <div class="ap-griglia">
+    {profiles.map((profile, i) => (
+      <article class="ap-carta">
         {profile.photo && (
-          <img
-            src={profile.photo}
-            alt=""
-            loading="lazy"
-            decoding="async"
-            class="w-full aspect-[4/3] object-cover rounded-md mb-md"
-          />
+          <span class="ap-foto">
+            <img src={profile.photo} alt="" loading="lazy" decoding="async" />
+            <span class="ap-num">{String(i + 1).padStart(2, '0')}</span>
+          </span>
         )}
-        <h3 class="font-display text-2xl text-ink mb-2xs">{profile.name}</h3>
-        <p class="text-xs uppercase tracking-[0.15em] text-ink-subtle mb-sm">{profile.role}</p>
-        <p class="text-base text-ink-muted leading-relaxed">{profile.bio}</p>
+        <div class="ap-testo">
+          <p class="ap-ruolo">{profile.role}</p>
+          <h3 class="ap-nome">{profile.name}</h3>
+          <p class="ap-bio">{profile.bio}</p>
+        </div>
       </article>
     ))}
   </div>
 </section>
+
+<style>
+  .ap-sezione { margin: 3.5rem 0 0; }
+  .ap-titolo { font-family: var(--font-display); font-weight: 400; font-size: clamp(1.9rem, 4vw, 2.6rem); color: var(--color-ink); margin-bottom: 1.5rem; }
+  .ap-griglia { display: grid; gap: 1.25rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr)); }
+  .ap-carta { border-radius: 14px; overflow: hidden; border: 1px solid var(--color-border); background: var(--color-surface-deep); }
+  .ap-foto { position: relative; display: block; aspect-ratio: 4 / 3; overflow: hidden; background: var(--color-surface-elev); }
+  .ap-foto img { width: 100%; height: 100%; object-fit: cover; filter: sepia(0.45) saturate(0.85) contrast(1.04); }
+  .ap-foto::after { content: ''; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(28,24,19,0.5) 0%, rgba(28,24,19,0) 45%); }
+  .ap-num { position: absolute; z-index: 1; left: 1rem; bottom: 0.4rem; font-family: var(--font-display); font-size: 2.8rem; font-weight: 300; line-height: 1; color: #fbfaf6; }
+  .ap-testo { padding: 1.2rem 1.25rem 1.4rem; position: relative; }
+  .ap-testo::before { content: ''; position: absolute; left: 1.25rem; right: 1.25rem; top: 0; height: 3px; background: linear-gradient(90deg, var(--color-accent), transparent); }
+  .ap-ruolo { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--color-accent); margin-bottom: 0.4rem; }
+  .ap-nome { font-family: var(--font-display); font-weight: 400; font-size: 1.6rem; color: var(--color-ink); }
+  .ap-bio { margin-top: 0.5rem; color: var(--color-ink-muted); line-height: 1.6; }
+</style>

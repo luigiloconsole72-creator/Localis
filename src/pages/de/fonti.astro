@@ -1,6 +1,8 @@
 ---
 export const prerender = true;
 import Layout from '../../components/Layout.astro';
+import AtlanteTesta from '../../components/AtlanteTesta.astro';
+import '../../styles/atlante-pagine.css';
 import { getCollection } from 'astro:content';
 
 const sources = (await getCollection('sources')).sort((a, b) =>
@@ -55,24 +57,29 @@ function uniqueChapterSources(chapter: ChapterWithSources): SourceRef[] {
   description="Archiv- und Fachquellen hinter den Localis Guides, Kapitel für Kapitel."
   lang="de"
 >
-  <article class="max-w-wrap mx-auto px-md py-2xl">
-    <header class="mb-3xl">
-      <p class="text-[11px] font-semibold tracking-[0.32em] uppercase text-accent mb-sm">Prüfe die Geschichten</p>
-      <h1 class="font-display text-4xl sm:text-5xl text-ink leading-tight mb-md">Unsere Quellen.</h1>
-      <p class="font-display italic text-xl text-ink-muted leading-snug max-w-prose">
-        Keine kalte Literaturliste: Hier siehst du den Rechercheweg hinter jeder Guide.
-      </p>
-    </header>
+  <AtlanteTesta occhiello="Prüfe die Geschichten" titolo="Unsere Quellen." lede="Keine kalte Literaturliste: Hier siehst du den Rechercheweg hinter jeder Guide." img="/images/covers/fonti-ricerca.jpg" alt="Der Recherche-Schreibtisch: Bücher, Notizen, Postkarten und eine Karte" />
 
-    <section class="mb-3xl rounded-xl border border-border bg-surface-deep p-lg">
+  <article class="ab-corpo">
+
+    <section class="fo-intro">
       <p class="text-base text-ink-muted leading-relaxed max-w-prose">
         Jede Guide basiert auf prüfbaren Quellen, Vor-Ort-Kontrollen und lokaler Erinnerung. Nicht belegbare Details markieren wir als narrative Rekonstruktion.
       </p>
     </section>
 
-    {sources.map((entry) => (
-      <section class="mb-3xl pt-xl border-t border-border">
-        <header class="mb-md">
+    <nav class="fo-indice" aria-label="Inhalt">
+      <p class="fo-indice-titolo">Inhalt</p>
+      <ol>
+        {sources.map((entry, i) => (
+          <li><a href={`#fonte-${entry.data.slug}`}><span>{String(i + 1).padStart(2, '0')}</span> {(entry.data.guide_title_de ?? entry.data.guide_title_it)}</a></li>
+        ))}
+      </ol>
+    </nav>
+
+    {sources.map((entry, i) => (
+      <section class="fo-guida" id={`fonte-${entry.data.slug}`}>
+        <header class="fo-guida-testa">
+          <span class="fo-num">{String(i + 1).padStart(2, '0')}</span>
           <h2 class="font-display text-3xl text-ink leading-tight mb-xs">{entry.data.guide_title_de ?? entry.data.guide_title_en}</h2>
           <p class="text-xs font-semibold tracking-[0.22em] uppercase text-ink-subtle">
             Letzte Prüfung: {formatDate(entry.data.last_review)}
@@ -88,8 +95,8 @@ function uniqueChapterSources(chapter: ChapterWithSources): SourceRef[] {
           const chapterSources = uniqueChapterSources(chapter);
 
           return (
-            <article class="mb-xl rounded-lg border border-border/80 bg-surface p-md">
-              <h3 class="font-display text-xl text-ink mb-xs">{chapter.title_de ?? chapter.title_en ?? 'Kapitel'}</h3>
+            <details class="fo-capitolo">
+              <summary><h3 class="font-display text-xl text-ink mb-xs">{chapter.title_de ?? chapter.title_en ?? 'Kapitel'}</h3></summary>
               <p class="text-sm text-ink mb-sm">{chapter.framing_de ?? chapter.framing_en ?? 'Was dieses Kapitel belegt:'}</p>
 
               {translatedFacts.length > 0 ? (
@@ -124,7 +131,7 @@ function uniqueChapterSources(chapter: ChapterWithSources): SourceRef[] {
                   </ul>
                 </>
               )}
-            </article>
+            </details>
           );
         })}
       </section>

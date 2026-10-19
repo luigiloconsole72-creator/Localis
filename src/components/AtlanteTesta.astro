@@ -1,0 +1,57 @@
+---
+// L'apertura delle pagine interne nello stile dell'atlante (masserie, home):
+// foto con viraggio seppia, occhiello, titolo, corsivo e una riga d'ingresso.
+export interface Props {
+  occhiello: string;
+  titolo: string;
+  corsivo?: string;
+  lede?: string;
+  img: string;
+  alt?: string;
+}
+const { occhiello, titolo, corsivo, lede, img, alt = '' } = Astro.props;
+---
+<header class="at-testa">
+  <div class="at-foto">
+    <img src={img} alt={alt} fetchpriority="high" />
+    <div class="at-testo">
+      <p class="at-occhiello">{occhiello}</p>
+      <h1>{titolo}{corsivo && <> <em>{corsivo}</em></>}</h1>
+      {lede && <p class="at-lede">{lede}</p>}
+    </div>
+  </div>
+</header>
+
+<style>
+  .at-testa { max-width: 80rem; margin: 0 auto; padding: 1rem 1rem 0; }
+  .at-foto {
+    position: relative;
+    min-height: clamp(18rem, 44vh, 28rem);
+    border-radius: 18px;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    isolation: isolate;
+    background: var(--color-surface-elev);
+  }
+  .at-foto img {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2;
+    filter: sepia(0.5) saturate(0.85) contrast(1.04) brightness(0.95);
+    animation: at-lento 16s ease-out both;
+  }
+  .at-foto::after {
+    content: ''; position: absolute; inset: 0; z-index: -1;
+    background:
+      linear-gradient(90deg, rgba(28,24,19,0.8) 0%, rgba(28,24,19,0.4) 55%, rgba(28,24,19,0.1) 100%),
+      linear-gradient(0deg, rgba(28,24,19,0.55) 0%, rgba(28,24,19,0) 60%);
+  }
+  .at-testo { padding: 2rem 1.5rem 2.4rem; color: #fbfaf6; max-width: 46rem; animation: at-su 0.8s cubic-bezier(.2,.7,.2,1) both; }
+  @media (min-width: 768px) { .at-testo { padding: 2.75rem 3rem 3rem; } }
+  .at-occhiello { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: #e8d3a3; margin-bottom: 0.8rem; }
+  .at-testo h1 { font-family: var(--font-display); font-weight: 400; font-size: var(--text-5xl); line-height: 1.02; letter-spacing: -0.02em; color: #fbfaf6; }
+  .at-testo h1 em { color: #e8d3a3; }
+  .at-lede { margin-top: 1rem; font-family: var(--font-display); font-style: italic; font-size: 1.2rem; line-height: 1.5; color: rgba(251,250,246,0.9); max-width: 40rem; }
+  @keyframes at-su { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  @keyframes at-lento { from { transform: scale(1.06); } to { transform: scale(1); } }
+  @media (prefers-reduced-motion: reduce) { .at-foto img, .at-testo { animation: none; } }
+</style>
