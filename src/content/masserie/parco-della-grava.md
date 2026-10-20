@@ -4,7 +4,7 @@ name: Masseria Parco della Grava
 place: Pezze di Greco, Fasano
 title_it: Le mura, il frantoio, la cisterna
 audio_it: /audio/masserie/parco-della-grava-it.mp3
-duration_seconds: 197
+duration_seconds: 272
 zone_label: Valle d'Itria
 zone_href: /valle-d-itria/
 description: "Una masseria fortificata del 1726 nelle campagne di Fasano: perché le masserie erano piccole fortezze, e cosa notare oggi tra mura, frantoio e cisterna."
@@ -15,6 +15,14 @@ sources:
     title: "Sito ufficiale — home e pagina «la masseria»"
     year: 2023
     url: https://parcodellagrava.com/masseria/
+  - type: archive
+    author: Lisa Dipierdomenico e Silvestro Zaccaria
+    title: "Lettera a Localis sull'origine del nome «Grava» e su Monte Pizzuto"
+    year: 2026
+  - type: website
+    author: Wikipedia
+    title: "Voce «Gravina (geologia)»"
+    url: https://it.wikipedia.org/wiki/Gravina_(geologia)
   - type: book
     author: Vito Bianchi
     title: "Apulia. The Masserie"
@@ -34,6 +42,8 @@ Dal mare arrivavano i pirati, sempre più di rado. Da terra arrivavano i banditi
 
 Dentro le mura si viveva di quello che dava la terra. Le olive si macinavano qui, nel frantoio. La pioggia si raccoglieva in una cisterna.
 
+Il nome, invece, lo spiega la terra. La masseria sta ai piedi di Monte Pizzuto, la collina che dà il nome alla contrada e che chiude, da questa parte, la Murgia dei Trulli: dalla cima, dice chi ci vive, lo sguardo arriva fino al mare. E «grava» è una parola di prima dei romani: dice un avvallamento scavato dall'acqua nella roccia calcarea, parente stretta della gravina. Il parco è tutto quello che sta intorno: ulivi, macchia, vigne.
+
 Un tempo questa terra apparteneva alle monache di San Giuseppe. Oggi è della famiglia Dipierdomenico. L'azienda agricola l'ha voluta Marco Dipierdomenico, che questa terra la amava e che se n'è andato troppo presto. La passione l'ha lasciata ai figli.
 
 I quaranta ettari qui intorno si lavorano ancora: olio, vino, ortaggi, frutta. Se vedi qualcuno chino tra gli ulivi, non è una scena messa lì per te. È il lavoro di sempre.
@@ -48,7 +58,7 @@ Stasera, quando ti siedi a cena, sei nelle sale ricavate dall'antico frantoio. D
 
 La piscina, laggiù tra gli ulivi, conserva la forma di un'antica cisterna per l'acqua piovana. In una terra dove l'acqua si raccoglieva goccia per goccia, adesso ci nuoti.
 
-E nei tre ettari di vigna crescono tre uve di Puglia: Verdeca, Primitivo e Negroamaro. Se a tavola ti versano il vino della casa, viene da quei filari.
+E nei tre ettari di vigna crescono tre uve di Puglia: Verdeca, Primitivo e Negroamaro. Se a tavola ti versano il vino della casa, viene da quei filari, e due di quei vini si chiamano come la masseria: Grava Bianca e Grava Rosa.
 
 Gli ulivi intorno a te sono secolari. Erano qui prima di chi ha costruito queste camere, e con un po' di fortuna ci saranno ancora quando sarai tornato a casa.
 
