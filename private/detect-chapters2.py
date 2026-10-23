@@ -1,8 +1,8 @@
 import re, os, subprocess, json
 
-BACKUP = r"c:\Users\Admin\Desktop\Progetti & Lab\Sites\LocalisGuide\private\audio\guides\backup-r2"
-GUIDES_DIR = r"c:\Users\Admin\Desktop\Progetti & Lab\Sites\LocalisGuide\src\content\guides"
-SCRIPTS_DIR = r"c:\Users\Admin\Desktop\Progetti & Lab\Sites\LocalisGuide\src\content\scripts"
+BACKUP = r"c:\Progetti\Sites\LocalisGuide\private\audio\guides\backup-r2"
+GUIDES_DIR = r"c:\Progetti\Sites\LocalisGuide\src\content\guides"
+SCRIPTS_DIR = r"c:\Progetti\Sites\LocalisGuide\src\content\scripts"
 
 def get_duration(mp3):
     r = subprocess.run(

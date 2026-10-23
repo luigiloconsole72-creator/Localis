@@ -1,8 +1,8 @@
 import subprocess, re, os
 
 FFMPEG = r"C:\ffmpeg\bin\ffmpeg.exe"
-BACKUP = r"c:\Users\Admin\Desktop\Progetti & Lab\Sites\LocalisGuide\private\audio\guides\backup-r2"
-GUIDES_DIR = r"c:\Users\Admin\Desktop\Progetti & Lab\Sites\LocalisGuide\src\content\guides"
+BACKUP = r"c:\Progetti\Sites\LocalisGuide\private\audio\guides\backup-r2"
+GUIDES_DIR = r"c:\Progetti\Sites\LocalisGuide\src\content\guides"
 
 def detect_silences(mp3, noise_db=-35, min_duration=0.8):
     """Return list of (silence_start, silence_end) tuples."""

@@ -1,7 +1,7 @@
 // Raccoglie i dati per il digest giornaliero e li stampa in JSON su stdout.
 // Output: { date, ga4, commits, recontact }
 //
-// L'UNICO consumatore e' C:\Dev\gallery-outreach\daily_digest.py, lanciato dal
+// L'UNICO consumatore e' C:\Progetti\gallery-outreach\daily_digest.py, lanciato dal
 // Task Scheduler ("Localis Daily Digest", 08:00) via run-daily-digest.bat, che
 // aggiunge i conteggi del DB outreach e manda la mail con Resend. Nel 2026-08
 // era nato un secondo digest su GitHub Actions: non ha mai funzionato (secret
@@ -17,7 +17,7 @@ import { runReport } from './ga4-shared.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const LOCALIS = join(HERE, '..');
-const GALLERY = 'C:/Dev/gallery-outreach';
+const GALLERY = 'C:/Progetti/gallery-outreach';
 const PARTNERS_DIR = join(LOCALIS, 'src', 'content', 'partners');
 const GRACE = 12;
 const PHYSICAL = new Set(['hotel', 'bb', 'bar', 'restaurant', 'ristorante', 'shop', 'infopoint', 'cafe']);

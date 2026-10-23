@@ -4,9 +4,9 @@ R2_ENDPOINT = "https://056403330181e0037dcd3b4f0ea50fda.r2.cloudflarestorage.com
 R2_KEY      = "f9ec440d6ba774fbebaade8df2138633"
 R2_SECRET   = "f810b5aac6ae0e18148810c3546b70d6fca5c8d5ea96e52566a3165df08ac09a"
 BUCKET      = "localis-audio"
-BACKUP      = r"c:\Users\Admin\Desktop\Progetti & Lab\Sites\LocalisGuide\private\audio\guides\backup-r2"
-GUIDES_DIR  = r"c:\Users\Admin\Desktop\Progetti & Lab\Sites\LocalisGuide\src\content\guides"
-SCRIPTS_DIR = r"c:\Users\Admin\Desktop\Progetti & Lab\Sites\LocalisGuide\src\content\scripts"
+BACKUP      = r"c:\Progetti\Sites\LocalisGuide\private\audio\guides\backup-r2"
+GUIDES_DIR  = r"c:\Progetti\Sites\LocalisGuide\src\content\guides"
+SCRIPTS_DIR = r"c:\Progetti\Sites\LocalisGuide\src\content\scripts"
 
 # Guides to fix: slug -> R2 key for the IT audio
 TARGETS = {

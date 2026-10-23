@@ -8,7 +8,7 @@ client = boto3.client(
     region_name="auto"
 )
 
-dest = r"c:\Users\Admin\Desktop\Progetti & Lab\Sites\LocalisGuide\private\audio\guides\backup-r2"
+dest = r"c:\Progetti\Sites\LocalisGuide\private\audio\guides\backup-r2"
 keys = [
     "guides/gargano-vieste/full-it.mp3",
     "guides/gargano-nord/full-it.mp3",

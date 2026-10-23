@@ -4,7 +4,7 @@ Sito audioguide (Astro 6, MDX, Netlify, R2 per audio, pnpm). Risposte in italian
 
 ## Percorso & shell (anti-errore #1 e #2)
 
-- **Lavora sempre da `C:\Dev\Sites\LocalisGuide`** (junction senza `&`). Il path reale `...\Progetti & Lab\...` ha un ampersand che rompe PowerShell e gli shim `node_modules\.bin\` — non usarlo nei comandi.
+- **Il progetto sta in `C:\Progetti\Sites\LocalisGuide`.** Dal 23/10/2026 il workspace non ha più la `&` nel percorso: niente junction (`C:\Dev` non esiste più).
 - **Una shell sola per comando.** Niente sintassi bash dentro PowerShell e viceversa. `winget`/comandi Windows → PowerShell; pipe POSIX/heredoc → Bash.
 - **Python sempre con `PYTHONIOENCODING=utf-8`** (evita UnicodeEncodeError su Windows).
 

@@ -1,8 +1,8 @@
 import subprocess, json, os, re
 
 FFPROBE = r"C:\ffmpeg\bin\ffprobe.exe"
-BACKUP = r"c:\Users\Admin\Desktop\Progetti & Lab\Sites\LocalisGuide\private\audio\guides\backup-r2"
-GUIDES_DIR = r"c:\Users\Admin\Desktop\Progetti & Lab\Sites\LocalisGuide\src\content\guides"
+BACKUP = r"c:\Progetti\Sites\LocalisGuide\private\audio\guides\backup-r2"
+GUIDES_DIR = r"c:\Progetti\Sites\LocalisGuide\src\content\guides"
 
 def get_duration(path):
     r = subprocess.run([FFPROBE,"-v","quiet","-print_format","json","-show_format",path],
