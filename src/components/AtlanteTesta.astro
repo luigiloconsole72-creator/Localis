@@ -18,6 +18,7 @@ const { occhiello, titolo, corsivo, lede, img, alt = '' } = Astro.props;
       <p class="at-occhiello">{occhiello}</p>
       <h1>{titolo}{corsivo && <> <em>{corsivo}</em></>}</h1>
       {lede && <p class="at-lede">{lede}</p>}
+      <slot />
     </div>
   </div>
 </header>

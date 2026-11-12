@@ -1,0 +1,176 @@
+---
+// Apertura della pagina guida nello stile dell'atlante: foto, titolo, assaggio
+// audio e prezzo nel primo schermo. Sotto, solo su telefono e tablet, la barra
+// d'ascolto: resta in basso mentre si legge, con il play dell'assaggio e il prezzo.
+// Entrambi i bottoni portano alle schede prezzo (#acquista): si compra da lì.
+import AtlanteTesta from './AtlanteTesta.astro';
+import HeroAudioSample from './HeroAudioSample.astro';
+import { formatPrice } from '../lib/format';
+import { PRODUCT_PRICE_CENTS } from '../lib/stripe-prices';
+import type { Lang } from '../lib/i18n';
+
+export interface Props {
+  lang: Lang;
+  slug: string;
+  city: string;
+  occhiello: string;
+  title: string;
+  subtitle?: string;
+  cover: string;
+  coverAlt?: string;
+  durationLabel: string;
+  chapters: number;
+  /** preview_audio_base della guida (senza -{lang}.mp3), se ce l'ha. */
+  previewBase?: string | null;
+}
+const { lang, slug, city, occhiello, title, subtitle, cover, coverAlt = '', durationLabel, chapters, previewBase } = Astro.props;
+
+const T = {
+  it: { cta: 'Ascolta tutto il racconto', rassicura: 'Senza app · tuo per sempre · soddisfatto o rimborsato', compra: 'Acquista', continua: 'Il racconto continua', capitoli: 'capitoli', play: "Ascolta l'assaggio", pausa: 'Pausa', barra: 'Ascolto e acquisto' },
+  en: { cta: 'Hear the whole story', rassicura: 'No app · yours forever · money-back guarantee', compra: 'Buy', continua: 'The story continues', capitoli: 'chapters', play: 'Play the sample', pausa: 'Pause', barra: 'Listen and buy' },
+  de: { cta: 'Die ganze Erzählung hören', rassicura: 'Keine App · gehört dir für immer · Geld-zurück-Garantie', compra: 'Kaufen', continua: 'Die Erzählung geht weiter', capitoli: 'Kapitel', play: 'Hörprobe abspielen', pausa: 'Pausieren', barra: 'Hören und kaufen' },
+} as const;
+const t = T[lang];
+
+// Le guide senza un assaggio proprio fanno sentire quello della loro zona (gli
+// stessi file delle pagine zona), e la scritta lo dice. Niente durata: non è la stessa per lingua.
+const ASSAGGIO_ZONA = {
+  gargano: {
+    base: '/audio/trailers/gargano/gargano-trailer', slug: 'gargano-vieste',
+    label: { it: 'Un assaggio dal Gargano · gratis', en: 'A sample from the Gargano · free', de: 'Hörprobe aus dem Gargano · gratis' },
+  },
+  valle: {
+    base: '/audio/trailers/valle-d-itria/alberobello-trailer', slug: 'alberobello',
+    label: { it: "Un assaggio dalla Valle d'Itria · gratis", en: "A sample from Valle d'Itria · free", de: "Hörprobe aus dem Valle d'Itria · gratis" },
+  },
+} as const;
+const zona = ['vieste', 'gargano'].includes(city) ? 'gargano'
+  : ['alberobello', 'locorotondo', 'martina-franca', 'cisternino', 'ostuni', 'fasano'].includes(city) ? 'valle'
+  : null;
+const assaggio = previewBase
+  ? { src: `${previewBase}-${lang}.mp3`, slug, label: undefined }
+  : zona
+    ? { src: `${ASSAGGIO_ZONA[zona].base}-${lang}.mp3`, slug: ASSAGGIO_ZONA[zona].slug, label: ASSAGGIO_ZONA[zona].label[lang] }
+    : null;
+
+const prezzo = formatPrice(PRODUCT_PRICE_CENTS.single, lang);
+---
+<div class="ga">
+  <AtlanteTesta occhiello={occhiello} titolo={title} lede={subtitle} img={cover} alt={coverAlt}>
+    {assaggio && <HeroAudioSample lang={lang} src={assaggio.src} guideSlug={assaggio.slug} context="product" label={assaggio.label} />}
+    <div class="ga-azioni">
+      <a href="#acquista" class="ga-pill" data-ga-cta="guide_hero">{t.cta} · {prezzo}</a>
+      <span class="ga-rassicura">{t.rassicura}</span>
+    </div>
+  </AtlanteTesta>
+</div>
+
+<aside class="ga-barra" aria-label={t.barra} data-slug={slug} data-lang={lang} inert>
+  <span class="ga-barra-avanza" aria-hidden="true"></span>
+  {assaggio && (
+    <button type="button" class="ga-barra-play" aria-label={t.play} data-play={t.play} data-pausa={t.pausa}>
+      <svg class="ga-ico-play" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="6 4 20 12 6 20 6 4" /></svg>
+      <svg class="ga-ico-pausa" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="4" width="4" height="16" /><rect x="14" y="4" width="4" height="16" /></svg>
+    </button>
+  )}
+  <span class="ga-barra-testo">
+    <span class="ga-barra-titolo" data-continua={t.continua}>{title}</span>
+    <span class="ga-barra-sub">{durationLabel} · {chapters} {t.capitoli}</span>
+  </span>
+  <a href="#acquista" class="ga-barra-cta" data-ga-cta="guide_bar">{t.compra} · {prezzo}</a>
+</aside>
+
+<script>
+  const barra = document.querySelector<HTMLElement>('.ga-barra');
+  if (barra) {
+    // La barra sale quando né il bottone dell'apertura né le schede prezzo sono a schermo.
+    const aSchermo = new Set<Element>();
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => (e.isIntersecting ? aSchermo.add(e.target) : aSchermo.delete(e.target)));
+      const su = aSchermo.size === 0;
+      barra.classList.toggle('is-su', su);
+      barra.inert = !su;
+    });
+    // Le schede prezzo sono gli <aside> che contengono un bottone d'acquisto (altre card della pagina sono <aside> anche loro).
+    const schede = new Set([...document.querySelectorAll('#acquista .checkout-btn')].map((b) => b.closest('aside')));
+    [document.querySelector('.ga-pill'), ...schede].forEach((el) => el && io.observe(el));
+
+    // Il banner dei cookie sta in basso anche lui: la barra gli si appoggia sopra.
+    const banner = document.getElementById('cookie-banner');
+    if (banner) new ResizeObserver(() => barra.style.setProperty('--ga-sotto', `${banner.offsetHeight}px`)).observe(banner);
+
+    // Il play della barra è quello dell'assaggio in apertura: un audio solo, due bottoni.
+    const campione = document.querySelector<HTMLElement>('.ga .hero-sample');
+    const play = barra.querySelector<HTMLButtonElement>('.ga-barra-play');
+    if (campione && play) {
+      const btn = campione.querySelector<HTMLButtonElement>('.hero-sample-btn')!;
+      const avanza = campione.querySelector<HTMLElement>('.hero-sample-progress')!;
+      const linea = barra.querySelector<HTMLElement>('.ga-barra-avanza')!;
+      play.addEventListener('click', () => btn.click());
+      new MutationObserver(() => {
+        const suona = btn.getAttribute('aria-label') === btn.dataset.pauseLabel;
+        barra.classList.toggle('is-suona', suona);
+        play.setAttribute('aria-label', suona ? play.dataset.pausa! : play.dataset.play!);
+        linea.style.width = avanza.style.width;
+      }).observe(campione, { attributes: true, subtree: true, attributeFilter: ['aria-label', 'style'] });
+      campione.addEventListener('localis:sample-ended', () => {
+        const titolo = barra.querySelector<HTMLElement>('.ga-barra-titolo')!;
+        titolo.textContent = titolo.dataset.continua!;
+        barra.classList.add('is-finito');
+      });
+    }
+
+    document.querySelectorAll<HTMLElement>('[data-ga-cta]').forEach((a) => {
+      a.addEventListener('click', () => {
+        window.localisTrack?.('cta_click', { cta_source: a.dataset.gaCta!, guide: barra.dataset.slug!, lang: barra.dataset.lang! });
+      });
+    });
+  }
+</script>
+
+<style>
+  /* ---------- apertura ---------- */
+  .ga :global(.at-foto) { min-height: clamp(24rem, 64vh, 36rem); }
+  .ga :global(.at-testo h1) { font-size: var(--text-4xl); line-height: 1.05; }
+  .ga :global(.hero-sample) { margin-top: 1.4rem; }
+  .ga-azioni { display: flex; flex-wrap: wrap; align-items: center; gap: 0.7rem 1.2rem; margin-top: 1.1rem; }
+  .ga-pill {
+    display: inline-flex; align-items: center; min-height: 48px; padding: 0.85rem 1.45rem; border-radius: 999px;
+    background: var(--color-olive); color: #fbfaf6; font-weight: 600; text-decoration: none;
+    transition: background 0.25s, transform 0.25s;
+  }
+  .ga-pill:hover { background: var(--color-olive-d); transform: translateY(-1px); }
+  .ga-rassicura { font-size: 0.8rem; color: rgba(251,250,246,0.82); }
+  :global(#acquista) { scroll-margin-top: 2rem; }
+
+  /* ---------- barra d'ascolto (telefono e tablet) ---------- */
+  .ga-barra {
+    position: fixed; left: 0; right: 0; bottom: var(--ga-sotto, 0px); z-index: 40;
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.65rem 1rem calc(0.65rem + env(safe-area-inset-bottom, 0px));
+    background: rgba(28,24,19,0.95); color: #fbfaf6;
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+    box-shadow: 0 -12px 30px -18px rgba(28,24,19,0.6);
+    transform: translateY(110%); visibility: hidden;
+    transition: transform 0.35s cubic-bezier(.2,.7,.2,1), visibility 0.35s, bottom 0.25s;
+  }
+  .ga-barra.is-su { transform: none; visibility: visible; }
+  @media (min-width: 1024px) { .ga-barra { display: none; } }
+  @media (max-width: 1023px) { :global(body:has(.ga-barra)) { padding-bottom: 4.25rem; } }
+  .ga-barra-avanza { position: absolute; top: 0; left: 0; height: 2px; width: 0; background: #e8d3a3; transition: width 0.25s linear; }
+  .ga-barra-play {
+    flex-shrink: 0; width: 44px; height: 44px; border-radius: 50%; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; background: #e8d3a3; color: #1c1813;
+  }
+  .ga-ico-pausa, .is-suona .ga-ico-play { display: none; }
+  .is-suona .ga-ico-pausa { display: block; }
+  .ga-barra-testo { flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 1.25; }
+  .ga-barra-titolo { font-family: var(--font-display); font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .is-finito .ga-barra-titolo { color: #e8d3a3; font-style: italic; }
+  .ga-barra-sub { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(251,250,246,0.7); }
+  .ga-barra-cta {
+    flex-shrink: 0; display: inline-flex; align-items: center; min-height: 44px; padding: 0.55rem 1.05rem; border-radius: 999px;
+    background: #fbfaf6; color: var(--color-olive-d); font-weight: 700; font-size: 0.9rem; text-decoration: none; white-space: nowrap;
+  }
+  @media (prefers-reduced-motion: reduce) { .ga-barra { transition: none; } }
+</style>

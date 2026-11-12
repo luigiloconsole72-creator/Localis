@@ -1,14 +1,13 @@
 ---
 export const prerender = true;
 import Layout from '../../../components/Layout.astro';
-import Eyebrow from '../../../components/Eyebrow.astro';
 import GuidePurchaseCards from '../../../components/GuidePurchaseCards.astro';
 import ChapterList from '../../../components/ChapterList.astro';
 import StartMap from '../../../components/StartMap.astro';
 import NarratorCard from '../../../components/NarratorCard.astro';
 import StructuredData from '../../../components/StructuredData.astro';
 import Breadcrumb from '../../../components/Breadcrumb.astro';
-import HeroAudioSample from '../../../components/HeroAudioSample.astro';
+import GuideApertura from '../../../components/GuideApertura.astro';
 import GuideUseCase from '../../../components/GuideUseCase.astro';
 import GuideFactsCard from '../../../components/GuideFactsCard.astro';
 import GuideSeoEditorial from '../../../components/GuideSeoEditorial.astro';
@@ -43,7 +42,6 @@ export async function getStaticPaths() {
 
 const { guide } = Astro.props;
 const data = guide.data;
-const previewSrc = data.preview_audio_base ? `${data.preview_audio_base}-de.mp3` : null;
 const destination = CITY_DEST[data.city];
 const lang = 'de';
 const durationSeconds = guideDurationSeconds(data, lang);
@@ -137,20 +135,20 @@ ld.push(breadcrumbListLD([
     ? <Breadcrumb items={[{ label: 'Start', href: '/de' }, { label: destination.label, href: destination.href }, { label: title }]} />
     : <Breadcrumb items={[{ label: 'Start', href: '/de' }, { label: title }]} />}
 
-  <article class="max-w-wrap mx-auto px-md py-2xl grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-2xl items-start">
-    <header class="order-1 lg:order-none lg:col-span-2 mb-2xl">
-      <Eyebrow class="mb-md">{`Apulien · ${durationLabel} · IT/EN/DE`}</Eyebrow>
-      <h1 class="font-display text-4xl text-ink leading-tight mb-sm">{title}</h1>
-      <p class="font-display italic text-2xl text-ink-muted">{subtitle}</p>
-    </header>
-
+  <GuideApertura
+    lang="de"
+    slug={data.slug}
+    city={data.city}
+    occhiello={`Apulien · ${durationLabel} · IT/EN/DE`}
+    title={title}
+    subtitle={subtitle}
+    cover={data.cover}
+    durationLabel={durationLabel}
+    chapters={data.chapters.length}
+    previewBase={data.preview_audio_base}
+  />
+  <article id="acquista" class="max-w-wrap mx-auto px-md py-2xl grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-2xl items-start">
     <div class="order-2 lg:order-none flex flex-col gap-lg">
-      <img src={data.cover} alt="" class="w-full aspect-[4/3] object-cover rounded-lg" loading="eager" />
-
-      {previewSrc && (
-        <HeroAudioSample lang="de" src={previewSrc} guideSlug={data.slug} context="product" />
-      )}
-
       <GuidePurchaseCards
         class="lg:hidden flex flex-col gap-md"
         guideSlug={data.slug}

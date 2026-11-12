@@ -90,6 +90,8 @@ const pauseLabel = lang === 'de' ? 'Pausieren' : lang === 'it' ? 'Pausa' : 'Paus
         audio.addEventListener('ended', () => {
           bar.style.width = '0%';
           tracker?.onEnded();
+          // La barra d'ascolto della pagina guida (GuideApertura) cambia scritta a fine assaggio.
+          el.dispatchEvent(new CustomEvent('localis:sample-ended'));
         });
         audio.addEventListener('play', () => {
           iconPlay.style.display = 'none';
