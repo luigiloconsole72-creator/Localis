@@ -1,14 +1,11 @@
 ﻿---
 export const prerender = true;
 import Layout from '../../components/Layout.astro';
+import ZonaAtlante from '../../components/ZonaAtlante.astro';
 import BariMap from '../../components/BariMap.astro';
-import PriceCard from '../../components/PriceCard.astro';
-import SectionDivider from '../../components/SectionDivider.astro';
 import AuthorsBlock from '../../components/AuthorsBlock.astro';
 import StepsBlock from '../../components/StepsBlock.astro';
-import LangPills from '../../components/LangPills.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
-import HeroAudioSample from '../../components/HeroAudioSample.astro';
 import StructuredData from '../../components/StructuredData.astro';
 import { itemListLD } from '../../lib/seo';
 
@@ -30,120 +27,25 @@ const guideListLD = itemListLD('Bari audio guides', [
 
   <Breadcrumb items={[{ label: 'Home', href: '/en' }, { label: 'Bari' }]} />
 
-  {/* PAGE HEADER — hero with image */}
-  <section class="bari-hero relative overflow-hidden border-b border-border">
-    <img
-      src="/images/hero/hero-bari-tramonto.jpg"
-      alt="Bari, view of the old town and seafront"
-      class="bari-hero-bg"
-      width="1980"
-      height="900"
-      loading="eager"
-      fetchpriority="high"
-      decoding="async"
-    />
-    <div class="bari-hero-scrim" aria-hidden="true"></div>
-    <div class="max-w-wrap mx-auto px-md py-3xl lg:py-4xl relative z-10">
-      <LangPills lang="en" currentPath={Astro.url.pathname} />
-      <div class="flex items-center gap-sm mb-md">
-        <span class="block w-7 h-px bg-accent"></span>
-        <span class="text-[11px] font-semibold tracking-[0.24em] uppercase text-accent">
-          Destination — Bari
-        </span>
-      </div>
-      <h1 class="font-display font-light text-ink leading-[1.05] tracking-[-0.014em] text-[clamp(2.2rem,5vw,3.6rem)] max-w-[18ch]">
-        Bari, the way a local friend would tell it.
-      </h1>
-      <p class="font-body text-base sm:text-lg leading-relaxed text-ink mt-md max-w-[52ch]">
-        Someone who actually grew up here tells you the alleys, the saints, the why behind things — right as you walk past them. Six stories, no app.
-      </p>
-      <HeroAudioSample lang="en" src="/audio/trailers/bari/san-nicola-trailer-en.mp3" guideSlug="san-nicola" />
-      <a href="#prezzi" class="mt-md inline-flex items-center gap-xs text-sm font-semibold text-link hover:text-link-pressed no-underline">Guides and pricing <span aria-hidden="true">↓</span></a>
-    </div>
-  </section>
-
-  <style>
-    .bari-hero {
-      min-height: clamp(560px, 78vh, 820px);
-      display: flex;
-      align-items: center;
-    }
-    .bari-hero-bg {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center center;
-      filter: saturate(0.92) contrast(1.04);
-    }
-    .bari-hero-scrim {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        to right,
-        oklch(from var(--color-surface) l c h / 0.88) 0%,
-        oklch(from var(--color-surface) l c h / 0.65) 35%,
-        oklch(from var(--color-surface) l c h / 0.18) 70%,
-        oklch(from var(--color-surface) l c h / 0) 100%
-      );
-      pointer-events: none;
-    }
-    @media (max-width: 768px) {
-      .bari-hero-scrim {
-        background: linear-gradient(
-          to bottom,
-          oklch(from var(--color-surface) l c h / 0.92) 0%,
-          oklch(from var(--color-surface) l c h / 0.72) 60%,
-          oklch(from var(--color-surface) l c h / 0.5) 100%
-        );
-      }
-    }
-  </style>
+  {/* APERTURA + SOMMARIO — l'elenco dei racconti è il listino (ZonaAtlante) */}
+  <ZonaAtlante
+    lang="en"
+    zona="bari"
+    ancora="prezzi"
+    occhiello="Destination — Bari"
+    titolo="Bari,"
+    corsivo="the way a local friend would tell it."
+    lede="Someone who actually grew up here tells you the alleys, the saints, the why behind things — right as you walk past them. Six stories, no app."
+    img="/images/hero/hero-bari-tramonto.jpg"
+    alt="Bari, view of the old town and seafront"
+    assaggio="/audio/trailers/bari/san-nicola-trailer-en.mp3"
+    assaggioSlug="san-nicola"
+  />
 
   {/* LE 6 GUIDE */}
   <BariMap lang="en" />
 
   {/* PRICING */}
-  <section id="prezzi" class="bg-surface">
-    <div class="max-w-wrap mx-auto px-md py-3xl lg:py-4xl">
-      <SectionDivider label="Choose how to listen to Bari." />
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-lg max-w-[68rem] mx-auto">
-        <PriceCard
-          product="single"
-          guideSlug="bari-vecchia"
-          lang="en"
-          features={[
-            'One guide of your choice',
-            'Unlimited access, forever',
-            'Italian and English',
-            'Money-back, no questions asked',
-          ]}
-        />
-        <PriceCard
-          product="tris"
-          lang="en"
-          features={[
-            '3 guides of your choice',
-            'Unlimited access, forever',
-            'Money-back, no questions asked',
-          ]}
-        />
-        <PriceCard
-          product="bari-completa"
-          lang="en"
-          primary
-          features={[
-            'All 6 Bari guides',
-            '~2h 20min · 6 different voices',
-            'Save €9.95 vs single guides',
-            'Money-back, no questions asked',
-          ]}
-        />
-      </div>
-    </div>
-  </section>
-
   {/* AUTORI */}
   <AuthorsBlock lang="en" />
 

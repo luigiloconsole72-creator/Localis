@@ -1,12 +1,9 @@
 ﻿---
 export const prerender = true;
 import Layout from '../../components/Layout.astro';
-import SectionDivider from '../../components/SectionDivider.astro';
-import PriceCard from '../../components/PriceCard.astro';
+import ZonaAtlante from '../../components/ZonaAtlante.astro';
 import StepsBlock from '../../components/StepsBlock.astro';
-import LangPills from '../../components/LangPills.astro';
 import Breadcrumb from '../../components/Breadcrumb.astro';
-import HeroAudioSample from '../../components/HeroAudioSample.astro';
 import StructuredData from '../../components/StructuredData.astro';
 import { itemListLD } from '../../lib/seo';
 
@@ -98,84 +95,20 @@ const guideListLD = itemListLD(
 
   <Breadcrumb items={[{ label: 'Home', href: '/en' }, { label: 'Gargano' }]} />
 
-  {/* PAGE HEADER — hero with image */}
-  <section class="gargano-hero relative overflow-hidden border-b border-border">
-    <img
-      src="/images/covers/gargano-landing.jpg"
-      alt="Gargano promontory over the Adriatic sea"
-      class="gargano-hero-bg"
-      width="1980"
-      height="900"
-      loading="eager"
-      fetchpriority="high"
-      decoding="async"
-    />
-    <div class="gargano-hero-scrim" aria-hidden="true"></div>
-    <div class="max-w-wrap mx-auto px-md py-3xl lg:py-4xl relative z-10">
-      <LangPills lang="en" currentPath={Astro.url.pathname} />
-      <div class="flex items-center gap-sm mb-md">
-        <span class="block w-7 h-px bg-accent"></span>
-        <span class="text-[11px] font-semibold tracking-[0.24em] uppercase text-accent">
-          Destination — Gargano
-        </span>
-      </div>
-      <h1 class="font-display font-light text-ink leading-[1.05] tracking-[-0.014em] text-[clamp(2.2rem,5vw,3.6rem)] max-w-[22ch]">
-        Gargano told<br /><em class="not-italic text-ink-muted">by people born there.</em>
-      </h1>
-      <p class="font-body text-base sm:text-lg leading-relaxed text-ink-muted mt-md max-w-[52ch]">
-        Six live guides. From Vieste to the Tremiti Islands, from the Foresta Umbra to the Margherita salt flats — every voice belongs to someone who actually lives there.
-      </p>
-      <HeroAudioSample lang="en" src="/audio/trailers/gargano/gargano-trailer-en.mp3" guideSlug="gargano-vieste" />
-      <a href="#prezzi" class="mt-md inline-flex items-center gap-xs text-sm font-semibold text-link hover:text-link-pressed no-underline">Guides and pricing <span aria-hidden="true">↓</span></a>
-    </div>
-  </section>
-
-  <style>
-    .gargano-hero {
-      min-height: clamp(560px, 78vh, 820px);
-      display: flex;
-      align-items: center;
-    }
-    .gargano-hero-bg {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center center;
-      filter: saturate(0.92) contrast(1.04);
-    }
-    .gargano-hero .text-ink,
-    .gargano-hero h1 {
-      color: oklch(12% 0.005 240) !important;
-    }
-    .gargano-hero .text-ink-muted,
-    .gargano-hero p {
-      color: oklch(22% 0.008 240 / 0.9) !important;
-    }
-    .gargano-hero-scrim {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        to right,
-        oklch(from var(--color-surface) l c h / 0.96) 0%,
-        oklch(from var(--color-surface) l c h / 0.85) 35%,
-        oklch(from var(--color-surface) l c h / 0.45) 62%,
-        oklch(from var(--color-surface) l c h / 0) 85%
-      );
-      pointer-events: none;
-    }
-    @media (max-width: 768px) {
-      .gargano-hero-scrim {
-        background: linear-gradient(
-          to bottom,
-          oklch(from var(--color-surface) l c h / 0.78) 0%,
-          oklch(from var(--color-surface) l c h / 0.58) 60%,
-          oklch(from var(--color-surface) l c h / 0.35) 100%
-        );
-      }
-    }
-  </style>
+  {/* APERTURA + SOMMARIO — l'elenco dei racconti è il listino (ZonaAtlante) */}
+  <ZonaAtlante
+    lang="en"
+    zona="gargano"
+    ancora="prezzi"
+    occhiello="Destination — Gargano"
+    titolo="Gargano told"
+    corsivo="by people born there."
+    lede="Six live guides. From Vieste to the Tremiti Islands, from the Foresta Umbra to the Margherita salt flats — every voice belongs to someone who actually lives there."
+    img="/images/covers/gargano-landing.jpg"
+    alt="Gargano promontory over the Adriatic sea"
+    assaggio="/audio/trailers/gargano/gargano-trailer-en.mp3"
+    assaggioSlug="gargano-vieste"
+  />
 
   {/* INTERLUDE */}
   <section class="bg-surface-elev border-b border-border">
@@ -214,47 +147,6 @@ const guideListLD = itemListLD(
   </section>
 
   {/* NARRATORS */}
-  <section id="prezzi" class="bg-surface-elev border-t border-border">
-    <div class="max-w-wrap mx-auto px-md py-3xl lg:py-4xl">
-      <SectionDivider label="Choose how to listen to Gargano." />
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-lg max-w-[68rem] mx-auto">
-        <PriceCard
-          product="single"
-          guideSlug="gargano-vieste"
-          lang="en"
-          features={[
-            'One guide of your choice',
-            'Unlimited access, forever',
-            'Italian and English',
-            'Money-back, no questions asked',
-          ]}
-        />
-        <PriceCard
-          product="tris"
-          lang="en"
-          features={[
-            '3 guides of your choice',
-            'Unlimited access, forever',
-            'Money-back, no questions asked',
-          ]}
-        />
-        <PriceCard
-          product="gargano-completa"
-          lang="en"
-          primary
-          titleOverride="Pack 6 Guides (Complete Area)"
-          descriptionOverride="All 6 Gargano guides. Six stories, six landscapes."
-          ctaOverride="Get Pack 6 Guides"
-          features={[
-            'All 6 Gargano guides',
-            '~5h of storytelling · different voices',
-            'Money-back, no questions asked',
-          ]}
-        />
-      </div>
-    </div>
-  </section>
-
   <style>
     .narr-grid {
       display: grid;

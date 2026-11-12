@@ -14,6 +14,11 @@ export function formatDuration(seconds: number, format: 'short' | 'long' = 'shor
   return `${m} min`;
 }
 
+/** Minuti in chiaro: "58 min" sotto l'ora, "3 h 05 min" sopra. */
+export function formatMinutes(min: number): string {
+  return min < 60 ? `${min} min` : `${Math.floor(min / 60)} h ${String(min % 60).padStart(2, '0')} min`;
+}
+
 /**
  * Prezzo per lingua. Separatore e posizione del simbolo non sono un dettaglio
  * estetico: in tedesco "€4.99" si legge come separatore di migliaia. Il resto
